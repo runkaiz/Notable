@@ -12,22 +12,31 @@ struct ContentView: View {
     @Environment(\.managedObjectContext) private var viewContext
 
     @FetchRequest(
-        sortDescriptors: [NSSortDescriptor(keyPath: \Item.timestamp, ascending: true)],
-        animation: .default)
-    private var items: FetchedResults<Item>
+        entity: Entry.entity(),
+        sortDescriptors: [NSSortDescriptor(keyPath: \Entry.timestamp, ascending: false)],
+        animation: .none)
+    private var entries: FetchedResults<Entry>
+    
+    @State private var selection: Entry?
 
     var body: some View {
         NavigationView {
-            List {
-                ForEach(items) { item in
+            List(selection: $selection) {
+                ForEach(entries, id: \.self) { entry in
                     NavigationLink {
-                        Text("Item at \(item.timestamp!, formatter: itemFormatter)")
+                        EditorView(entry: entry)
                     } label: {
-                        Text(item.timestamp!, formatter: itemFormatter)
+                        Text(entry.title ?? "")
                     }
                 }
-                .onDelete(perform: deleteItems)
+#if os(iOS)
+                .onDelete(perform: deleteEntries)
+#endif
             }
+            .navigationTitle("Entries")
+#if os(macOS)
+            .onDeleteCommand(perform: selection == nil ? nil : deleteEntry)
+#endif
             .toolbar {
 #if os(iOS)
                 ToolbarItem(placement: .navigationBarTrailing) {
@@ -35,19 +44,24 @@ struct ContentView: View {
                 }
 #endif
                 ToolbarItem {
-                    Button(action: addItem) {
-                        Label("Add Item", systemImage: "plus")
+                    Button(action: addEntry) {
+                        Label("Add Entry", systemImage: "plus")
                     }
                 }
             }
-            Text("Select an item")
+            Text("Select an entry")
         }
     }
 
-    private func addItem() {
+    private func addEntry() {
         withAnimation {
-            let newItem = Item(context: viewContext)
-            newItem.timestamp = Date()
+            let newEntry = Entry(context: viewContext)
+            newEntry.timestamp = Date()
+            newEntry.id = UUID()
+            newEntry.title = "Tests"
+            newEntry.content = ""
+            
+            selection = nil
 
             do {
                 try viewContext.save()
@@ -60,10 +74,11 @@ struct ContentView: View {
         }
     }
 
-    private func deleteItems(offsets: IndexSet) {
+    private func deleteEntries(offsets: IndexSet) {
         withAnimation {
-            offsets.map { items[$0] }.forEach(viewContext.delete)
+            offsets.map { entries[$0] }.forEach(viewContext.delete)
 
+            selection = nil
             do {
                 try viewContext.save()
             } catch {
@@ -72,11 +87,27 @@ struct ContentView: View {
                 let nsError = error as NSError
                 fatalError("Unresolved error \(nsError), \(nsError.userInfo)")
             }
+        }
+    }
+    
+    private func deleteEntry() {
+        viewContext.delete(entries[entries.firstIndex(of: selection!)!])
+        
+        // Reset selection
+        selection = nil
+        
+        do {
+            try viewContext.save()
+        } catch {
+            // Replace this implementation with code to handle the error appropriately.
+            // fatalError() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development.
+            let nsError = error as NSError
+            fatalError("Unresolved error \(nsError), \(nsError.userInfo)")
         }
     }
 }
 
-private let itemFormatter: DateFormatter = {
+private let entryFormatter: DateFormatter = {
     let formatter = DateFormatter()
     formatter.dateStyle = .short
     formatter.timeStyle = .medium
