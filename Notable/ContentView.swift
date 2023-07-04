@@ -43,7 +43,7 @@ struct ContentView: View {
                     EditButton()
                 }
 #endif
-                ToolbarItem {
+                ToolbarItem(placement: .primaryAction) {
                     Button(action: addEntry) {
                         Label("Add Entry", systemImage: "plus")
                     }
@@ -58,7 +58,7 @@ struct ContentView: View {
             let newEntry = Entry(context: viewContext)
             newEntry.timestamp = Date()
             newEntry.id = UUID()
-            newEntry.title = "Tests"
+            newEntry.title = "Untitled"
             newEntry.content = ""
             
             selection = nil

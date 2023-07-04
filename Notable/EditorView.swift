@@ -16,6 +16,8 @@ struct EditorView: View {
     @State private var presentAlert = false
     @State private var newTitle = ""
     
+    @FocusState var isInputActive: Bool
+    
     var body: some View {
         TextEditor(text: $entry.content ?? "")
             .font(.title)
@@ -23,11 +25,13 @@ struct EditorView: View {
             .onChange(of: entry.content, perform: { _ in
                 saveEntry()
             })
-        
+            .focused($isInputActive)
+#if os(iOS)
             .navigationBarTitleDisplayMode(.inline)
+#endif
             .toolbar {
                 ToolbarItem(placement: .principal) {
-                    Button(entry.title!) {
+                    Button(entry.title ?? "Error") {
                         newTitle = entry.title ?? ""
                         presentAlert = true
                     }
@@ -41,13 +45,20 @@ struct EditorView: View {
                     })
                 }
                 ToolbarItem {
-                    ShareLink(item: entry.content!)
+                    ShareLink(item: entry.content ?? "Error")
+                }
+                ToolbarItemGroup(placement: .keyboard) {
+                    Spacer()
+                    
+                    Button("Done") {
+                        isInputActive = false
+                    }
                 }
             }
     }
     
     private func saveEntry() {
-        entry.title = newTitle
+        if !newTitle.isEmpty { entry.title = newTitle }
         
         withAnimation {
             do {
