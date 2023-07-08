@@ -15,8 +15,7 @@ struct EntryItem: View {
     var body: some View {
         VStack(alignment: .leading) {
             Text(entry.title ?? "")
-                .font(.title)
-                .fontWeight(.bold)
+                .font(.headline)
             Text(entry.timestamp!, formatter: entryFormatter)
                 .font(.subheadline)
         }

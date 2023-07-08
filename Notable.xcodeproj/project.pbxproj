@@ -13,6 +13,7 @@
 		B22944572A4D8B04009015BA /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B22944562A4D8B04009015BA /* ContentView.swift */; };
 		B22944592A4D8B05009015BA /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B22944582A4D8B05009015BA /* Assets.xcassets */; };
 		B229445D2A4D8B05009015BA /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B229445C2A4D8B05009015BA /* Preview Assets.xcassets */; };
+		B28638322A597BB600B361C3 /* CodeEditor in Frameworks */ = {isa = PBXBuildFile; productRef = B28638312A597BB600B361C3 /* CodeEditor */; };
 		B287911F2A512A000012E576 /* EditorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B287911E2A512A000012E576 /* EditorView.swift */; };
 		B2C0BE782A55332200EC9CAF /* EntryItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2C0BE772A55332200EC9CAF /* EntryItem.swift */; };
 /* End PBXBuildFile section */
@@ -35,6 +36,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B28638322A597BB600B361C3 /* CodeEditor in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -97,6 +99,9 @@
 			dependencies = (
 			);
 			name = Notable;
+			packageProductDependencies = (
+				B28638312A597BB600B361C3 /* CodeEditor */,
+			);
 			productName = Notable;
 			productReference = B229444C2A4D8B04009015BA /* Notable.app */;
 			productType = "com.apple.product-type.application";
@@ -125,6 +130,9 @@
 				Base,
 			);
 			mainGroup = B22944432A4D8B04009015BA;
+			packageReferences = (
+				B28638302A597BB600B361C3 /* XCRemoteSwiftPackageReference "CodeEditor" */,
+			);
 			productRefGroup = B229444D2A4D8B04009015BA /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -374,6 +382,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		B28638302A597BB600B361C3 /* XCRemoteSwiftPackageReference "CodeEditor" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/ZeeZide/CodeEditor.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.0.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		B28638312A597BB600B361C3 /* CodeEditor */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = B28638302A597BB600B361C3 /* XCRemoteSwiftPackageReference "CodeEditor" */;
+			productName = CodeEditor;
+		};
+/* End XCSwiftPackageProductDependency section */
 
 /* Begin XCVersionGroup section */
 		B22944532A4D8B04009015BA /* Notable.xcdatamodeld */ = {

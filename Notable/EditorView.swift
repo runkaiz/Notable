@@ -6,7 +6,23 @@
 //
 
 import SwiftUI
+import CodeEditor
 import CoreData
+import CoreTransferable
+
+public extension CodeEditor.ThemeName {
+    static var foundation = CodeEditor.ThemeName(rawValue: "foundation")
+    static var xcode = CodeEditor.ThemeName(rawValue: "xcode")
+}
+
+struct Note: Codable, Transferable {
+    var title: String
+    var body: String
+    
+    static var transferRepresentation: some TransferRepresentation {
+        CodableRepresentation(contentType: .text).suggestedFileName("tet.txt")
+    }
+}
 
 struct EditorView: View {
     @Environment(\.managedObjectContext) private var viewContext
@@ -15,52 +31,52 @@ struct EditorView: View {
     
     @State private var presentAlert = false
     @State private var newTitle = ""
+    @State private var note = Note(title: "test", body: "Some")
     
     @FocusState var isInputActive: Bool
     
-    var body: some View {
-        TextEditor(text: $entry.content ?? "")
-            .onChange(of: entry.content, perform: { _ in
-                saveEntry()
-            })
-            .focused($isInputActive)
-#if os(iOS)
-            .navigationBarTitleDisplayMode(.inline)
+#if os(macOS)
+    @AppStorage("fontsize") var fontSize = Int(NSFont.systemFontSize)
 #endif
-            .toolbar {
-                ToolbarItem(placement: .principal) {
-                    Button(entry.title ?? "Error") {
-                        newTitle = entry.title ?? ""
-                        presentAlert = true
-                    }
-                    .bold()
-                    .foregroundColor(.black)
-                    .alert("Rename Entry", isPresented: $presentAlert, actions: {
-                        TextField("Entry Title", text: $newTitle)
-                        
-                        Button("Rename", action: saveEntry)
-                        Button("Cancel", role: .cancel, action: {})
-                    })
+    @State private var language = CodeEditor.Language.markdown
+    @State private var theme    = CodeEditor.ThemeName.xcode
+    
+    var body: some View {
+        VStack(spacing: 0) {
+            Divider()
+#if os(macOS)
+            CodeEditor(source: $entry.content ?? "", language: language, theme: theme, fontSize: .init(get: { CGFloat(fontSize) }, set: { fontSize = Int($0) }))
+                .frame(minWidth: 640, minHeight: 480)
+#else
+            CodeEditor(source: $entry.content ?? "", language: language, theme: theme)
+#endif
+        }
+        .onChange(of: entry.content, perform: { _ in
+            saveEntry()
+        })
+        .focused($isInputActive)
+#if os(iOS)
+        .navigationBarTitleDisplayMode(.inline)
+#endif
+        .toolbar {
+            ToolbarItem(placement: .principal) {
+                Button(entry.title ?? "Error") {
+                    newTitle = entry.title ?? ""
+                    presentAlert = true
                 }
-                ToolbarItem {
-                    ShareLink(item: entry.content ?? "Error")
-                }
-                ToolbarItemGroup(placement: .keyboard) {
-                    Button(action: inactiveInput) {
-                        Image(systemName: "bold")
-                    }
-                    Button(action: inactiveInput) {
-                        Image(systemName: "italic")
-                    }
-                    Button(action: inactiveInput) {
-                        Image(systemName: "underline")
-                    }
-                    Spacer()
-                    Button(action: inactiveInput) {
-                        Image(systemName: "keyboard.chevron.compact.down")
-                    }
-                }
+                .bold()
+                .foregroundColor(.black)
+                .alert("Rename Entry", isPresented: $presentAlert, actions: {
+                    TextField("Entry Title", text: $newTitle)
+                    
+                    Button("Rename", action: saveEntry)
+                    Button("Cancel", role: .cancel, action: {})
+                })
             }
+            ToolbarItem {
+                ShareLink(item: note.body, preview: SharePreview("Export \(note.title)"))
+            }
+        }
     }
     
     private func inactiveInput() {
