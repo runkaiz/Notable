@@ -20,8 +20,6 @@ struct EditorView: View {
     
     var body: some View {
         TextEditor(text: $entry.content ?? "")
-            .font(.title)
-            .fontWeight(.bold)
             .onChange(of: entry.content, perform: { _ in
                 saveEntry()
             })
@@ -48,13 +46,25 @@ struct EditorView: View {
                     ShareLink(item: entry.content ?? "Error")
                 }
                 ToolbarItemGroup(placement: .keyboard) {
+                    Button(action: inactiveInput) {
+                        Image(systemName: "bold")
+                    }
+                    Button(action: inactiveInput) {
+                        Image(systemName: "italic")
+                    }
+                    Button(action: inactiveInput) {
+                        Image(systemName: "underline")
+                    }
                     Spacer()
-                    
-                    Button("Done") {
-                        isInputActive = false
+                    Button(action: inactiveInput) {
+                        Image(systemName: "keyboard.chevron.compact.down")
                     }
                 }
             }
+    }
+    
+    private func inactiveInput() {
+        isInputActive = false
     }
     
     private func saveEntry() {

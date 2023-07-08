@@ -26,7 +26,7 @@ struct ContentView: View {
                     NavigationLink {
                         EditorView(entry: entry)
                     } label: {
-                        Text(entry.title ?? "")
+                        EntryItem(entry: entry)
                     }
                 }
 #if os(iOS)
@@ -106,13 +106,6 @@ struct ContentView: View {
         }
     }
 }
-
-private let entryFormatter: DateFormatter = {
-    let formatter = DateFormatter()
-    formatter.dateStyle = .short
-    formatter.timeStyle = .medium
-    return formatter
-}()
 
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
