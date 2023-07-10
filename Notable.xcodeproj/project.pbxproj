@@ -28,6 +28,7 @@
 		B229445A2A4D8B05009015BA /* Notable.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Notable.entitlements; sourceTree = "<group>"; };
 		B229445C2A4D8B05009015BA /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		B287911E2A512A000012E576 /* EditorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditorView.swift; sourceTree = "<group>"; };
+		B293DF772A5C1C4200826D26 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		B2C0BE772A55332200EC9CAF /* EntryItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EntryItem.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -62,6 +63,7 @@
 		B229444E2A4D8B04009015BA /* Notable */ = {
 			isa = PBXGroup;
 			children = (
+				B293DF772A5C1C4200826D26 /* Info.plist */,
 				B229444F2A4D8B04009015BA /* NotableApp.swift */,
 				B22944512A4D8B04009015BA /* Persistence.swift */,
 				B22944562A4D8B04009015BA /* ContentView.swift */,
@@ -293,6 +295,7 @@
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = Notable/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = Notable;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.productivity";
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
@@ -333,6 +336,7 @@
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = Notable/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = Notable;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.productivity";
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;

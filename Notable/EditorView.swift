@@ -20,7 +20,7 @@ struct Note: Codable, Transferable {
     var body: String
     
     static var transferRepresentation: some TransferRepresentation {
-        CodableRepresentation(contentType: .text).suggestedFileName("tet.txt")
+        ProxyRepresentation(exporting: \.body).suggestedFileName("Ok wtf.txt")
     }
 }
 
@@ -31,15 +31,22 @@ struct EditorView: View {
     
     @State private var presentAlert = false
     @State private var newTitle = ""
-    @State private var note = Note(title: "test", body: "Some")
+    @State private var note: Note
     
     @FocusState var isInputActive: Bool
     
 #if os(macOS)
     @AppStorage("fontsize") var fontSize = Int(NSFont.systemFontSize)
+#else
+    @State private var fontSize = CGFloat(18)
 #endif
     @State private var language = CodeEditor.Language.markdown
     @State private var theme    = CodeEditor.ThemeName.xcode
+    
+    init(entry: Entry) {
+        self.entry = entry
+        self.note = Note(title: entry.title!, body: entry.content!)
+    }
     
     var body: some View {
         VStack(spacing: 0) {
@@ -48,7 +55,7 @@ struct EditorView: View {
             CodeEditor(source: $entry.content ?? "", language: language, theme: theme, fontSize: .init(get: { CGFloat(fontSize) }, set: { fontSize = Int($0) }))
                 .frame(minWidth: 640, minHeight: 480)
 #else
-            CodeEditor(source: $entry.content ?? "", language: language, theme: theme)
+            CodeEditor(source: $entry.content ?? "", language: language, theme: theme, fontSize: $fontSize)
 #endif
         }
         .onChange(of: entry.content, perform: { _ in
@@ -74,7 +81,7 @@ struct EditorView: View {
                 })
             }
             ToolbarItem {
-                ShareLink(item: note.body, preview: SharePreview("Export \(note.title)"))
+                ShareLink(item: note, preview: SharePreview("\(note.title)"))
             }
         }
     }
@@ -85,6 +92,8 @@ struct EditorView: View {
     
     private func saveEntry() {
         if !newTitle.isEmpty { entry.title = newTitle }
+        
+        note = Note(title: entry.title!, body: entry.content!)
         
         withAnimation {
             do {
