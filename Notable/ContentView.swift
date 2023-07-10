@@ -41,12 +41,16 @@ struct ContentView: View {
                 .toolbar {
 #if os(iOS)
                     ToolbarItem(placement: .navigationBarTrailing) {
-                        EditButton()
+                        if tabSelection == .tab1 {
+                            EditButton()
+                        }
                     }
 #endif
-                    ToolbarItem(placement: .primaryAction) {
-                        Button(action: addEntry) {
-                            Label("Add Entry", systemImage: "plus")
+                    ToolbarItem(placement: .navigationBarTrailing) {
+                        if tabSelection == .tab1 {
+                            Button(action: addEntry) {
+                                Label("Add Entry", systemImage: "plus")
+                            }
                         }
                     }
                 }
