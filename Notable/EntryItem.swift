@@ -9,14 +9,13 @@ import SwiftUI
 import CoreData
 
 struct EntryItem: View {
-    
     @ObservedObject var entry: Entry
     
     var body: some View {
         VStack(alignment: .leading) {
             Text(entry.title ?? "")
                 .font(.headline)
-            Text(entry.timestamp!, formatter: entryFormatter)
+            Text(entry.timestamp ?? Date(), formatter: entryFormatter)
                 .font(.subheadline)
         }
     }

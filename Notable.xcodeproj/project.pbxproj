@@ -15,6 +15,7 @@
 		B229445D2A4D8B05009015BA /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B229445C2A4D8B05009015BA /* Preview Assets.xcassets */; };
 		B28638322A597BB600B361C3 /* CodeEditor in Frameworks */ = {isa = PBXBuildFile; productRef = B28638312A597BB600B361C3 /* CodeEditor */; };
 		B287911F2A512A000012E576 /* EditorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B287911E2A512A000012E576 /* EditorView.swift */; };
+		B293DF792A5C2EE500826D26 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B293DF782A5C2EE500826D26 /* SettingsView.swift */; };
 		B2C0BE782A55332200EC9CAF /* EntryItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2C0BE772A55332200EC9CAF /* EntryItem.swift */; };
 /* End PBXBuildFile section */
 
@@ -29,6 +30,7 @@
 		B229445C2A4D8B05009015BA /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		B287911E2A512A000012E576 /* EditorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditorView.swift; sourceTree = "<group>"; };
 		B293DF772A5C1C4200826D26 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		B293DF782A5C2EE500826D26 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		B2C0BE772A55332200EC9CAF /* EntryItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EntryItem.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -69,6 +71,7 @@
 				B22944562A4D8B04009015BA /* ContentView.swift */,
 				B2C0BE772A55332200EC9CAF /* EntryItem.swift */,
 				B287911E2A512A000012E576 /* EditorView.swift */,
+				B293DF782A5C2EE500826D26 /* SettingsView.swift */,
 				B22944582A4D8B05009015BA /* Assets.xcassets */,
 				B229445A2A4D8B05009015BA /* Notable.entitlements */,
 				B22944532A4D8B04009015BA /* Notable.xcdatamodeld */,
@@ -161,6 +164,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B293DF792A5C2EE500826D26 /* SettingsView.swift in Sources */,
 				B22944552A4D8B04009015BA /* Notable.xcdatamodeld in Sources */,
 				B22944502A4D8B04009015BA /* NotableApp.swift in Sources */,
 				B22944572A4D8B04009015BA /* ContentView.swift in Sources */,
@@ -316,10 +320,12 @@
 				PRODUCT_BUNDLE_IDENTIFIER = xyz.runkaizhang.Notable;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = auto;
-				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Debug;
 		};
@@ -357,10 +363,12 @@
 				PRODUCT_BUNDLE_IDENTIFIER = xyz.runkaizhang.Notable;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = auto;
-				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Release;
 		};

@@ -10,7 +10,7 @@ import CoreData
 
 struct ContentView: View {
     @Environment(\.managedObjectContext) private var viewContext
-
+    
     @FetchRequest(
         entity: Entry.entity(),
         sortDescriptors: [NSSortDescriptor(keyPath: \Entry.timestamp, ascending: false)],
@@ -18,41 +18,73 @@ struct ContentView: View {
     private var entries: FetchedResults<Entry>
     
     @State private var selection: Entry?
-
+    @State var tabSelection: Tabs = .tab1
+    
     var body: some View {
-        NavigationView {
-            List(selection: $selection) {
-                ForEach(entries, id: \.self) { entry in
-                    NavigationLink {
-                        EditorView(entry: entry)
-                    } label: {
-                        EntryItem(entry: entry)
+        NavigationStack {
+            TabView(selection: $tabSelection) {
+                List(selection: $selection) {
+                    ForEach(entries, id: \.id) { entry in
+                        NavigationLink {
+                            EditorView(entry: entry)
+                        } label: {
+                            EntryItem(entry: entry)
+                        }
                     }
-                }
 #if os(iOS)
-                .onDelete(perform: deleteEntries)
+                    .onDelete(perform: deleteEntries)
 #endif
-            }
-            .navigationTitle("Entries")
+                }
 #if os(macOS)
-            .onDeleteCommand(perform: selection == nil ? nil : deleteEntry)
+                .onDeleteCommand(perform: selection == nil ? nil : deleteEntry)
 #endif
-            .toolbar {
+                .toolbar {
 #if os(iOS)
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    EditButton()
-                }
+                    ToolbarItem(placement: .navigationBarTrailing) {
+                        EditButton()
+                    }
 #endif
-                ToolbarItem(placement: .primaryAction) {
-                    Button(action: addEntry) {
-                        Label("Add Entry", systemImage: "plus")
+                    ToolbarItem(placement: .primaryAction) {
+                        Button(action: addEntry) {
+                            Label("Add Entry", systemImage: "plus")
+                        }
                     }
                 }
+                
+                .tabItem {
+                    Label("Entries", systemImage: "tray.fill")
+                }
+                .tag(Tabs.tab1)
+#if os(macOS)
+                Text("Select an entry")
+#endif
+                SettingsView()
+                    .tabItem {
+                        Label("Settings", systemImage: "gear")
+                    }
+                    .tag(Tabs.tab2)
             }
-            Text("Select an entry")
+#if os(iOS)
+            .navigationBarTitle(returnNaviBarTitle(tabSelection: self.tabSelection))
+#endif
+            .onAppear {
+                selection = nil
+            }
         }
     }
-
+    
+    enum Tabs{
+        case tab1, tab2
+    }
+    
+    // This function will return the correct NavigationBarTitle when different tab is selected.
+    func returnNaviBarTitle(tabSelection: Tabs) -> String{
+        switch tabSelection{
+        case .tab1: return "Entries"
+        case .tab2: return "Settings"
+        }
+    }
+    
     private func addEntry() {
         withAnimation {
             let newEntry = Entry(context: viewContext)
@@ -62,7 +94,7 @@ struct ContentView: View {
             newEntry.content = ""
             
             selection = nil
-
+            
             do {
                 try viewContext.save()
             } catch {
@@ -73,12 +105,13 @@ struct ContentView: View {
             }
         }
     }
-
+    
     private func deleteEntries(offsets: IndexSet) {
         withAnimation {
             offsets.map { entries[$0] }.forEach(viewContext.delete)
-
+            
             selection = nil
+            
             do {
                 try viewContext.save()
             } catch {
