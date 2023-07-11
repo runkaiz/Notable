@@ -41,7 +41,7 @@ struct ContentView: View {
                 .toolbar {
 #if os(iOS)
                     ToolbarItem(placement: .navigationBarTrailing) {
-                        if tabSelection == .tab1 {
+                        if tabSelection == .tab1 && !entries.isEmpty {
                             EditButton()
                         }
                     }
