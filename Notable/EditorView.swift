@@ -57,6 +57,7 @@ struct EditorView: View {
                 .frame(minWidth: 640, minHeight: 480)
 #else
             CodeEditor(source: $entry.content ?? "", language: language, theme: theme, fontSize:.init(get: { CGFloat(editorFontSize) }, set: { editorFontSize = Int($0) }))
+                .padding(.top, CGFloat(12))
 #endif
         }
         .onChange(of: entry.content, perform: { _ in
