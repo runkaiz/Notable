@@ -10,11 +10,6 @@ import CodeEditor
 import CoreData
 import CoreTransferable
 
-public extension CodeEditor.ThemeName {
-    static var foundation = CodeEditor.ThemeName(rawValue: "foundation")
-    static var xcode = CodeEditor.ThemeName(rawValue: "xcode")
-}
-
 struct Note: Codable, Transferable {
     var title: String
     var body: String
@@ -38,10 +33,16 @@ struct EditorView: View {
 #if os(macOS)
     @AppStorage("fontsize") var fontSize = Int(NSFont.systemFontSize)
 #else
-    @State private var fontSize = CGFloat(18)
+    @AppStorage("editorFontSize")
+    private var editorFontSize = 18
+//    @State private var fontSize = CGFloat(18)
 #endif
-    @State private var language = CodeEditor.Language.markdown
-    @State private var theme    = CodeEditor.ThemeName.xcode
+    
+    @AppStorage("editorLanguage")
+    private var language = CodeEditor.Language.markdown
+    
+    @AppStorage("editorTheme")
+    private var theme = CodeEditor.ThemeName.xcode
     
     init(entry: Entry) {
         self.entry = entry
@@ -55,7 +56,7 @@ struct EditorView: View {
             CodeEditor(source: $entry.content ?? "", language: language, theme: theme, fontSize: .init(get: { CGFloat(fontSize) }, set: { fontSize = Int($0) }))
                 .frame(minWidth: 640, minHeight: 480)
 #else
-            CodeEditor(source: $entry.content ?? "", language: language, theme: theme, fontSize: $fontSize)
+            CodeEditor(source: $entry.content ?? "", language: language, theme: theme, fontSize:.init(get: { CGFloat(editorFontSize) }, set: { editorFontSize = Int($0) }))
 #endif
         }
         .onChange(of: entry.content, perform: { _ in
