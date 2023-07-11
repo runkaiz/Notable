@@ -10,6 +10,9 @@ import CoreData
 import CodeEditor
 
 struct SettingsView: View {
+    @AppStorage("autocorrect")
+    private var autocorrect = true
+    
     @AppStorage("editorFontSize")
     private var editorFontSize = 18
     
@@ -22,6 +25,7 @@ struct SettingsView: View {
     var body: some View {
         Form {
             Section(header: Text("Editor settings")) {
+                Toggle("Autocorrect", isOn: $autocorrect)
                 Stepper(value: $editorFontSize, in: 1...64) {
                     Text("Font size: \(editorFontSize)")
                 }

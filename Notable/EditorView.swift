@@ -35,8 +35,11 @@ struct EditorView: View {
 #else
     @AppStorage("editorFontSize")
     private var editorFontSize = 18
-//    @State private var fontSize = CGFloat(18)
+    //    @State private var fontSize = CGFloat(18)
 #endif
+    
+    @AppStorage("autocorrect")
+    private var autocorrect = true
     
     @AppStorage("editorLanguage")
     private var language = CodeEditor.Language.markdown
@@ -55,9 +58,11 @@ struct EditorView: View {
 #if os(macOS)
             CodeEditor(source: $entry.content ?? "", language: language, theme: theme, fontSize: .init(get: { CGFloat(fontSize) }, set: { fontSize = Int($0) }))
                 .frame(minWidth: 640, minHeight: 480)
+                .autocorrectionDisabled(!autocorrect)
 #else
             CodeEditor(source: $entry.content ?? "", language: language, theme: theme, fontSize:.init(get: { CGFloat(editorFontSize) }, set: { editorFontSize = Int($0) }))
                 .padding(.top, CGFloat(12))
+                .autocorrectionDisabled(!autocorrect)
 #endif
         }
         .onChange(of: entry.content, perform: { _ in

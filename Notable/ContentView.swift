@@ -20,24 +20,63 @@ struct ContentView: View {
     @State private var selection: Entry?
     @State var tabSelection: Tabs = .tab1
     
+    @State private var searchText = ""
+    @State private var showCancelButton: Bool = false
+    
     var body: some View {
         NavigationStack {
             TabView(selection: $tabSelection) {
-                List(selection: $selection) {
-                    ForEach(entries, id: \.id) { entry in
-                        NavigationLink {
-                            EditorView(entry: entry)
-                        } label: {
-                            EntryItem(entry: entry)
+                VStack {
+                    // Search view
+                    HStack {
+                        HStack {
+                            Image(systemName: "magnifyingglass")
+                            
+                            TextField("search", text: $searchText, onEditingChanged: { isEditing in
+                                withAnimation {
+                                    self.showCancelButton = true
+                                }
+                            }).foregroundColor(.primary)
+                            
+                            Button(action: {
+                                self.searchText = ""
+                            }) {
+                                Image(systemName: "xmark.circle.fill").opacity(searchText == "" ? 0 : 1)
+                            }
+                        }
+                        .padding(EdgeInsets(top: 8, leading: 6, bottom: 8, trailing: 6))
+                        .foregroundColor(.secondary)
+                        .background(Color(.secondarySystemBackground))
+                        .cornerRadius(10.0)
+                        
+                        if showCancelButton  {
+                            Button("Cancel") {
+                                UIApplication.shared.endEditing(true) // this must be placed before the other commands here
+                                self.searchText = ""
+                                self.showCancelButton = false
+                            }
+                            .foregroundColor(Color(.systemBlue))
                         }
                     }
+                    .padding(.horizontal)
+                    .navigationBarHidden(showCancelButton)
+                    
+                    List(selection: $selection) {
+                        ForEach(entries.filter{$0.title!.hasPrefix(searchText) || searchText == ""}, id: \.id) { entry in
+                            NavigationLink {
+                                EditorView(entry: entry)
+                            } label: {
+                                EntryItem(entry: entry)
+                            }
+                        }
 #if os(iOS)
-                    .onDelete(perform: deleteEntries)
+                        .onDelete(perform: deleteEntries)
+#endif
+                    }
+#if os(macOS)
+                    .onDeleteCommand(perform: selection == nil ? nil : deleteEntry)
 #endif
                 }
-#if os(macOS)
-                .onDeleteCommand(perform: selection == nil ? nil : deleteEntry)
-#endif
                 .toolbar {
 #if os(iOS)
                     ToolbarItem(placement: .navigationBarTrailing) {
@@ -74,6 +113,10 @@ struct ContentView: View {
             .onAppear {
                 selection = nil
             }
+        }.onAppear {
+            let tabBarAppearance = UITabBarAppearance()
+            tabBarAppearance.configureWithDefaultBackground()
+            UITabBar.appearance().scrollEdgeAppearance = tabBarAppearance
         }
     }
     
@@ -147,5 +190,33 @@ struct ContentView: View {
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
         ContentView().environment(\.managedObjectContext, PersistenceController.preview.container.viewContext)
+    }
+}
+
+extension UIApplication {
+    /// Resigns the keyboard.
+    ///
+    /// Used for resigning the keyboard when pressing the cancel button in a searchbar based on [this](https://stackoverflow.com/a/58473985/3687284) solution.
+    /// - Parameter force: set true to resign the keyboard.
+    func endEditing(_ force: Bool) {
+        let scenes = UIApplication.shared.connectedScenes
+        let windowScene = scenes.first as? UIWindowScene
+        let window = windowScene?.windows.first
+        window?.endEditing(force)
+    }
+}
+
+struct ResignKeyboardOnDragGesture: ViewModifier {
+    var gesture = DragGesture().onChanged{_ in
+        UIApplication.shared.endEditing(true)
+    }
+    func body(content: Content) -> some View {
+        content.gesture(gesture)
+    }
+}
+
+extension View {
+    func resignKeyboardOnDragGesture() -> some View {
+        return modifier(ResignKeyboardOnDragGesture())
     }
 }
