@@ -19,6 +19,9 @@
 		B28AB4452A60F9270097023A /* EditorConfigSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = B28AB4442A60F9270097023A /* EditorConfigSheet.swift */; };
 		B293DF792A5C2EE500826D26 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B293DF782A5C2EE500826D26 /* SettingsView.swift */; };
 		B2C0BE782A55332200EC9CAF /* EntryItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2C0BE772A55332200EC9CAF /* EntryItem.swift */; };
+		B2D69FD42A613C53007B65C3 /* Package.resolved in Resources */ = {isa = PBXBuildFile; fileRef = B2D69FD32A613C53007B65C3 /* Package.resolved */; };
+		B2D69FD72A613CAB007B65C3 /* AcknowledgeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2D69FD62A613CAB007B65C3 /* AcknowledgeView.swift */; };
+		B2D69FDC2A61467F007B65C3 /* AcknowList in Frameworks */ = {isa = PBXBuildFile; productRef = B2D69FDB2A61467F007B65C3 /* AcknowList */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -35,6 +38,8 @@
 		B293DF772A5C1C4200826D26 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		B293DF782A5C2EE500826D26 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		B2C0BE772A55332200EC9CAF /* EntryItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EntryItem.swift; sourceTree = "<group>"; };
+		B2D69FD32A613C53007B65C3 /* Package.resolved */ = {isa = PBXFileReference; lastKnownFileType = file; path = Package.resolved; sourceTree = SOURCE_ROOT; };
+		B2D69FD62A613CAB007B65C3 /* AcknowledgeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AcknowledgeView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -43,6 +48,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				B28AB4422A60F7700097023A /* RichTextKit in Frameworks */,
+				B2D69FDC2A61467F007B65C3 /* AcknowList in Frameworks */,
 				B28638322A597BB600B361C3 /* CodeEditor in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -53,6 +59,7 @@
 		B22944432A4D8B04009015BA = {
 			isa = PBXGroup;
 			children = (
+				B2D69FD32A613C53007B65C3 /* Package.resolved */,
 				B229444E2A4D8B04009015BA /* Notable */,
 				B229444D2A4D8B04009015BA /* Products */,
 			);
@@ -69,13 +76,11 @@
 		B229444E2A4D8B04009015BA /* Notable */ = {
 			isa = PBXGroup;
 			children = (
-				B28AB4432A60F9000097023A /* Components */,
 				B293DF772A5C1C4200826D26 /* Info.plist */,
 				B229444F2A4D8B04009015BA /* NotableApp.swift */,
 				B22944512A4D8B04009015BA /* Persistence.swift */,
-				B22944562A4D8B04009015BA /* ContentView.swift */,
-				B287911E2A512A000012E576 /* EditorView.swift */,
-				B293DF782A5C2EE500826D26 /* SettingsView.swift */,
+				B2D69FD52A613C80007B65C3 /* Views */,
+				B28AB4432A60F9000097023A /* Components */,
 				B22944582A4D8B05009015BA /* Assets.xcassets */,
 				B229445A2A4D8B05009015BA /* Notable.entitlements */,
 				B22944532A4D8B04009015BA /* Notable.xcdatamodeld */,
@@ -101,6 +106,17 @@
 			path = Components;
 			sourceTree = "<group>";
 		};
+		B2D69FD52A613C80007B65C3 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				B22944562A4D8B04009015BA /* ContentView.swift */,
+				B287911E2A512A000012E576 /* EditorView.swift */,
+				B293DF782A5C2EE500826D26 /* SettingsView.swift */,
+				B2D69FD62A613CAB007B65C3 /* AcknowledgeView.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -111,6 +127,7 @@
 				B22944482A4D8B04009015BA /* Sources */,
 				B22944492A4D8B04009015BA /* Frameworks */,
 				B229444A2A4D8B04009015BA /* Resources */,
+				B2D69FD92A61459A007B65C3 /* Copy Package.resolved */,
 			);
 			buildRules = (
 			);
@@ -120,6 +137,7 @@
 			packageProductDependencies = (
 				B28638312A597BB600B361C3 /* CodeEditor */,
 				B28AB4412A60F7700097023A /* RichTextKit */,
+				B2D69FDB2A61467F007B65C3 /* AcknowList */,
 			);
 			productName = Notable;
 			productReference = B229444C2A4D8B04009015BA /* Notable.app */;
@@ -152,6 +170,7 @@
 			packageReferences = (
 				B28638302A597BB600B361C3 /* XCRemoteSwiftPackageReference "CodeEditor" */,
 				B28AB4402A60F7700097023A /* XCRemoteSwiftPackageReference "RichTextKit" */,
+				B2D69FDA2A61467F007B65C3 /* XCRemoteSwiftPackageReference "AcknowList" */,
 			);
 			productRefGroup = B229444D2A4D8B04009015BA /* Products */;
 			projectDirPath = "";
@@ -168,11 +187,33 @@
 			buildActionMask = 2147483647;
 			files = (
 				B229445D2A4D8B05009015BA /* Preview Assets.xcassets in Resources */,
+				B2D69FD42A613C53007B65C3 /* Package.resolved in Resources */,
 				B22944592A4D8B05009015BA /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		B2D69FD92A61459A007B65C3 /* Copy Package.resolved */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = "Copy Package.resolved";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\ncp ${PROJECT_FILE_PATH}/project.xcworkspace/xcshareddata/swiftpm/Package.resolved ${PROJECT_DIR}\n";
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		B22944482A4D8B04009015BA /* Sources */ = {
@@ -182,6 +223,7 @@
 				B28AB4452A60F9270097023A /* EditorConfigSheet.swift in Sources */,
 				B293DF792A5C2EE500826D26 /* SettingsView.swift in Sources */,
 				B22944552A4D8B04009015BA /* Notable.xcdatamodeld in Sources */,
+				B2D69FD72A613CAB007B65C3 /* AcknowledgeView.swift in Sources */,
 				B22944502A4D8B04009015BA /* NotableApp.swift in Sources */,
 				B22944572A4D8B04009015BA /* ContentView.swift in Sources */,
 				B22944522A4D8B04009015BA /* Persistence.swift in Sources */,
@@ -428,6 +470,14 @@
 				minimumVersion = 0.7.2;
 			};
 		};
+		B2D69FDA2A61467F007B65C3 /* XCRemoteSwiftPackageReference "AcknowList" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/vtourraine/AcknowList";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 3.0.0;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -440,6 +490,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = B28AB4402A60F7700097023A /* XCRemoteSwiftPackageReference "RichTextKit" */;
 			productName = RichTextKit;
+		};
+		B2D69FDB2A61467F007B65C3 /* AcknowList */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = B2D69FDA2A61467F007B65C3 /* XCRemoteSwiftPackageReference "AcknowList" */;
+			productName = AcknowList;
 		};
 /* End XCSwiftPackageProductDependency section */
 

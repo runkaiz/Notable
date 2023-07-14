@@ -36,6 +36,16 @@ struct SettingsView: View {
                     }
                 }
             }
+            
+            Section(header: Text("Miscellaneous")) {
+                NavigationLink("Acknowledgement") {
+                    AcknowledgeView()
+#if os(iOS)
+                        .navigationTitle("Acknowledgement")
+                        .navigationBarTitleDisplayMode(.inline)
+#endif
+                }
+            }
         }
     }
 }
