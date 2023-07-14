@@ -38,7 +38,7 @@
 		B293DF772A5C1C4200826D26 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		B293DF782A5C2EE500826D26 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		B2C0BE772A55332200EC9CAF /* EntryItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EntryItem.swift; sourceTree = "<group>"; };
-		B2D69FD32A613C53007B65C3 /* Package.resolved */ = {isa = PBXFileReference; lastKnownFileType = file; path = Package.resolved; sourceTree = SOURCE_ROOT; };
+		B2D69FD32A613C53007B65C3 /* Package.resolved */ = {isa = PBXFileReference; lastKnownFileType = text; path = Package.resolved; sourceTree = SOURCE_ROOT; };
 		B2D69FD62A613CAB007B65C3 /* AcknowledgeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AcknowledgeView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -208,6 +208,7 @@
 			outputFileListPaths = (
 			);
 			outputPaths = (
+				"$(PROJECT_FILE_PATH)/Package.resolved",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
