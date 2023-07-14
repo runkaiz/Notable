@@ -132,6 +132,7 @@ struct EditorView: View {
             entry.content = text.string
             note = Note(title: entry.title!, body: entry.content!)
         } else {
+            text = NSAttributedString(string: entry.content ?? "")
             note = Note(title: entry.title!, body: entry.content!)
         }
         
