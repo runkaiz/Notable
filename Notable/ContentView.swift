@@ -139,6 +139,7 @@ struct ContentView: View {
             newEntry.id = UUID()
             newEntry.title = "Untitled"
             newEntry.content = ""
+            newEntry.isRichText = false
             
             selection = nil
             

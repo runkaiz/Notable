@@ -9,6 +9,7 @@ import SwiftUI
 import CodeEditor
 import CoreData
 import CoreTransferable
+import RichTextKit
 
 struct Note: Codable, Transferable {
     var title: String
@@ -24,9 +25,13 @@ struct EditorView: View {
     
     @ObservedObject var entry: Entry
     
+    @StateObject var context = RichTextContext()
+    
     @State private var presentAlert = false
     @State private var newTitle = ""
     @State private var note: Note
+    @State private var showingSheet = false
+    @State private var text: NSAttributedString
     
     @FocusState var isInputActive: Bool
     
@@ -50,25 +55,38 @@ struct EditorView: View {
     init(entry: Entry) {
         self.entry = entry
         self.note = Note(title: entry.title!, body: entry.content!)
+        _text = State(initialValue: NSAttributedString(string: entry.content ?? ""))
     }
     
     var body: some View {
         VStack(spacing: 0) {
             Divider()
+            if entry.isRichText {
+                RichTextEditor(text: $text, context: context) { _ in
+                    // Customize the native text view here
+                    // TODO: Somehow apply the context.fontSize properly so that both editor mode is at least consistent with each other.
+                }
+                .onChange(of: text) { _ in
+                    saveEntry()
+                }
+            } else {
 #if os(macOS)
-            CodeEditor(source: $entry.content ?? "", language: language, theme: theme, fontSize: .init(get: { CGFloat(fontSize) }, set: { fontSize = Int($0) }))
-                .frame(minWidth: 640, minHeight: 480)
-                .autocorrectionDisabled(!autocorrect)
+                CodeEditor(source: $entry.content ?? "", language: language, theme: theme, fontSize: .init(get: { CGFloat(fontSize) }, set: { fontSize = Int($0) }))
+                    .frame(minWidth: 640, minHeight: 480)
+                    .onChange(of: entry.content, perform: { _ in
+                        saveEntry()
+                    })
+                    .focused($isInputActive)
 #else
-            CodeEditor(source: $entry.content ?? "", language: language, theme: theme, fontSize:.init(get: { CGFloat(editorFontSize) }, set: { editorFontSize = Int($0) }))
-                .padding(.top, CGFloat(12))
-                .autocorrectionDisabled(!autocorrect)
+                CodeEditor(source: $entry.content ?? "", language: language, theme: theme, fontSize:.init(get: { CGFloat(editorFontSize) }, set: { editorFontSize = Int($0) }))
+                    .padding(.top, CGFloat(12))
+                    .onChange(of: entry.content, perform: { _ in
+                        saveEntry()
+                    })
+                    .focused($isInputActive)
 #endif
+            }
         }
-        .onChange(of: entry.content, perform: { _ in
-            saveEntry()
-        })
-        .focused($isInputActive)
 #if os(iOS)
         .navigationBarTitleDisplayMode(.inline)
 #endif
@@ -88,8 +106,18 @@ struct EditorView: View {
                 })
             }
             ToolbarItem {
-                ShareLink(item: note, preview: SharePreview("\(note.title)"))
+                Menu {
+                    Button("Settings") {
+                        showingSheet.toggle()
+                    }
+                    ShareLink(item: note, preview: SharePreview("\(note.title)"))
+                } label: {
+                    Image(systemName: "info.circle")
+                }
             }
+        }
+        .sheet(isPresented: $showingSheet) {
+            EditorConfigSheet(entry: entry)
         }
     }
     
@@ -100,7 +128,12 @@ struct EditorView: View {
     private func saveEntry() {
         if !newTitle.isEmpty { entry.title = newTitle }
         
-        note = Note(title: entry.title!, body: entry.content!)
+        if entry.isRichText {
+            entry.content = text.string
+            note = Note(title: entry.title!, body: entry.content!)
+        } else {
+            note = Note(title: entry.title!, body: entry.content!)
+        }
         
         withAnimation {
             do {

@@ -19,6 +19,7 @@ struct PersistenceController {
             newEntry.id = UUID()
             newEntry.title = "Test"
             newEntry.content = "# lalala\nlalalal"
+            newEntry.isRichText = false
         }
         do {
             try viewContext.save()

@@ -17,6 +17,15 @@
         "revision" : "93199b9e434f04bda956a613af8f571933f9f037",
         "version" : "2.1.2"
       }
+    },
+    {
+      "identity" : "richtextkit",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/danielsaidi/RichTextKit.git",
+      "state" : {
+        "revision" : "836ee7b701107490a0eafd2e4ad6b1558bba5e60",
+        "version" : "0.7.2"
+      }
     }
   ],
   "version" : 2
