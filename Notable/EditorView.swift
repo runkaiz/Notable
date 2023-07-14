@@ -62,9 +62,9 @@ struct EditorView: View {
         VStack(spacing: 0) {
             Divider()
             if entry.isRichText {
-                RichTextEditor(text: $text, context: context) { _ in
-                    // Customize the native text view here
-                    // TODO: Somehow apply the context.fontSize properly so that both editor mode is at least consistent with each other.
+                RichTextEditor(text: $text, context: context) {
+                    $0.textContentInset = CGSize(width: 8, height: 22)
+                    $0.setFontSize(to: CGFloat(editorFontSize))
                 }
                 .onChange(of: text) { _ in
                     saveEntry()
@@ -77,6 +77,7 @@ struct EditorView: View {
                         saveEntry()
                     })
                     .focused($isInputActive)
+                    .keyboardType(UIKit.UIKeyboardType.alphabet)
 #else
                 CodeEditor(source: $entry.content ?? "", language: language, theme: theme, fontSize:.init(get: { CGFloat(editorFontSize) }, set: { editorFontSize = Int($0) }))
                     .padding(.top, CGFloat(12))
@@ -84,6 +85,7 @@ struct EditorView: View {
                         saveEntry()
                     })
                     .focused($isInputActive)
+                    .keyboardType(UIKit.UIKeyboardType.alphabet)
 #endif
             }
         }
@@ -108,6 +110,7 @@ struct EditorView: View {
             ToolbarItem {
                 Menu {
                     Button("Settings") {
+                        isInputActive = false
                         showingSheet.toggle()
                     }
                     ShareLink(item: note, preview: SharePreview("\(note.title)"))
@@ -119,10 +122,6 @@ struct EditorView: View {
         .sheet(isPresented: $showingSheet) {
             EditorConfigSheet(entry: entry)
         }
-    }
-    
-    private func inactiveInput() {
-        isInputActive = false
     }
     
     private func saveEntry() {
