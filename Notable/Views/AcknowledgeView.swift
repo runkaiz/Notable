@@ -7,7 +7,6 @@
 
 import SwiftUI
 import AcknowList
-import SPM_Acknowledgments
 
 struct AcknowledgeView: UIViewControllerRepresentable {
     typealias UIViewControllerType = AcknowListViewController
