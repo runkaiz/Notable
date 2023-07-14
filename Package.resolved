@@ -1,0 +1,41 @@
+{
+  "pins" : [
+    {
+      "identity" : "acknowlist",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/vtourraine/AcknowList",
+      "state" : {
+        "revision" : "7cf70f24c97e86f1321f25ec24d128c1542eb7ef",
+        "version" : "3.0.1"
+      }
+    },
+    {
+      "identity" : "codeeditor",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/ZeeZide/CodeEditor.git",
+      "state" : {
+        "revision" : "180bde07b44dea839b32873bd8586ba146fa9106",
+        "version" : "1.2.2"
+      }
+    },
+    {
+      "identity" : "highlightr",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/raspu/Highlightr",
+      "state" : {
+        "revision" : "93199b9e434f04bda956a613af8f571933f9f037",
+        "version" : "2.1.2"
+      }
+    },
+    {
+      "identity" : "richtextkit",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/danielsaidi/RichTextKit.git",
+      "state" : {
+        "revision" : "836ee7b701107490a0eafd2e4ad6b1558bba5e60",
+        "version" : "0.7.2"
+      }
+    }
+  ],
+  "version" : 2
+}
