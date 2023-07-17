@@ -140,6 +140,7 @@ struct ContentView: View {
             newEntry.title = "Untitled"
             newEntry.content = ""
             newEntry.isRichText = false
+            newEntry.language = "markdown"
             
             selection = nil
             

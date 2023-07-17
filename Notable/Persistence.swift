@@ -20,6 +20,7 @@ struct PersistenceController {
             newEntry.title = "Test"
             newEntry.content = "# lalala\nlalalal"
             newEntry.isRichText = false
+            newEntry.language = "markdown"
         }
         do {
             try viewContext.save()

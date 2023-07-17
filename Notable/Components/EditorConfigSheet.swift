@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import CodeEditor
 
 struct EditorConfigSheet: View {
     @Environment(\.managedObjectContext) private var viewContext
@@ -14,17 +15,21 @@ struct EditorConfigSheet: View {
     
     @Environment(\.dismiss) private var dismiss
     
+    @State private var language: CodeEditor.Language
+    
     @State private var selectedMode: String
     let modes = ["Rich Text", "Code"]
     
     init(entry: Entry) {
         self.entry = entry
-
+        
         if entry.isRichText {
             _selectedMode = State(initialValue:"Rich Text")
         } else {
             _selectedMode = State(initialValue:"Code")
         }
+        
+        _language = State(initialValue: CodeEditor.Language(rawValue: entry.language ?? "lisp"))
     }
     
     var body: some View {
@@ -75,10 +80,32 @@ struct EditorConfigSheet: View {
                         }
                     }
                 }
+                if !entry.isRichText {
+                    Section("Code Editor Settings") {
+                        Picker("Language", selection: $language) {
+                            ForEach(CodeEditor.availableLanguages) { language in
+                                Text("\(language.rawValue.capitalized)")
+                                    .tag(language)
+                            }
+                        }
+                        .onChange(of: language) { _ in
+                            entry.language = language.rawValue
+                            
+                            do {
+                                try viewContext.save()
+                            } catch {
+                                // Replace this implementation with code to handle the error appropriately.
+                                // fatalError() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development.
+                                let nsError = error as NSError
+                                fatalError("Unresolved error \(nsError), \(nsError.userInfo)")
+                            }
+                        }
+                    }
+                }
             }
             .scrollContentBackground(.hidden)
         }
-        .presentationDetents([.medium])
+        .presentationDetents([.fraction(0.4)])
     }
     
     func dismissSheet() {
