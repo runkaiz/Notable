@@ -29,7 +29,7 @@ struct SettingsView: View {
                 Stepper(value: $editorFontSize, in: 1...64) {
                     Text("Font size: \(editorFontSize)")
                 }
-                Picker("Theme", selection: $theme) {
+                Picker("Editor Theme", selection: $theme) {
                     ForEach(CodeEditor.availableThemes) { theme in
                         Text("\(theme.rawValue.capitalized)")
                             .tag(theme)

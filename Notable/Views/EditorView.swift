@@ -69,6 +69,12 @@ struct EditorView: View {
                 .onChange(of: text) { _ in
                     saveEntry()
                 }
+                
+                RichTextKeyboardToolbar(context: context) {
+                    
+                } trailingButtons: {
+                }
+
             } else {
 #if os(macOS)
                 CodeEditor(source: $entry.content ?? "", language: language, theme: theme, fontSize: .init(get: { CGFloat(fontSize) }, set: { fontSize = Int($0) }))
@@ -122,6 +128,14 @@ struct EditorView: View {
         .sheet(isPresented: $showingSheet) {
             EditorConfigSheet(entry: entry)
         }
+    }
+    
+    private func styleItalic() {
+        
+    }
+    
+    private func styleBold() {
+        
     }
     
     private func saveEntry() {
