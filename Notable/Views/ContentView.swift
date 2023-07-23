@@ -125,7 +125,7 @@ struct ContentView: View {
     }
     
     // This function will return the correct NavigationBarTitle when different tab is selected.
-    func returnNaviBarTitle(tabSelection: Tabs) -> String{
+    func returnNaviBarTitle(tabSelection: Tabs) -> String {
         switch tabSelection{
         case .tab1: return "Entries"
         case .tab2: return "Settings"
