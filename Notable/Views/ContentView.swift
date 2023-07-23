@@ -7,66 +7,38 @@
 
 import SwiftUI
 import CoreData
+import PhotosUI
 
 struct ContentView: View {
     @Environment(\.managedObjectContext) private var viewContext
     
     @FetchRequest(
-        entity: Pile.entity(),
-        sortDescriptors: [NSSortDescriptor(keyPath: \Pile.name, ascending: true)],
+        entity: Entry.entity(),
+        sortDescriptors: [NSSortDescriptor(keyPath: \Entry.timestamp, ascending: false)],
         animation: .none)
-    private var piles: FetchedResults<Pile>
+    private var entries: FetchedResults<Entry>
     
-    @State private var entriesArray: [Entry] = []
     @State private var selection: Entry?
-    @State var tabSelection: Tabs = .tab1
+    @State private var tabSelection: Tabs = .tab1
     
+    @State private var showPhotosPicker = false
     @State private var searchText = ""
     @State private var showCancelButton: Bool = false
+    @State private var selectedImage: PhotosPickerItem?
     
     var body: some View {
         NavigationStack {
             TabView(selection: $tabSelection) {
                 VStack {
-                    // Search view
-                    HStack {
-                        HStack {
-                            Image(systemName: "magnifyingglass")
-                            
-                            TextField("search", text: $searchText, onEditingChanged: { isEditing in
-                                withAnimation {
-                                    self.showCancelButton = true
-                                }
-                            }).foregroundColor(.primary)
-                            
-                            Button(action: {
-                                self.searchText = ""
-                            }) {
-                                Image(systemName: "xmark.circle.fill").opacity(searchText == "" ? 0 : 1)
-                            }
-                        }
-                        .padding(EdgeInsets(top: 8, leading: 6, bottom: 8, trailing: 6))
-                        .foregroundColor(.secondary)
-                        .background(Color(.secondarySystemBackground))
-                        .cornerRadius(10.0)
-                        
-                        if showCancelButton  {
-                            Button("Cancel") {
-                                UIApplication.shared.endEditing(true) // this must be placed before the other commands here
-                                self.searchText = ""
-                                self.showCancelButton = false
-                            }
-                            .foregroundColor(Color(.systemBlue))
-                        }
-                    }
-                    .padding(.horizontal)
-                    .navigationBarHidden(showCancelButton)
-                    
                     List(selection: $selection) {
-                        ForEach(entriesArray.filter{ $0.title!.hasPrefix(searchText) || searchText == "" }, id: \.id) { entry in
-                            NavigationLink {
-                                EditorView(entry: entry)
-                            } label: {
+                        ForEach(entries, id: \.id) { entry in
+                            if entry.type == "text" {
+                                NavigationLink {
+                                    EditorView(entry: entry)
+                                } label: {
+                                    EntryItem(entry: entry)
+                                }
+                            } else {
                                 EntryItem(entry: entry)
                             }
                         }
@@ -81,16 +53,20 @@ struct ContentView: View {
                 .toolbar {
 #if os(iOS)
                     ToolbarItem(placement: .navigationBarTrailing) {
-                        if tabSelection == .tab1 && !entriesArray.isEmpty {
+                        if tabSelection == .tab1 && !entries.isEmpty {
                             EditButton()
                         }
                     }
 #endif
                     ToolbarItem(placement: .navigationBarTrailing) {
                         if tabSelection == .tab1 {
+                            
                             Menu {
                                 Button(action: addEntry) {
-                                    Label("New Entry", systemImage: "plus.app")
+                                    Label("New Text Entry", systemImage: "plus.app")
+                                }
+                                Button(action: togglePicker) {
+                                    Label("New Image Entry", systemImage: "photo.badge.plus")
                                 }
                                 Button(action: addFolder) {
                                     Label("New Pile", systemImage: "folder.badge.plus")
@@ -120,11 +96,22 @@ struct ContentView: View {
             .navigationBarTitle(returnNaviBarTitle(tabSelection: self.tabSelection))
 #endif
             .onAppear {
-                // Fetch the Entry objects associated with the selected Pile
-                updateEntriesArray(for: piles.first)
                 selection = nil
             }
-        }.onAppear {
+            .onChange(of: selectedImage) { _ in
+                Task {
+                    if let data = try? await selectedImage?.loadTransferable(type: Data.self) {
+                        addPicture(image: data)
+                        
+                        return
+                    }
+                    
+                    print("Failed")
+                }
+            }
+            .photosPicker(isPresented: $showPhotosPicker, selection: $selectedImage, matching: .any(of: [.images, .screenshots]), preferredItemEncoding: .automatic)
+        }
+        .onAppear {
             let tabBarAppearance = UITabBarAppearance()
             tabBarAppearance.configureWithDefaultBackground()
             UITabBar.appearance().scrollEdgeAppearance = tabBarAppearance
@@ -145,6 +132,49 @@ struct ContentView: View {
     
     private func addFolder() {
         
+    }
+    
+    private func addPicture(image: Data) {
+        withAnimation {
+            let newEntry = Entry(context: viewContext)
+            newEntry.timestamp = Date()
+            newEntry.id = UUID()
+            newEntry.type = EntryType.image.rawValue
+            newEntry.image = image
+            
+            selection = nil
+            
+            do {
+                // TODO: Handle this properly
+                let fetchRequest: NSFetchRequest<Pile> = Pile.fetchRequest()
+                
+                let id = "default"
+                fetchRequest.predicate = NSPredicate(format: "name = %d", id)
+                
+                let matchingItems = try viewContext.fetch(fetchRequest)
+                if !matchingItems.isEmpty {
+                    // Default exists
+                    matchingItems.first?.addToEntries(newEntry)
+                } else {
+                    // Entry does not exist
+                    let newPile = Pile(context: viewContext)
+                    newPile.name = "default"
+                    newPile.addToEntries(newEntry)
+                    print("Entry does not exist in CoreData.")
+                }
+                
+                try viewContext.save()
+            } catch {
+                // Replace this implementation with code to handle the error appropriately.
+                // fatalError() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development.
+                let nsError = error as NSError
+                fatalError("Unresolved error \(nsError), \(nsError.userInfo)")
+            }
+        }
+    }
+    
+    private func togglePicker() {
+        showPhotosPicker.toggle()
     }
     
     private func addEntry() {
@@ -170,18 +200,9 @@ struct ContentView: View {
         }
     }
     
-    private func updateEntriesArray(for pile: Pile?) {
-            // Fetch the Entry objects associated with the selected Pile
-            if let selectedPile = pile {
-                entriesArray = selectedPile.entries?.allObjects as? [Entry] ?? []
-            } else {
-                entriesArray = []
-            }
-        }
-    
     private func deleteEntries(offsets: IndexSet) {
         withAnimation {
-            offsets.map { entriesArray[$0] }.forEach(viewContext.delete)
+            offsets.map { entries[$0] }.forEach(viewContext.delete)
             
             selection = nil
             
@@ -197,10 +218,7 @@ struct ContentView: View {
     }
     
     private func deleteEntry() {
-        if let selectedPile = piles.first {
-                    viewContext.delete(selection!)
-                    updateEntriesArray(for: selectedPile) // Update entriesArray after deletion
-                }
+        viewContext.delete(entries[entries.firstIndex(of: selection!)!])
         
         // Reset selection
         selection = nil

@@ -8,16 +8,35 @@
 import SwiftUI
 import CoreData
 
+enum EntryType: String {
+    case text
+    case image
+}
+
 struct EntryItem: View {
     @ObservedObject var entry: Entry
+    var type: EntryType
+    
+    init(entry: Entry) {
+        self.entry = entry
+        self.type = EntryType(rawValue: entry.type ?? "text")!
+    }
     
     var body: some View {
-        VStack(alignment: .leading) {
-            Text(entry.title ?? "")
-                .font(.headline)
-            Text(entry.timestamp ?? Date(), formatter: entryFormatter)
-                .font(.subheadline)
+        switch type {
+        case .image:
+            Image(uiImage: UIImage(data: entry.image ?? Data()) ?? UIImage())
+                .resizable()
+                .aspectRatio(contentMode: .fit)
+        default:
+            VStack(alignment: .leading) {
+                Text(entry.title ?? "")
+                    .font(.headline)
+                Text(entry.timestamp ?? Date(), formatter: entryFormatter)
+                    .font(.subheadline)
+            }
         }
+        
     }
 }
 

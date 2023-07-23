@@ -15,7 +15,6 @@ struct PersistenceController {
         let viewContext = result.container.viewContext
         
         let newPile = Pile(context: viewContext)
-        var entries = newPile.mutableSetValue(forKey: "entries")
         newPile.id = UUID()
         newPile.name = "Example Pile"
         
@@ -27,8 +26,9 @@ struct PersistenceController {
             newEntry.content = "# lalala\nlalalal"
             newEntry.isRichText = false
             newEntry.language = "markdown"
+            newEntry.type = "text"
             
-            entries.add(newEntry)
+            newPile.addToEntries(newEntry)
         }
         do {
             try viewContext.save()
