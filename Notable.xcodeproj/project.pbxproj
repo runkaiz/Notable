@@ -62,6 +62,7 @@
 			isa = PBXGroup;
 			children = (
 				B2D69FD32A613C53007B65C3 /* Package.resolved */,
+				B27458932A6D344B007C29FC /* TestFlight */,
 				B229444E2A4D8B04009015BA /* Notable */,
 				B229444D2A4D8B04009015BA /* Products */,
 			);
@@ -98,6 +99,13 @@
 				B229445C2A4D8B05009015BA /* Preview Assets.xcassets */,
 			);
 			path = "Preview Content";
+			sourceTree = "<group>";
+		};
+		B27458932A6D344B007C29FC /* TestFlight */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = TestFlight;
 			sourceTree = "<group>";
 		};
 		B28AB4432A60F9000097023A /* Components */ = {

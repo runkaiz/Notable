@@ -12,11 +12,12 @@ struct ContentView: View {
     @Environment(\.managedObjectContext) private var viewContext
     
     @FetchRequest(
-        entity: Entry.entity(),
-        sortDescriptors: [NSSortDescriptor(keyPath: \Entry.timestamp, ascending: false)],
+        entity: Pile.entity(),
+        sortDescriptors: [NSSortDescriptor(keyPath: \Pile.name, ascending: true)],
         animation: .none)
-    private var entries: FetchedResults<Entry>
+    private var piles: FetchedResults<Pile>
     
+    @State private var entriesArray: [Entry] = []
     @State private var selection: Entry?
     @State var tabSelection: Tabs = .tab1
     
@@ -62,7 +63,7 @@ struct ContentView: View {
                     .navigationBarHidden(showCancelButton)
                     
                     List(selection: $selection) {
-                        ForEach(entries.filter{$0.title!.hasPrefix(searchText) || searchText == ""}, id: \.id) { entry in
+                        ForEach(entriesArray.filter{ $0.title!.hasPrefix(searchText) || searchText == "" }, id: \.id) { entry in
                             NavigationLink {
                                 EditorView(entry: entry)
                             } label: {
@@ -80,16 +81,24 @@ struct ContentView: View {
                 .toolbar {
 #if os(iOS)
                     ToolbarItem(placement: .navigationBarTrailing) {
-                        if tabSelection == .tab1 && !entries.isEmpty {
+                        if tabSelection == .tab1 && !entriesArray.isEmpty {
                             EditButton()
                         }
                     }
 #endif
                     ToolbarItem(placement: .navigationBarTrailing) {
                         if tabSelection == .tab1 {
-                            Button(action: addEntry) {
-                                Label("Add Entry", systemImage: "plus")
+                            Menu {
+                                Button(action: addEntry) {
+                                    Label("New Entry", systemImage: "plus.app")
+                                }
+                                Button(action: addFolder) {
+                                    Label("New Pile", systemImage: "folder.badge.plus")
+                                }
+                            } label: {
+                                Image(systemName: "plus")
                             }
+                            
                         }
                     }
                 }
@@ -111,6 +120,8 @@ struct ContentView: View {
             .navigationBarTitle(returnNaviBarTitle(tabSelection: self.tabSelection))
 #endif
             .onAppear {
+                // Fetch the Entry objects associated with the selected Pile
+                updateEntriesArray(for: piles.first)
                 selection = nil
             }
         }.onAppear {
@@ -130,6 +141,10 @@ struct ContentView: View {
         case .tab1: return "Entries"
         case .tab2: return "Settings"
         }
+    }
+    
+    private func addFolder() {
+        
     }
     
     private func addEntry() {
@@ -155,9 +170,18 @@ struct ContentView: View {
         }
     }
     
+    private func updateEntriesArray(for pile: Pile?) {
+            // Fetch the Entry objects associated with the selected Pile
+            if let selectedPile = pile {
+                entriesArray = selectedPile.entries?.allObjects as? [Entry] ?? []
+            } else {
+                entriesArray = []
+            }
+        }
+    
     private func deleteEntries(offsets: IndexSet) {
         withAnimation {
-            offsets.map { entries[$0] }.forEach(viewContext.delete)
+            offsets.map { entriesArray[$0] }.forEach(viewContext.delete)
             
             selection = nil
             
@@ -173,7 +197,10 @@ struct ContentView: View {
     }
     
     private func deleteEntry() {
-        viewContext.delete(entries[entries.firstIndex(of: selection!)!])
+        if let selectedPile = piles.first {
+                    viewContext.delete(selection!)
+                    updateEntriesArray(for: selectedPile) // Update entriesArray after deletion
+                }
         
         // Reset selection
         selection = nil

@@ -13,6 +13,12 @@ struct PersistenceController {
     static var preview: PersistenceController = {
         let result = PersistenceController(inMemory: true)
         let viewContext = result.container.viewContext
+        
+        let newPile = Pile(context: viewContext)
+        var entries = newPile.mutableSetValue(forKey: "entries")
+        newPile.id = UUID()
+        newPile.name = "Example Pile"
+        
         for _ in 0..<10 {
             let newEntry = Entry(context: viewContext)
             newEntry.timestamp = Date()
@@ -21,6 +27,8 @@ struct PersistenceController {
             newEntry.content = "# lalala\nlalalal"
             newEntry.isRichText = false
             newEntry.language = "markdown"
+            
+            entries.add(newEntry)
         }
         do {
             try viewContext.save()
