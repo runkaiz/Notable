@@ -32,7 +32,7 @@ struct ContentView: View {
                 VStack {
                     List(selection: $selection) {
                         ForEach(entries, id: \.id) { entry in
-                            if entry.type == "text" {
+                            if entry.type != "image" {
                                 NavigationLink {
                                     EditorView(entry: entry)
                                 } label: {
