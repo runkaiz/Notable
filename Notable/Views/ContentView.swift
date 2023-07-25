@@ -18,6 +18,8 @@ struct ContentView: View {
     private var piles: FetchedResults<Pile>
     
     @State private var tabSelection: Tabs = .tab1
+    @State private var presentAlert = false
+    @State private var newPileName = ""
     
     var body: some View {
         NavigationStack {
@@ -48,7 +50,7 @@ struct ContentView: View {
                     ToolbarItem(placement: .navigationBarTrailing) {
                         if tabSelection == .tab1 {
                             Menu {
-                                Button(action: addFolder) {
+                                Button(action: toggleAlert) {
                                     Label("New Pile", systemImage: "folder.badge.plus")
                                 }
                             } label: {
@@ -68,7 +70,12 @@ struct ContentView: View {
                     }
                     .tag(Tabs.tab2)
             }
-            
+            .alert("Name Pile", isPresented: $presentAlert, actions: {
+                TextField("Pile Name", text: $newPileName)
+                
+                Button("Create", action: addFolder)
+                Button("Cancel", role: .cancel, action: {})
+            })
 #if os(iOS)
             .navigationBarTitle(returnNaviBarTitle(tabSelection: self.tabSelection))
 #endif
@@ -84,6 +91,10 @@ struct ContentView: View {
         case tab1, tab2
     }
     
+    func toggleAlert() {
+        presentAlert.toggle()
+    }
+    
     // This function will return the correct NavigationBarTitle when different tab is selected.
     func returnNaviBarTitle(tabSelection: Tabs) -> String {
         switch tabSelection{
@@ -96,7 +107,9 @@ struct ContentView: View {
         withAnimation {
             let newPile = Pile(context: viewContext)
             newPile.id = UUID()
-            newPile.name = "Untitled"
+            newPile.name = newPileName
+            
+            newPileName = ""
             
             do {
                 try viewContext.save()

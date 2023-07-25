@@ -81,10 +81,18 @@ struct EntryListView: View {
         organizedList.removeAll()
         
         for entry in entries {
-            let pileName = pile.name ?? "default"
-            
-            if entry.pile?.name == pileName {
-                organizedList.append(entry)
+            if let pileID = pile.id {
+                if entry.pile?.id == pileID {
+                    organizedList.append(entry)
+                }
+            } else {
+                pile.id = UUID()
+                
+                if let pileID = pile.id {
+                    if entry.pile?.id == pileID {
+                        organizedList.append(entry)
+                    }
+                }
             }
         }
     }
