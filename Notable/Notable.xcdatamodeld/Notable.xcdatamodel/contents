@@ -12,6 +12,7 @@
         <relationship name="pile" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Pile" inverseName="entries" inverseEntity="Pile"/>
     </entity>
     <entity name="Pile" representedClassName="Pile" syncable="YES" codeGenerationType="class">
+        <attribute name="desc" optional="YES" attributeType="String"/>
         <attribute name="id" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
         <attribute name="name" optional="YES" attributeType="String"/>
         <relationship name="entries" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Entry" inverseName="pile" inverseEntity="Entry"/>
