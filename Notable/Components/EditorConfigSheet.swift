@@ -106,7 +106,6 @@ struct EditorConfigSheet: View {
             .scrollContentBackground(.hidden)
             .presentationDetents([.medium])
             .presentationDragIndicator(.hidden)
-            .fixedSize(horizontal: false, vertical: false)
         }
     }
     
