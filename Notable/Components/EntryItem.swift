@@ -25,9 +25,14 @@ struct EntryItem: View {
     var body: some View {
         switch type {
         case .image:
-            Image(uiImage: UIImage(data: entry.image ?? Data()) ?? UIImage())
-                .resizable()
-                .aspectRatio(contentMode: .fit)
+            Section {
+                Image(uiImage: UIImage(data: entry.image ?? Data()) ?? UIImage())
+                    .resizable()
+                    .aspectRatio(contentMode: .fit)
+                    .listRowInsets(EdgeInsets())
+                Text(entry.timestamp ?? Date(), formatter: entryFormatter)
+                    .font(.subheadline)
+            }
         default:
             VStack(alignment: .leading) {
                 Text(entry.title ?? "")

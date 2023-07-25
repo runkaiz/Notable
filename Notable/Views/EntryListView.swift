@@ -32,7 +32,7 @@ struct EntryListView: View {
         List(selection: $selection) {
             Section {
                 Group {
-                    Label("Description", systemImage: "info.circle").labelStyle(ColorfulIconLabelStyle(color: .green))
+                    Label("Description", systemImage: "info.circle").labelStyle(ColorfulIconLabelStyle(color: .blue))
                     
                     TextEditor(text: $pile.desc ?? "")
                         .frame(minHeight: 50)
@@ -63,14 +63,12 @@ struct EntryListView: View {
                 }
             }
             
-            Section {
-                ForEach(organizedList, id: \.id) { entry in
-                    EntryTransformer(entry: entry)
-                }
-#if os(iOS)
-                .onDelete(perform: deleteEntries)
-#endif
+            ForEach(organizedList, id: \.id) { entry in
+                EntryTransformer(entry: entry)
             }
+#if os(iOS)
+            .onDelete(perform: deleteEntries)
+#endif
         }
         .navigationTitle(pile.name ?? "error")
         .navigationBarTitleDisplayMode(.inline)
@@ -145,6 +143,7 @@ struct EntryListView: View {
             
             do {
                 try viewContext.save()
+                updateOrganizedList()
             } catch {
                 // Replace this implementation with code to handle the error appropriately.
                 // fatalError() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development.
