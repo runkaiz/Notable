@@ -31,9 +31,12 @@ struct EntryListView: View {
     var body: some View {
         List(selection: $selection) {
             Section {
-                Text("Description")
-                TextEditor(text: $pile.desc ?? "")
-                    .frame(minHeight: 50)
+                Group {
+                    Label("Description", systemImage: "info.circle").labelStyle(ColorfulIconLabelStyle(color: .green))
+                    
+                    TextEditor(text: $pile.desc ?? "")
+                        .frame(minHeight: 50)
+                }
             }
             .onAppear {
                 if pile.desc == nil {
@@ -212,6 +215,21 @@ struct EntryListView: View {
             // fatalError() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development.
             let nsError = error as NSError
             fatalError("Unresolved error \(nsError), \(nsError.userInfo)")
+        }
+    }
+}
+
+struct ColorfulIconLabelStyle: LabelStyle {
+    var color: Color
+    
+    func makeBody(configuration: Configuration) -> some View {
+        Label {
+            configuration.title
+        } icon: {
+            configuration.icon
+                .font(.system(size: 17))
+                .foregroundColor(.white)
+                .background(RoundedRectangle(cornerRadius: 7).frame(width: 28, height: 28).foregroundColor(color))
         }
     }
 }

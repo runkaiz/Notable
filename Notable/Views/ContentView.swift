@@ -21,10 +21,12 @@ struct ContentView: View {
     @State private var presentAlert = false
     @State private var newPileName = ""
     
+    @State private var selection: Entry?
+    
     var body: some View {
         NavigationStack {
             TabView(selection: $tabSelection) {
-                List {
+                List(selection: $selection) {
                     ForEach(piles, id: \.id) { pile in
                         NavigationLink {
                             EntryListView(pile: pile)
@@ -84,6 +86,8 @@ struct ContentView: View {
             let tabBarAppearance = UITabBarAppearance()
             tabBarAppearance.configureWithDefaultBackground()
             UITabBar.appearance().scrollEdgeAppearance = tabBarAppearance
+            
+            selection = nil
         }
     }
     
