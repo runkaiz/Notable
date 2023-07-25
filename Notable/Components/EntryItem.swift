@@ -47,8 +47,6 @@ private let entryFormatter: DateFormatter = {
     return formatter
 }()
 
-struct EntryItem_Previews: PreviewProvider {
-    static var previews: some View {
-        ContentView().environment(\.managedObjectContext, PersistenceController.preview.container.viewContext)
-    }
+#Preview {
+    ContentView().environment(\.managedObjectContext, PersistenceController.preview.container.viewContext)
 }

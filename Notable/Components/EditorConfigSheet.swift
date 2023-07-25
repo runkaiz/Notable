@@ -104,8 +104,10 @@ struct EditorConfigSheet: View {
                 }
             }
             .scrollContentBackground(.hidden)
+            .presentationDetents([.medium])
+            .presentationDragIndicator(.hidden)
+            .fixedSize(horizontal: false, vertical: false)
         }
-        .presentationDetents([.fraction(0.4)])
     }
     
     func dismissSheet() {
@@ -113,8 +115,6 @@ struct EditorConfigSheet: View {
     }
 }
 
-struct EditorConfigSheet_Previews: PreviewProvider {
-    static var previews: some View {
-        ContentView().environment(\.managedObjectContext, PersistenceController.preview.container.viewContext)
-    }
+#Preview {
+    ContentView().environment(\.managedObjectContext, PersistenceController.preview.container.viewContext)
 }

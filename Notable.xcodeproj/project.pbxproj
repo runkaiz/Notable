@@ -23,6 +23,8 @@
 		B2D69FD42A613C53007B65C3 /* Package.resolved in Resources */ = {isa = PBXBuildFile; fileRef = B2D69FD32A613C53007B65C3 /* Package.resolved */; };
 		B2D69FD72A613CAB007B65C3 /* AcknowledgeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2D69FD62A613CAB007B65C3 /* AcknowledgeView.swift */; };
 		B2D69FDC2A61467F007B65C3 /* AcknowList in Frameworks */ = {isa = PBXBuildFile; productRef = B2D69FDB2A61467F007B65C3 /* AcknowList */; };
+		B2F0F0482A6F7D760000989B /* EntryListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2F0F0472A6F7D760000989B /* EntryListView.swift */; };
+		B2F0F04A2A6F8B590000989B /* EntryTransformer.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2F0F0492A6F8B590000989B /* EntryTransformer.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -43,6 +45,8 @@
 		B2C0BE772A55332200EC9CAF /* EntryItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EntryItem.swift; sourceTree = "<group>"; };
 		B2D69FD32A613C53007B65C3 /* Package.resolved */ = {isa = PBXFileReference; lastKnownFileType = text; path = Package.resolved; sourceTree = SOURCE_ROOT; };
 		B2D69FD62A613CAB007B65C3 /* AcknowledgeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AcknowledgeView.swift; sourceTree = "<group>"; };
+		B2F0F0472A6F7D760000989B /* EntryListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EntryListView.swift; sourceTree = "<group>"; };
+		B2F0F0492A6F8B590000989B /* EntryTransformer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EntryTransformer.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -123,6 +127,7 @@
 			children = (
 				B2C0BE772A55332200EC9CAF /* EntryItem.swift */,
 				B28AB4442A60F9270097023A /* EditorConfigSheet.swift */,
+				B2F0F0492A6F8B590000989B /* EntryTransformer.swift */,
 			);
 			path = Components;
 			sourceTree = "<group>";
@@ -131,6 +136,7 @@
 			isa = PBXGroup;
 			children = (
 				B22944562A4D8B04009015BA /* ContentView.swift */,
+				B2F0F0472A6F7D760000989B /* EntryListView.swift */,
 				B287911E2A512A000012E576 /* EditorView.swift */,
 				B293DF782A5C2EE500826D26 /* SettingsView.swift */,
 				B2D69FD62A613CAB007B65C3 /* AcknowledgeView.swift */,
@@ -256,8 +262,10 @@
 				B22944552A4D8B04009015BA /* Notable.xcdatamodeld in Sources */,
 				B2D69FD72A613CAB007B65C3 /* AcknowledgeView.swift in Sources */,
 				B22944502A4D8B04009015BA /* NotableApp.swift in Sources */,
+				B2F0F04A2A6F8B590000989B /* EntryTransformer.swift in Sources */,
 				B22944572A4D8B04009015BA /* ContentView.swift in Sources */,
 				B22944522A4D8B04009015BA /* Persistence.swift in Sources */,
+				B2F0F0482A6F7D760000989B /* EntryListView.swift in Sources */,
 				B287911F2A512A000012E576 /* EditorView.swift in Sources */,
 				B2C0BE782A55332200EC9CAF /* EntryItem.swift in Sources */,
 			);

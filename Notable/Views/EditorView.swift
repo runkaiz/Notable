@@ -95,7 +95,7 @@ struct EditorView: View {
     
     init(entry: Entry) {
         self.entry = entry
-        self.note = Note(title: entry.title!, body: entry.content!)
+        self.note = Note(title: entry.title ?? "", body: entry.content ?? "")
         _text = State(initialValue: NSAttributedString(string: entry.content ?? ""))
     }
     
@@ -184,11 +184,11 @@ struct EditorView: View {
         
         if entry.isRichText {
             entry.content = text.string
-            note = Note(title: entry.title!, body: entry.content!)
         } else {
             text = NSAttributedString(string: entry.content ?? "")
-            note = Note(title: entry.title!, body: entry.content!)
         }
+        
+        note = Note(title: entry.title!, body: entry.content!)
         
         withAnimation {
             do {
@@ -210,10 +210,8 @@ private let entryFormatter: DateFormatter = {
     return formatter
 }()
 
-struct EditorView_Previews: PreviewProvider {
-    static var previews: some View {
-        ContentView().environment(\.managedObjectContext, PersistenceController.preview.container.viewContext)
-    }
+#Preview {
+    ContentView().environment(\.managedObjectContext, PersistenceController.preview.container.viewContext)
 }
 
 func ??<T>(lhs: Binding<Optional<T>>, rhs: T) -> Binding<T> {
