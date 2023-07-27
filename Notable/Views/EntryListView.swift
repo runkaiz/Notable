@@ -52,7 +52,7 @@ struct EntryListView: View {
                     fatalError("Unresolved error \(nsError), \(nsError.userInfo)")
                 }
             }
-            .onChange(of: pile.desc) { _ in
+            .onChange(of: pile.desc) {
                 do {
                     try viewContext.save()
                 } catch {
@@ -96,7 +96,7 @@ struct EntryListView: View {
         .onAppear {
             updateOrganizedList()
         }
-        .onChange(of: selectedImage) { _ in
+        .onChange(of: selectedImage) {
             Task {
                 if let data = try? await selectedImage?.loadTransferable(type: Data.self) {
                     addPicture(image: data)

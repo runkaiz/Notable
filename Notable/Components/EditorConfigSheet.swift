@@ -63,7 +63,7 @@ struct EditorConfigSheet: View {
                         }
                     }
                     .pickerStyle(.segmented)
-                    .onChange(of: selectedMode) { _ in
+                    .onChange(of: selectedMode) {
                         if selectedMode == "Rich Text" {
                             entry.isRichText = true
                         } else {
@@ -88,7 +88,7 @@ struct EditorConfigSheet: View {
                                     .tag(language)
                             }
                         }
-                        .onChange(of: language) { _ in
+                        .onChange(of: language) {
                             entry.language = language.rawValue
                             
                             do {

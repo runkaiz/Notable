@@ -91,7 +91,7 @@ struct ContentView: View {
         }
     }
     
-    enum Tabs{
+    enum Tabs {
         case tab1, tab2
     }
     

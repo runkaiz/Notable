@@ -107,7 +107,7 @@ struct EditorView: View {
                     $0.textContentInset = CGSize(width: 8, height: 22)
                     $0.setFontSize(to: CGFloat(editorFontSize))
                 }
-                .onChange(of: text) { _ in
+                .onChange(of: text) {
                     saveEntry()
                 }
                 
@@ -128,9 +128,9 @@ struct EditorView: View {
 #else
                 CodeEditor(source: $entry.content ?? "", language: language, theme: theme, fontSize:.init(get: { CGFloat(editorFontSize) }, set: { editorFontSize = Int($0) }))
                     .padding(.top, CGFloat(12))
-                    .onChange(of: entry.content, perform: { _ in
+                    .onChange(of: entry.content) {
                         saveEntry()
-                    })
+                    }
                     .focused($isInputActive)
                     .keyboardType(UIKit.UIKeyboardType.alphabet)
 #endif
