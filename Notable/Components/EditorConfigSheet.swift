@@ -54,7 +54,6 @@ struct EditorConfigSheet: View {
                 .padding(.top, 8)
                 .padding(.trailing, 8)
             }
-            
             Form {
                 Section("Editor Mode") {
                     Picker("Mode", selection: $selectedMode) {
@@ -103,10 +102,10 @@ struct EditorConfigSheet: View {
                     }
                 }
             }
-            .scrollContentBackground(.hidden)
-            .presentationDetents([.medium])
-            .presentationDragIndicator(.hidden)
         }
+        .scrollContentBackground(.hidden)
+        .presentationDetents([.medium])
+        .presentationDragIndicator(.visible)
     }
     
     func dismissSheet() {
