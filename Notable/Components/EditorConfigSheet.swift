@@ -104,6 +104,7 @@ struct EditorConfigSheet: View {
             }
         }
         .scrollContentBackground(.hidden)
+        .presentationCornerRadius(30)
         .presentationDetents([.medium])
         .presentationDragIndicator(.visible)
     }

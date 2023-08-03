@@ -167,7 +167,10 @@ struct EditorView: View {
             }
         }
         .sheet(isPresented: $showingSheet) {
-            EditorConfigSheet(entry: entry)
+            VStack {
+                EditorConfigSheet(entry: entry)
+                Spacer()
+            }
         }
     }
     

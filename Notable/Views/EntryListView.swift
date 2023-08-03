@@ -32,7 +32,7 @@ struct EntryListView: View {
         List(selection: $selection) {
             Section {
                 Group {
-                    Label("Description", systemImage: "info.circle").labelStyle(ColorfulIconLabelStyle(color: .blue))
+                    Label("Description", systemImage: "info.circle").labelStyle(ColorfulIconLabelStyle(color: .gray))
                     
                     TextEditor(text: $pile.desc ?? "")
                         .frame(minHeight: 50)
@@ -70,6 +70,7 @@ struct EntryListView: View {
             .onDelete(perform: deleteEntries)
 #endif
         }
+        .listStyle(.grouped)
         .navigationTitle(pile.name ?? "error")
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {

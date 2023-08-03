@@ -31,9 +31,9 @@ struct ContentView: View {
                         NavigationLink {
                             EntryListView(pile: pile)
                         } label: {
-                            VStack(alignment: .leading) {
-                                Text(pile.name ?? "Unamed")
-                                    .font(.headline)
+                            HStack {
+                                Image(systemName: "doc.on.doc")
+                                Text(pile.name ?? "")
                             }
                         }
                     }
@@ -42,15 +42,15 @@ struct ContentView: View {
 #endif
                 }
                 .toolbar {
+                    if tabSelection == .tab1 {
 #if os(iOS)
-                    ToolbarItem(placement: .navigationBarTrailing) {
-                        if tabSelection == .tab1 && !piles.isEmpty {
-                            EditButton()
+                        if !piles.isEmpty {
+                            ToolbarItem(placement: .navigationBarTrailing) {
+                                EditButton()
+                            }
                         }
-                    }
 #endif
-                    ToolbarItem(placement: .navigationBarTrailing) {
-                        if tabSelection == .tab1 {
+                        ToolbarItem(placement: .navigationBarTrailing) {
                             Menu {
                                 Button(action: toggleAlert) {
                                     Label("New Pile", systemImage: "folder.badge.plus")

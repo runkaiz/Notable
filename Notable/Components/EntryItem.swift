@@ -34,12 +34,18 @@ struct EntryItem: View {
                     .font(.subheadline)
             }
         default:
-            VStack(alignment: .leading) {
-                Text(entry.title ?? "")
-                    .font(.headline)
+            VStack(alignment: .leading, spacing: 10) {
+                HStack {
+                    Image(systemName: "text.word.spacing")
+                    Text(entry.title ?? "")
+                }
+                Text(entry.content?.replacingOccurrences(of: "\n", with: " ") ?? "")
+                    .lineLimit(3)
+                    .font(.body)
                 Text(entry.timestamp ?? Date(), formatter: entryFormatter)
-                    .font(.subheadline)
+                    .font(.footnote)
             }
+            .padding(.vertical, 6)
         }
         
     }
