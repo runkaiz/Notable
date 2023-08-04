@@ -63,6 +63,10 @@ struct EntryListView: View {
                 }
             }
             
+            if organizedList.isEmpty {
+                Text("Add some entries to start your pile.")
+            }
+            
             ForEach(organizedList, id: \.id) { entry in
                 EntryTransformer(entry: entry)
             }
