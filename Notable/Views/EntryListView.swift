@@ -84,7 +84,7 @@ struct EntryListView: View {
             ToolbarItem(placement: .navigationBarTrailing) {
                 Menu {
                     Button(action: addEntry) {
-                        Label("New Text Entry", systemImage: "plus.app")
+                        Label("New Text Entry", systemImage: "doc.badge.plus")
                     }
                     Button(action: togglePicker) {
                         Label("New Image Entry", systemImage: "photo.badge.plus")

@@ -18,6 +18,7 @@ struct PersistenceController {
         newPile.id = UUID()
         newPile.name = "Example Pile"
         newPile.desc = "Example description for an example pile"
+        newPile.tag = "Non Photo Blue"
         
         for _ in 0..<10 {
             let newEntry = Entry(context: viewContext)
