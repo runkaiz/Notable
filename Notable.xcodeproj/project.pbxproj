@@ -155,7 +155,6 @@
 				B22944492A4D8B04009015BA /* Frameworks */,
 				B229444A2A4D8B04009015BA /* Resources */,
 				B2D69FD92A61459A007B65C3 /* Copy Package.resolved */,
-				B2D693202A71750A00A9DDF1 /* Embed Watch Content */,
 			);
 			buildRules = (
 			);

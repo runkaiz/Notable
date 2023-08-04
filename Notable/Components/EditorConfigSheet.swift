@@ -54,59 +54,55 @@ struct EditorConfigSheet: View {
                 .padding(.top, 8)
                 .padding(.trailing, 8)
             }
-            Form {
-                Section("Editor Mode") {
-                    Picker("Mode", selection: $selectedMode) {
-                        ForEach(modes, id: \.self) { name in
-                            Text(name).tag(name)
-                        }
-                    }
-                    .pickerStyle(.segmented)
-                    .onChange(of: selectedMode) {
-                        if selectedMode == "Rich Text" {
-                            entry.isRichText = true
-                        } else {
-                            entry.isRichText = false
-                        }
-                        
-                        do {
-                            try viewContext.save()
-                        } catch {
-                            // Replace this implementation with code to handle the error appropriately.
-                            // fatalError() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development.
-                            let nsError = error as NSError
-                            fatalError("Unresolved error \(nsError), \(nsError.userInfo)")
-                        }
+            HStack {
+                Picker("Mode", selection: $selectedMode) {
+                    ForEach(modes, id: \.self) { name in
+                        Text(name).tag(name)
                     }
                 }
-                if !entry.isRichText {
-                    Section("Code Editor Settings") {
-                        Picker("Language", selection: $language) {
-                            ForEach(CodeEditor.availableLanguages) { language in
-                                Text("\(language.rawValue.capitalized)")
-                                    .tag(language)
-                            }
+                .pickerStyle(.segmented)
+            }.padding(.horizontal)
+            .onChange(of: selectedMode) {
+                if selectedMode == "Rich Text" {
+                    entry.isRichText = true
+                } else {
+                    entry.isRichText = false
+                }
+                
+                do {
+                    try viewContext.save()
+                } catch {
+                    // Replace this implementation with code to handle the error appropriately.
+                    // fatalError() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development.
+                    let nsError = error as NSError
+                    fatalError("Unresolved error \(nsError), \(nsError.userInfo)")
+                }
+            }
+            if !entry.isRichText {
+                HStack {
+                    Text("Language")
+                    Spacer()
+                    Picker("Language", selection: $language) {
+                        ForEach(CodeEditor.availableLanguages) { language in
+                            Text("\(language.rawValue.capitalized)")
+                                .tag(language)
                         }
-                        .onChange(of: language) {
-                            entry.language = language.rawValue
-                            
-                            do {
-                                try viewContext.save()
-                            } catch {
-                                // Replace this implementation with code to handle the error appropriately.
-                                // fatalError() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development.
-                                let nsError = error as NSError
-                                fatalError("Unresolved error \(nsError), \(nsError.userInfo)")
-                            }
-                        }
+                    }
+                }.padding()
+                .onChange(of: language) {
+                    entry.language = language.rawValue
+                    
+                    do {
+                        try viewContext.save()
+                    } catch {
+                        // Replace this implementation with code to handle the error appropriately.
+                        // fatalError() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development.
+                        let nsError = error as NSError
+                        fatalError("Unresolved error \(nsError), \(nsError.userInfo)")
                     }
                 }
             }
         }
-        .scrollContentBackground(.hidden)
-        .presentationCornerRadius(30)
-        .presentationDetents([.medium])
-        .presentationDragIndicator(.visible)
     }
     
     func dismissSheet() {

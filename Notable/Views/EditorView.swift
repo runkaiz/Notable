@@ -167,10 +167,12 @@ struct EditorView: View {
             }
         }
         .sheet(isPresented: $showingSheet) {
-            VStack {
+            VStack{
                 EditorConfigSheet(entry: entry)
                 Spacer()
             }
+            .presentationDetents([.fraction(0.275)])
+            .scrollContentBackground(.hidden)
         }
     }
     
