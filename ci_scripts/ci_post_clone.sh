@@ -2,4 +2,3 @@
 
 brew install swiftlint
 defaults write com.apple.dt.Xcode IDESkipPackagePluginFingerprintValidatation -bool YES
-xcode-select -s /Applications/Xcode.app/Contents/Developer
