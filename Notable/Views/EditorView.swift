@@ -79,7 +79,6 @@ struct EditorView: View {
 #else
     @AppStorage("editorFontSize")
     private var editorFontSize = 18
-    //    @State private var fontSize = CGFloat(18)
 #endif
 
     @AppStorage("autocorrect")
@@ -119,17 +118,17 @@ struct EditorView: View {
                     source: $entry.content ?? "",
                     language: language, theme: theme,
                     fontSize: .init(get: { CGFloat(fontSize) }, set: { fontSize = Int($0) }))
-                    .frame(minWidth: 640, minHeight: 480)
-                    .focused($isInputActive)
-                    .keyboardType(UIKit.UIKeyboardType.alphabet)
+                .frame(minWidth: 640, minHeight: 480)
+                .focused($isInputActive)
+                .keyboardType(UIKit.UIKeyboardType.alphabet)
 #else
                 CodeEditor(
                     source: $entry.content ?? "",
                     language: language, theme: theme,
                     fontSize: .init(get: { CGFloat(editorFontSize) }, set: { editorFontSize = Int($0) }))
-                    .padding(.top, CGFloat(12))
-                    .focused($isInputActive)
-                    .keyboardType(UIKit.UIKeyboardType.alphabet)
+                .padding(.top, CGFloat(12))
+                .focused($isInputActive)
+                .keyboardType(UIKit.UIKeyboardType.alphabet)
 #endif
             }
         }

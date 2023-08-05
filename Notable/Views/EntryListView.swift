@@ -33,12 +33,19 @@ struct EntryListView: View {
     var body: some View {
         List(selection: $selection) {
             Section {
-                Group {
-                    Label("Description", systemImage: "info.circle").labelStyle(ColorfulIconLabelStyle(color: .gray))
-
-                    TextEditor(text: $pile.desc ?? "")
-                        .frame(minHeight: 50)
-                }
+                VStack {
+                    HStack {
+                        Image(systemName: "info.square")
+                        Text("Description")
+                        Spacer()
+                    }
+                    .padding(.top, 12)
+                    .padding(.horizontal)
+                    Divider()
+                    TextField("Description", text: $pile.desc ?? "", axis: .vertical)
+                        .padding(.horizontal)
+                        .padding(.bottom, 8)
+                }.listRowInsets(EdgeInsets())
             }
             .onAppear {
                 if pile.desc == nil {
@@ -64,6 +71,7 @@ struct EntryListView: View {
             .onDelete(perform: deleteEntries)
 #endif
         }
+        .dismissKeyboardOnTap()
         .listStyle(.grouped)
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
@@ -193,18 +201,33 @@ struct EntryListView: View {
     }
 }
 
-struct ColorfulIconLabelStyle: LabelStyle {
-    var color: Color
+public extension View {
+    func dismissKeyboardOnTap() -> some View {
+        modifier(DismissKeyboardOnTap())
+    }
+}
 
-    func makeBody(configuration: Configuration) -> some View {
-        Label {
-            configuration.title
-        } icon: {
-            configuration.icon
-                .font(.system(size: 17))
-                .foregroundColor(.white)
-                .background(RoundedRectangle(cornerRadius: 7).frame(width: 28, height: 28).foregroundColor(color))
-        }
+public struct DismissKeyboardOnTap: ViewModifier {
+    public func body(content: Content) -> some View {
+#if os(macOS)
+        return content
+#else
+        return content.gesture(tapGesture)
+#endif
+    }
+
+    private var tapGesture: some Gesture {
+        TapGesture().onEnded(endEditing)
+    }
+
+    private func endEditing() {
+        UIApplication.shared.connectedScenes
+            .filter {$0.activationState == .foregroundActive}
+            .map {$0 as? UIWindowScene}
+            .compactMap({$0})
+            .first?.windows
+            .filter {$0.isKeyWindow}
+            .first?.endEditing(true)
     }
 }
 

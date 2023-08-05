@@ -62,21 +62,15 @@ struct EditorConfigSheet: View {
                 }
                 .pickerStyle(.segmented)
             }.padding(.horizontal)
-            .onChange(of: selectedMode) {
-                if selectedMode == "Markdown" {
-                    entry.isMarkdown = true
-                } else {
-                    entry.isMarkdown = false
-                }
+                .onChange(of: selectedMode) {
+                    if selectedMode == "Markdown" {
+                        entry.isMarkdown = true
+                    } else {
+                        entry.isMarkdown = false
+                    }
 
-                do {
-                    try viewContext.save()
-                } catch {
-                    // Replace this implementation with code to handle the error appropriately.
-                    let nsError = error as NSError
-                    fatalError("Unresolved error \(nsError), \(nsError.userInfo)")
+                    save()
                 }
-            }
             if !entry.isMarkdown {
                 HStack {
                     Text("Language")
@@ -88,18 +82,22 @@ struct EditorConfigSheet: View {
                         }
                     }
                 }.padding()
-                .onChange(of: language) {
-                    entry.language = language.rawValue
+                    .onChange(of: language) {
+                        entry.language = language.rawValue
 
-                    do {
-                        try viewContext.save()
-                    } catch {
-                        // Replace this implementation with code to handle the error appropriately.
-                        let nsError = error as NSError
-                        fatalError("Unresolved error \(nsError), \(nsError.userInfo)")
+                        save()
                     }
-                }
             }
+        }
+    }
+    
+    private func save() {
+        do {
+            try viewContext.save()
+        } catch {
+            // Replace this implementation with code to handle the error appropriately.
+            let nsError = error as NSError
+            fatalError("Unresolved error \(nsError), \(nsError.userInfo)")
         }
     }
 

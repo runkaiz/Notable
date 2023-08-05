@@ -51,9 +51,9 @@ struct EntryItem: View {
                             Text(
                                 "Image resolution: \(width) * \(height)"
                             )
-                                .frame(minWidth: 200, maxHeight: 400)
-                                .presentationCompactAdaptation(.popover)
-                                .padding()
+                            .frame(minWidth: 200, maxHeight: 400)
+                            .presentationCompactAdaptation(.popover)
+                            .padding()
                         }
                     }
                     .padding(.horizontal)

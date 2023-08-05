@@ -102,13 +102,13 @@ struct ContentView: View {
             }
             .toolbar {
                 if tabSelection == .tab1 {
-    #if os(iOS)
+#if os(iOS)
                     if !piles.isEmpty {
                         ToolbarItem(placement: .navigationBarTrailing) {
                             EditButton()
                         }
                     }
-    #endif
+#endif
                     ToolbarItem(placement: .navigationBarTrailing) {
                         Menu {
                             Button(action: toggleAlert) {

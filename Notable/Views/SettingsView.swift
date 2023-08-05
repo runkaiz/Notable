@@ -29,7 +29,6 @@ struct SettingsView: View {
             }
 
             Section(header: Text("Code Editor settings")) {
-//
                 Stepper(value: $editorFontSize, in: 1...64) {
                     Text("Font size: \(editorFontSize)")
                 }
