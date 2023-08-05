@@ -13,6 +13,19 @@
 		B22944572A4D8B04009015BA /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B22944562A4D8B04009015BA /* ContentView.swift */; };
 		B22944592A4D8B05009015BA /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B22944582A4D8B05009015BA /* Assets.xcassets */; };
 		B229445D2A4D8B05009015BA /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B229445C2A4D8B05009015BA /* Preview Assets.xcassets */; };
+		B2369E152A7E62D400A38D88 /* UniversalTypes.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2DF8C8F2A7E61540017BF27 /* UniversalTypes.swift */; };
+		B2369E162A7E62D400A38D88 /* Storage.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2DF8C8E2A7E61540017BF27 /* Storage.swift */; };
+		B2369E172A7E62D900A38D88 /* default-light.json in Resources */ = {isa = PBXBuildFile; fileRef = B2DF8C922A7E61540017BF27 /* default-light.json */; };
+		B2369E182A7E62D900A38D88 /* default-dark.json in Resources */ = {isa = PBXBuildFile; fileRef = B2DF8C932A7E61540017BF27 /* default-dark.json */; };
+		B2369E192A7E62DC00A38D88 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2DF8C942A7E61540017BF27 /* Extensions.swift */; };
+		B2369E1A2A7E62DC00A38D88 /* MarkdownNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2DF8C982A7E61540017BF27 /* MarkdownNode.swift */; };
+		B2369E1B2A7E62DC00A38D88 /* Style.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2DF8C9A2A7E61540017BF27 /* Style.swift */; };
+		B2369E1C2A7E62DC00A38D88 /* MarkdownEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2DF8C962A7E61540017BF27 /* MarkdownEngine.swift */; };
+		B2369E1D2A7E62DC00A38D88 /* SwiftDownHighligther.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2DF8C9B2A7E61540017BF27 /* SwiftDownHighligther.swift */; };
+		B2369E1E2A7E62DC00A38D88 /* ThemeConfigProperty.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2DF8C972A7E61540017BF27 /* ThemeConfigProperty.swift */; };
+		B2369E1F2A7E62DC00A38D88 /* Theme.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2DF8C9C2A7E61540017BF27 /* Theme.swift */; };
+		B2369E202A7E62DC00A38D88 /* SwiftDownEditor.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2DF8C952A7E61540017BF27 /* SwiftDownEditor.swift */; };
+		B2369E212A7E62DC00A38D88 /* SwiftDown.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2DF8C992A7E61540017BF27 /* SwiftDown.swift */; };
 		B28268432A664E5E00DF4F82 /* Entry.swift in Sources */ = {isa = PBXBuildFile; fileRef = B28268422A664E5E00DF4F82 /* Entry.swift */; };
 		B28638322A597BB600B361C3 /* CodeEditor in Frameworks */ = {isa = PBXBuildFile; productRef = B28638312A597BB600B361C3 /* CodeEditor */; };
 		B287911F2A512A000012E576 /* EditorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B287911E2A512A000012E576 /* EditorView.swift */; };
@@ -22,11 +35,11 @@
 		B2D69FD42A613C53007B65C3 /* Package.resolved in Resources */ = {isa = PBXBuildFile; fileRef = B2D69FD32A613C53007B65C3 /* Package.resolved */; };
 		B2D69FD72A613CAB007B65C3 /* AcknowledgeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2D69FD62A613CAB007B65C3 /* AcknowledgeView.swift */; };
 		B2D69FDC2A61467F007B65C3 /* AcknowList in Frameworks */ = {isa = PBXBuildFile; productRef = B2D69FDB2A61467F007B65C3 /* AcknowList */; };
+		B2DF8C8C2A7E61230017BF27 /* Down in Frameworks */ = {isa = PBXBuildFile; productRef = B2DF8C8B2A7E61230017BF27 /* Down */; };
 		B2EA295A2A7E3FF700151A7C /* light.json in Resources */ = {isa = PBXBuildFile; fileRef = B2EA29592A7E3FF700151A7C /* light.json */; };
 		B2EA295D2A7E511100151A7C /* ci_post_clone.sh in Resources */ = {isa = PBXBuildFile; fileRef = B2EA295C2A7E511100151A7C /* ci_post_clone.sh */; };
 		B2F0F0482A6F7D760000989B /* EntryListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2F0F0472A6F7D760000989B /* EntryListView.swift */; };
 		B2F0F04A2A6F8B590000989B /* EntryTransformer.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2F0F0492A6F8B590000989B /* EntryTransformer.swift */; };
-		B2F1DC762A7E085C00D6D856 /* SwiftDown in Frameworks */ = {isa = PBXBuildFile; productRef = B2F1DC752A7E085C00D6D856 /* SwiftDown */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -47,6 +60,19 @@
 		B2D6931C2A71750A00A9DDF1 /* Notable.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Notable.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		B2D69FD32A613C53007B65C3 /* Package.resolved */ = {isa = PBXFileReference; lastKnownFileType = text; path = Package.resolved; sourceTree = SOURCE_ROOT; };
 		B2D69FD62A613CAB007B65C3 /* AcknowledgeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AcknowledgeView.swift; sourceTree = "<group>"; };
+		B2DF8C8E2A7E61540017BF27 /* Storage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Storage.swift; sourceTree = "<group>"; };
+		B2DF8C8F2A7E61540017BF27 /* UniversalTypes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UniversalTypes.swift; sourceTree = "<group>"; };
+		B2DF8C922A7E61540017BF27 /* default-light.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "default-light.json"; sourceTree = "<group>"; };
+		B2DF8C932A7E61540017BF27 /* default-dark.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "default-dark.json"; sourceTree = "<group>"; };
+		B2DF8C942A7E61540017BF27 /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
+		B2DF8C952A7E61540017BF27 /* SwiftDownEditor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftDownEditor.swift; sourceTree = "<group>"; };
+		B2DF8C962A7E61540017BF27 /* MarkdownEngine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarkdownEngine.swift; sourceTree = "<group>"; };
+		B2DF8C972A7E61540017BF27 /* ThemeConfigProperty.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemeConfigProperty.swift; sourceTree = "<group>"; };
+		B2DF8C982A7E61540017BF27 /* MarkdownNode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarkdownNode.swift; sourceTree = "<group>"; };
+		B2DF8C992A7E61540017BF27 /* SwiftDown.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftDown.swift; sourceTree = "<group>"; };
+		B2DF8C9A2A7E61540017BF27 /* Style.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Style.swift; sourceTree = "<group>"; };
+		B2DF8C9B2A7E61540017BF27 /* SwiftDownHighligther.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftDownHighligther.swift; sourceTree = "<group>"; };
+		B2DF8C9C2A7E61540017BF27 /* Theme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Theme.swift; sourceTree = "<group>"; };
 		B2EA29592A7E3FF700151A7C /* light.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = light.json; sourceTree = "<group>"; };
 		B2EA295C2A7E511100151A7C /* ci_post_clone.sh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = ci_post_clone.sh; sourceTree = "<group>"; };
 		B2F0F0472A6F7D760000989B /* EntryListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EntryListView.swift; sourceTree = "<group>"; };
@@ -58,8 +84,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B2DF8C8C2A7E61230017BF27 /* Down in Frameworks */,
 				B2D69FDC2A61467F007B65C3 /* AcknowList in Frameworks */,
-				B2F1DC762A7E085C00D6D856 /* SwiftDown in Frameworks */,
 				B28638322A597BB600B361C3 /* CodeEditor in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -88,6 +114,7 @@
 				B28AB4432A60F9000097023A /* Components */,
 				B2FAA9322A664E1C00BEB849 /* Models */,
 				B2399E032A7E3FBC00C93B56 /* Themes */,
+				B2DF8C8D2A7E61540017BF27 /* SwiftDown */,
 				B22944532A4D8B04009015BA /* Notable.xcdatamodeld */,
 				B22944582A4D8B05009015BA /* Assets.xcassets */,
 				B229445A2A4D8B05009015BA /* Notable.entitlements */,
@@ -150,6 +177,42 @@
 			path = Views;
 			sourceTree = "<group>";
 		};
+		B2DF8C8D2A7E61540017BF27 /* SwiftDown */ = {
+			isa = PBXGroup;
+			children = (
+				B2DF8C8E2A7E61540017BF27 /* Storage.swift */,
+				B2DF8C8F2A7E61540017BF27 /* UniversalTypes.swift */,
+				B2DF8C902A7E61540017BF27 /* Resources */,
+				B2DF8C942A7E61540017BF27 /* Extensions.swift */,
+				B2DF8C952A7E61540017BF27 /* SwiftDownEditor.swift */,
+				B2DF8C962A7E61540017BF27 /* MarkdownEngine.swift */,
+				B2DF8C972A7E61540017BF27 /* ThemeConfigProperty.swift */,
+				B2DF8C982A7E61540017BF27 /* MarkdownNode.swift */,
+				B2DF8C992A7E61540017BF27 /* SwiftDown.swift */,
+				B2DF8C9A2A7E61540017BF27 /* Style.swift */,
+				B2DF8C9B2A7E61540017BF27 /* SwiftDownHighligther.swift */,
+				B2DF8C9C2A7E61540017BF27 /* Theme.swift */,
+			);
+			path = SwiftDown;
+			sourceTree = "<group>";
+		};
+		B2DF8C902A7E61540017BF27 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				B2DF8C912A7E61540017BF27 /* Themes */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+		B2DF8C912A7E61540017BF27 /* Themes */ = {
+			isa = PBXGroup;
+			children = (
+				B2DF8C922A7E61540017BF27 /* default-light.json */,
+				B2DF8C932A7E61540017BF27 /* default-dark.json */,
+			);
+			path = Themes;
+			sourceTree = "<group>";
+		};
 		B2FAA9322A664E1C00BEB849 /* Models */ = {
 			isa = PBXGroup;
 			children = (
@@ -165,7 +228,6 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = B22944602A4D8B05009015BA /* Build configuration list for PBXNativeTarget "Notable" */;
 			buildPhases = (
-				B2EA295B2A7E4F8A00151A7C /* ShellScript */,
 				B22944482A4D8B04009015BA /* Sources */,
 				B22944492A4D8B04009015BA /* Frameworks */,
 				B229444A2A4D8B04009015BA /* Resources */,
@@ -179,7 +241,7 @@
 			packageProductDependencies = (
 				B28638312A597BB600B361C3 /* CodeEditor */,
 				B2D69FDB2A61467F007B65C3 /* AcknowList */,
-				B2F1DC752A7E085C00D6D856 /* SwiftDown */,
+				B2DF8C8B2A7E61230017BF27 /* Down */,
 			);
 			productName = Notable;
 			productReference = B2D6931C2A71750A00A9DDF1 /* Notable.app */;
@@ -212,7 +274,7 @@
 			packageReferences = (
 				B28638302A597BB600B361C3 /* XCRemoteSwiftPackageReference "CodeEditor" */,
 				B2D69FDA2A61467F007B65C3 /* XCRemoteSwiftPackageReference "AcknowList" */,
-				B2F1DC742A7E085C00D6D856 /* XCRemoteSwiftPackageReference "SwiftDown" */,
+				B2DF8C8A2A7E61230017BF27 /* XCRemoteSwiftPackageReference "Down" */,
 			);
 			productRefGroup = B22944432A4D8B04009015BA;
 			projectDirPath = "";
@@ -232,7 +294,9 @@
 				B2D69FD42A613C53007B65C3 /* Package.resolved in Resources */,
 				B2EA295A2A7E3FF700151A7C /* light.json in Resources */,
 				B2EA295D2A7E511100151A7C /* ci_post_clone.sh in Resources */,
+				B2369E172A7E62D900A38D88 /* default-light.json in Resources */,
 				B22944592A4D8B05009015BA /* Assets.xcassets in Resources */,
+				B2369E182A7E62D900A38D88 /* default-dark.json in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -258,24 +322,6 @@
 			shellPath = /bin/sh;
 			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\ncp ${PROJECT_FILE_PATH}/project.xcworkspace/xcshareddata/swiftpm/Package.resolved ${PROJECT_DIR}\n";
 		};
-		B2EA295B2A7E4F8A00151A7C /* ShellScript */ = {
-			isa = PBXShellScriptBuildPhase;
-			alwaysOutOfDate = 1;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-			);
-			outputFileListPaths = (
-			);
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "#if [[ \"$(uname -m)\" == arm64 ]]; then\n#    export PATH=\"/opt/homebrew/bin:$PATH\"\n#fi\n\n#if which swiftlint > /dev/null; then\n#  swiftlint --fix && swiftlint\n#else\n#  echo \"warning: SwiftLint not installed, download from https://github.com/realm/SwiftLint\"\n#fi\n";
-		};
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
@@ -284,15 +330,26 @@
 			buildActionMask = 2147483647;
 			files = (
 				B28268432A664E5E00DF4F82 /* Entry.swift in Sources */,
+				B2369E162A7E62D400A38D88 /* Storage.swift in Sources */,
 				B28AB4452A60F9270097023A /* EditorConfigSheet.swift in Sources */,
 				B293DF792A5C2EE500826D26 /* SettingsView.swift in Sources */,
 				B22944552A4D8B04009015BA /* Notable.xcdatamodeld in Sources */,
 				B2D69FD72A613CAB007B65C3 /* AcknowledgeView.swift in Sources */,
+				B2369E1F2A7E62DC00A38D88 /* Theme.swift in Sources */,
+				B2369E1E2A7E62DC00A38D88 /* ThemeConfigProperty.swift in Sources */,
+				B2369E1A2A7E62DC00A38D88 /* MarkdownNode.swift in Sources */,
 				B22944502A4D8B04009015BA /* NotableApp.swift in Sources */,
+				B2369E212A7E62DC00A38D88 /* SwiftDown.swift in Sources */,
+				B2369E1C2A7E62DC00A38D88 /* MarkdownEngine.swift in Sources */,
 				B2F0F04A2A6F8B590000989B /* EntryTransformer.swift in Sources */,
+				B2369E202A7E62DC00A38D88 /* SwiftDownEditor.swift in Sources */,
 				B22944572A4D8B04009015BA /* ContentView.swift in Sources */,
 				B22944522A4D8B04009015BA /* Persistence.swift in Sources */,
+				B2369E192A7E62DC00A38D88 /* Extensions.swift in Sources */,
+				B2369E152A7E62D400A38D88 /* UniversalTypes.swift in Sources */,
 				B2F0F0482A6F7D760000989B /* EntryListView.swift in Sources */,
+				B2369E1D2A7E62DC00A38D88 /* SwiftDownHighligther.swift in Sources */,
+				B2369E1B2A7E62DC00A38D88 /* Style.swift in Sources */,
 				B287911F2A512A000012E576 /* EditorView.swift in Sources */,
 				B2C0BE782A55332200EC9CAF /* EntryItem.swift in Sources */,
 			);
@@ -550,12 +607,12 @@
 				minimumVersion = 3.0.0;
 			};
 		};
-		B2F1DC742A7E085C00D6D856 /* XCRemoteSwiftPackageReference "SwiftDown" */ = {
+		B2DF8C8A2A7E61230017BF27 /* XCRemoteSwiftPackageReference "Down" */ = {
 			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/qeude/SwiftDown.git";
+			repositoryURL = "https://github.com/johnxnguyen/Down.git";
 			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 0.3.1;
+				branch = master;
+				kind = branch;
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */
@@ -571,10 +628,10 @@
 			package = B2D69FDA2A61467F007B65C3 /* XCRemoteSwiftPackageReference "AcknowList" */;
 			productName = AcknowList;
 		};
-		B2F1DC752A7E085C00D6D856 /* SwiftDown */ = {
+		B2DF8C8B2A7E61230017BF27 /* Down */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = B2F1DC742A7E085C00D6D856 /* XCRemoteSwiftPackageReference "SwiftDown" */;
-			productName = SwiftDown;
+			package = B2DF8C8A2A7E61230017BF27 /* XCRemoteSwiftPackageReference "Down" */;
+			productName = Down;
 		};
 /* End XCSwiftPackageProductDependency section */
 

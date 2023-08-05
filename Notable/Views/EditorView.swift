@@ -9,8 +9,6 @@ import SwiftUI
 import CodeEditor
 import CoreData
 import CoreTransferable
-import RichTextKit
-import SwiftDown
 
 enum TemporaryFileError: Error {
     case creationFailed
