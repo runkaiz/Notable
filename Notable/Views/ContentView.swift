@@ -64,7 +64,7 @@ struct ContentView: View {
                                 }
                             }
                         }
-                        .contextMenu(ContextMenu(menuItems: {
+                        .contextMenu {
                             Button {
                                 contextPile = pile
                                 presentRenamer.toggle()
@@ -77,8 +77,13 @@ struct ContentView: View {
                             } label: {
                                 Text("Change Color")
                             }
-
-                        }))
+                            Button(role: .destructive) {
+                                contextPile = pile
+                                deletePile()
+                            } label: {
+                                Text("Delete Pile")
+                            }
+                        }
                     }
 #if os(iOS)
                     .onDelete(perform: deletePiles)
@@ -241,15 +246,11 @@ struct ContentView: View {
         }
     }
 
-    private func save() {
+    private func deletePile() {
         withAnimation {
-            do {
-                try viewContext.save()
-            } catch {
-                // Replace this implementation with code to handle the error appropriately.
-                let nsError = error as NSError
-                fatalError("Unresolved error \(nsError), \(nsError.userInfo)")
-            }
+            viewContext.delete(piles[piles.firstIndex(of: contextPile!)!])
+
+            save()
         }
     }
 
@@ -261,13 +262,7 @@ struct ContentView: View {
 
             newPileName = ""
 
-            do {
-                try viewContext.save()
-            } catch {
-                // Replace this implementation with code to handle the error appropriately.
-                let nsError = error as NSError
-                fatalError("Unresolved error \(nsError), \(nsError.userInfo)")
-            }
+            save()
         }
     }
 
@@ -275,6 +270,12 @@ struct ContentView: View {
         withAnimation {
             offsets.map { piles[$0] }.forEach(viewContext.delete)
 
+            save()
+        }
+    }
+
+    private func save() {
+        withAnimation {
             do {
                 try viewContext.save()
             } catch {
