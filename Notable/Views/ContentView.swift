@@ -81,26 +81,6 @@ struct ContentView: View {
                     .onDelete(perform: deletePiles)
 #endif
                 }
-                .toolbar {
-                    if tabSelection == .tab1 {
-#if os(iOS)
-                        if !piles.isEmpty {
-                            ToolbarItem(placement: .navigationBarTrailing) {
-                                EditButton()
-                            }
-                        }
-#endif
-                        ToolbarItem(placement: .navigationBarTrailing) {
-                            Menu {
-                                Button(action: toggleAlert) {
-                                    Label("New Pile", systemImage: "folder.badge.plus")
-                                }
-                            } label: {
-                                Image(systemName: "plus")
-                            }
-                        }
-                    }
-                }
                 .tabItem {
                     Label("Piles", systemImage: "tray.fill")
                 }
@@ -112,6 +92,26 @@ struct ContentView: View {
                     }
                     .tag(Tabs.tab2)
             }
+            .toolbar {
+                if tabSelection == .tab1 {
+    #if os(iOS)
+                    if !piles.isEmpty {
+                        ToolbarItem(placement: .navigationBarTrailing) {
+                            EditButton()
+                        }
+                    }
+    #endif
+                    ToolbarItem(placement: .navigationBarTrailing) {
+                        Menu {
+                            Button(action: toggleAlert) {
+                                Label("New Pile", systemImage: "folder.badge.plus")
+                            }
+                        } label: {
+                            Image(systemName: "plus")
+                        }
+                    }
+                }
+            }
             .alert("Name Pile", isPresented: $presentAlert, actions: {
                 TextField("Pile Name", text: $newPileName)
 
@@ -121,7 +121,7 @@ struct ContentView: View {
 #if os(iOS)
             .navigationBarTitle(returnNaviBarTitle(tabSelection: self.tabSelection))
 #endif
-            }
+        }
         .onAppear {
             let tabBarAppearance = UITabBarAppearance()
             tabBarAppearance.configureWithDefaultBackground()
@@ -189,17 +189,10 @@ struct ContentView: View {
                     contextPile!.tag = nil
                     save()
                 } label: {
-                    if selectedColor == nil {
-                        Image(systemName: "circle.dotted")
-                            .resizable()
-                            .scaledToFit()
-                            .frame(width: size, height: size)
-                    } else {
-                        Image(systemName: "circle.dotted")
-                            .resizable()
-                            .scaledToFit()
-                            .frame(width: size, height: size)
-                    }
+                    Image(systemName: "circle.dotted")
+                        .resizable()
+                        .scaledToFit()
+                        .frame(width: size, height: size)
                 }
                 .symbolEffect(.bounce, value: emptyTagAnimateTrigger)
             }
