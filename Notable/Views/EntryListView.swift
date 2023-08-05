@@ -15,12 +15,11 @@ struct EntryListView: View {
     @FetchRequest(
         entity: Entry.entity(),
         sortDescriptors: [NSSortDescriptor(keyPath: \Entry.timestamp, ascending: false)],
-        animation: .none)
+        animation: .default)
     private var entries: FetchedResults<Entry>
 
     @State var pile: Pile
 
-    @State private var organizedList: [Entry] = [Entry]()
     @State private var selection: Entry?
 
     @State private var showPhotosPicker = false
@@ -46,30 +45,20 @@ struct EntryListView: View {
                     pile.desc = ""
                 }
 
-                do {
-                    try viewContext.save()
-                } catch {
-                    // Replace this implementation with code to handle the error appropriately.
-                    let nsError = error as NSError
-                    fatalError("Unresolved error \(nsError), \(nsError.userInfo)")
-                }
+                save()
             }
             .onChange(of: pile.desc) {
-                do {
-                    try viewContext.save()
-                } catch {
-                    // Replace this implementation with code to handle the error appropriately.
-                    let nsError = error as NSError
-                    fatalError("Unresolved error \(nsError), \(nsError.userInfo)")
-                }
+                save()
             }
 
-            if organizedList.isEmpty {
+            if entries.isEmpty {
                 Text("Add some entries to start your pile.")
             }
 
-            ForEach(organizedList, id: \.id) { entry in
-                EntryTransformer(entry: entry)
+            ForEach(entries, id: \.id) { entry in
+                if entry.pile == pile {
+                    EntryTransformer(entry: entry)
+                }
             }
 #if os(iOS)
             .onDelete(perform: deleteEntries)
@@ -88,7 +77,7 @@ struct EntryListView: View {
             }
 #if os(iOS)
             ToolbarItem(placement: .navigationBarTrailing) {
-                if !organizedList.isEmpty {
+                if entries.contains(where: {$0.pile == pile}) {
                     EditButton()
                 }
             }
@@ -105,9 +94,6 @@ struct EntryListView: View {
                     Image(systemName: "plus")
                 }
             }
-        }
-        .onAppear {
-            updateOrganizedList()
         }
         .onChange(of: selectedImage) {
             Task {
@@ -132,39 +118,12 @@ struct EntryListView: View {
             Button("Rename", action: {
                 withAnimation {
                     pile.name = newPileName
-                    do {
-                        try viewContext.save()
-                        updateOrganizedList()
-                    } catch {
-                        // Replace this implementation with code to handle the error appropriately.
-                        let nsError = error as NSError
-                        fatalError("Unresolved error \(nsError), \(nsError.userInfo)")
-                    }
+                    save()
                     newPileName = ""
                 }
             })
             Button("Cancel", role: .cancel, action: {})
         })
-    }
-
-    private func updateOrganizedList() {
-        organizedList.removeAll()
-
-        for entry in entries {
-            if let pileID = pile.id {
-                if entry.pile?.id == pileID {
-                    organizedList.append(entry)
-                }
-            } else {
-                pile.id = UUID()
-
-                if let pileID = pile.id {
-                    if entry.pile?.id == pileID {
-                        organizedList.append(entry)
-                    }
-                }
-            }
-        }
     }
 
     private func addPicture(image: Data) {
@@ -178,14 +137,7 @@ struct EntryListView: View {
 
             selection = nil
 
-            do {
-                try viewContext.save()
-                updateOrganizedList()
-            } catch {
-                // Replace this implementation with code to handle the error appropriately.
-                let nsError = error as NSError
-                fatalError("Unresolved error \(nsError), \(nsError.userInfo)")
-            }
+            save()
         }
     }
 
@@ -207,14 +159,7 @@ struct EntryListView: View {
 
             selection = nil
 
-            do {
-                try viewContext.save()
-                updateOrganizedList()
-            } catch {
-                // Replace this implementation with code to handle the error appropriately.
-                let nsError = error as NSError
-                fatalError("Unresolved error \(nsError), \(nsError.userInfo)")
-            }
+            save()
         }
     }
 
@@ -224,14 +169,7 @@ struct EntryListView: View {
 
             selection = nil
 
-            do {
-                try viewContext.save()
-                updateOrganizedList()
-            } catch {
-                // Replace this implementation with code to handle the error appropriately.
-                let nsError = error as NSError
-                fatalError("Unresolved error \(nsError), \(nsError.userInfo)")
-            }
+            save()
         }
     }
 
@@ -241,9 +179,12 @@ struct EntryListView: View {
         // Reset selection
         selection = nil
 
+        save()
+    }
+
+    private func save() {
         do {
             try viewContext.save()
-            updateOrganizedList()
         } catch {
             // Replace this implementation with code to handle the error appropriately.
             let nsError = error as NSError
