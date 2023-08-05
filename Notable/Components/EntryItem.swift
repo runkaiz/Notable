@@ -11,6 +11,7 @@ import CoreData
 enum EntryType: String {
     case text
     case image
+    case recording
 }
 
 struct EntryItem: View {
@@ -30,6 +31,9 @@ struct EntryItem: View {
 
     var body: some View {
         switch type {
+        case .recording:
+            // To be implemented
+            EmptyView()
         case .image:
             Section {
                 VStack(spacing: 16) {

@@ -53,10 +53,10 @@ struct EntryListView: View {
                     pile.desc = ""
                 }
 
-                save()
+                save(viewContext)
             }
             .onChange(of: pile.desc) {
-                save()
+                save(viewContext)
             }
 
             if entries.isEmpty {
@@ -124,11 +124,9 @@ struct EntryListView: View {
             TextField("Pile Name", text: $newPileName)
 
             Button("Rename", action: {
-                withAnimation {
-                    pile.name = newPileName
-                    save()
-                    newPileName = ""
-                }
+                pile.name = newPileName
+                save(viewContext)
+                newPileName = ""
             })
             Button("Cancel", role: .cancel, action: {})
         })
@@ -143,9 +141,7 @@ struct EntryListView: View {
             newEntry.image = image
             pile.addToEntries(newEntry)
 
-            selection = nil
-
-            save()
+            save(viewContext)
         }
     }
 
@@ -163,11 +159,10 @@ struct EntryListView: View {
             newEntry.content = ""
             newEntry.isMarkdown = true
             newEntry.language = "markdown"
+            newEntry.type = "text"
             pile.addToEntries(newEntry)
 
-            selection = nil
-
-            save()
+            save(viewContext)
         }
     }
 
@@ -175,29 +170,14 @@ struct EntryListView: View {
         withAnimation {
             offsets.map { entries[$0] }.forEach(viewContext.delete)
 
-            selection = nil
-
-            save()
+            save(viewContext)
         }
     }
 
     private func deleteEntry() {
         viewContext.delete(entries[entries.firstIndex(of: selection!)!])
 
-        // Reset selection
-        selection = nil
-
-        save()
-    }
-
-    private func save() {
-        do {
-            try viewContext.save()
-        } catch {
-            // Replace this implementation with code to handle the error appropriately.
-            let nsError = error as NSError
-            fatalError("Unresolved error \(nsError), \(nsError.userInfo)")
-        }
+        save(viewContext)
     }
 }
 

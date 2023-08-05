@@ -67,6 +67,7 @@ struct ContentView: View {
                         .contextMenu {
                             Button {
                                 contextPile = pile
+                                newPileName = pile.name ?? ""
                                 presentRenamer.toggle()
                             } label: {
                                 Text("Rename")
@@ -125,7 +126,7 @@ struct ContentView: View {
 
                 Button("Rename", action: {
                     contextPile!.name = newPileName
-                    save()
+                    save(viewContext)
                     newPileName = ""
                 })
                 Button("Cancel", role: .cancel, action: {})
@@ -144,8 +145,6 @@ struct ContentView: View {
             let tabBarAppearance = UITabBarAppearance()
             tabBarAppearance.configureWithDefaultBackground()
             UITabBar.appearance().scrollEdgeAppearance = tabBarAppearance
-
-            selection = nil
         }
         .sheet(isPresented: $showColorPicker) {
 
@@ -156,7 +155,7 @@ struct ContentView: View {
                 Button {
                     selectedColor = colors[0]
                     contextPile!.tag = "Raisin Black"
-                    save()
+                    save(viewContext)
                 } label: {
                     if selectedColor == colors[0] {
                         Circle()
@@ -172,7 +171,7 @@ struct ContentView: View {
                 Button {
                     selectedColor = colors[1]
                     contextPile!.tag = "Safety Orange"
-                    save()
+                    save(viewContext)
                 } label: {
                     if selectedColor == colors[1] {
                         Circle()
@@ -188,7 +187,7 @@ struct ContentView: View {
                 Button {
                     selectedColor = colors[2]
                     contextPile!.tag = "Non Photo Blue"
-                    save()
+                    save(viewContext)
                 } label: {
                     if selectedColor == colors[2] {
                         Circle()
@@ -205,7 +204,7 @@ struct ContentView: View {
                     emptyTagAnimateTrigger.toggle()
                     selectedColor = nil
                     contextPile!.tag = nil
-                    save()
+                    save(viewContext)
                 } label: {
                     Image(systemName: "circle.dotted")
                         .resizable()
@@ -250,7 +249,7 @@ struct ContentView: View {
         withAnimation {
             viewContext.delete(piles[piles.firstIndex(of: contextPile!)!])
 
-            save()
+            save(viewContext)
         }
     }
 
@@ -262,7 +261,7 @@ struct ContentView: View {
 
             newPileName = ""
 
-            save()
+            save(viewContext)
         }
     }
 
@@ -270,20 +269,18 @@ struct ContentView: View {
         withAnimation {
             offsets.map { piles[$0] }.forEach(viewContext.delete)
 
-            save()
+            save(viewContext)
         }
     }
+}
 
-    private func save() {
-        withAnimation {
-            do {
-                try viewContext.save()
-            } catch {
-                // Replace this implementation with code to handle the error appropriately.
-                let nsError = error as NSError
-                fatalError("Unresolved error \(nsError), \(nsError.userInfo)")
-            }
-        }
+public func save(_ viewContext: NSManagedObjectContext) {
+    do {
+        try viewContext.save()
+    } catch {
+        // Replace this implementation with code to handle the error appropriately.
+        let nsError = error as NSError
+        fatalError("Unresolved error \(nsError), \(nsError.userInfo)")
     }
 }
 

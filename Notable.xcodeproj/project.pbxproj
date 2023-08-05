@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		B21428BE2A7E705000362E73 /* Note.swift in Sources */ = {isa = PBXBuildFile; fileRef = B21428BD2A7E705000362E73 /* Note.swift */; };
 		B22944502A4D8B04009015BA /* NotableApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = B229444F2A4D8B04009015BA /* NotableApp.swift */; };
 		B22944522A4D8B04009015BA /* Persistence.swift in Sources */ = {isa = PBXBuildFile; fileRef = B22944512A4D8B04009015BA /* Persistence.swift */; };
 		B22944552A4D8B04009015BA /* Notable.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = B22944532A4D8B04009015BA /* Notable.xcdatamodeld */; };
@@ -44,6 +45,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		B21428BD2A7E705000362E73 /* Note.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Note.swift; sourceTree = "<group>"; };
 		B229444F2A4D8B04009015BA /* NotableApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotableApp.swift; sourceTree = "<group>"; };
 		B22944512A4D8B04009015BA /* Persistence.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Persistence.swift; sourceTree = "<group>"; };
 		B22944542A4D8B04009015BA /* Notable.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Notable.xcdatamodel; sourceTree = "<group>"; };
@@ -220,6 +222,7 @@
 			isa = PBXGroup;
 			children = (
 				B28268422A664E5E00DF4F82 /* Entry.swift */,
+				B21428BD2A7E705000362E73 /* Note.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -344,6 +347,7 @@
 				B2369E1A2A7E62DC00A38D88 /* MarkdownNode.swift in Sources */,
 				B22944502A4D8B04009015BA /* NotableApp.swift in Sources */,
 				B2369E212A7E62DC00A38D88 /* SwiftDown.swift in Sources */,
+				B21428BE2A7E705000362E73 /* Note.swift in Sources */,
 				B2369E1C2A7E62DC00A38D88 /* MarkdownEngine.swift in Sources */,
 				B2F0F04A2A6F8B590000989B /* EntryTransformer.swift in Sources */,
 				B2369E202A7E62DC00A38D88 /* SwiftDownEditor.swift in Sources */,
