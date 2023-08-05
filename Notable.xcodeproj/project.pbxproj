@@ -22,6 +22,7 @@
 		B2D69FD42A613C53007B65C3 /* Package.resolved in Resources */ = {isa = PBXBuildFile; fileRef = B2D69FD32A613C53007B65C3 /* Package.resolved */; };
 		B2D69FD72A613CAB007B65C3 /* AcknowledgeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2D69FD62A613CAB007B65C3 /* AcknowledgeView.swift */; };
 		B2D69FDC2A61467F007B65C3 /* AcknowList in Frameworks */ = {isa = PBXBuildFile; productRef = B2D69FDB2A61467F007B65C3 /* AcknowList */; };
+		B2EA295A2A7E3FF700151A7C /* light.json in Resources */ = {isa = PBXBuildFile; fileRef = B2EA29592A7E3FF700151A7C /* light.json */; };
 		B2F0F0482A6F7D760000989B /* EntryListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2F0F0472A6F7D760000989B /* EntryListView.swift */; };
 		B2F0F04A2A6F8B590000989B /* EntryTransformer.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2F0F0492A6F8B590000989B /* EntryTransformer.swift */; };
 		B2F1DC762A7E085C00D6D856 /* SwiftDown in Frameworks */ = {isa = PBXBuildFile; productRef = B2F1DC752A7E085C00D6D856 /* SwiftDown */; };
@@ -45,6 +46,7 @@
 		B2D6931C2A71750A00A9DDF1 /* Notable.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Notable.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		B2D69FD32A613C53007B65C3 /* Package.resolved */ = {isa = PBXFileReference; lastKnownFileType = text; path = Package.resolved; sourceTree = SOURCE_ROOT; };
 		B2D69FD62A613CAB007B65C3 /* AcknowledgeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AcknowledgeView.swift; sourceTree = "<group>"; };
+		B2EA29592A7E3FF700151A7C /* light.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = light.json; sourceTree = "<group>"; };
 		B2F0F0472A6F7D760000989B /* EntryListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EntryListView.swift; sourceTree = "<group>"; };
 		B2F0F0492A6F8B590000989B /* EntryTransformer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EntryTransformer.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -83,6 +85,7 @@
 				B2D69FD52A613C80007B65C3 /* Views */,
 				B28AB4432A60F9000097023A /* Components */,
 				B2FAA9322A664E1C00BEB849 /* Models */,
+				B2399E032A7E3FBC00C93B56 /* Themes */,
 				B22944532A4D8B04009015BA /* Notable.xcdatamodeld */,
 				B22944582A4D8B05009015BA /* Assets.xcassets */,
 				B229445A2A4D8B05009015BA /* Notable.entitlements */,
@@ -105,6 +108,14 @@
 				B22C1B562A6D78A100D801A2 /* ci_post_xcodebuild.sh */,
 			);
 			path = ci_scripts;
+			sourceTree = "<group>";
+		};
+		B2399E032A7E3FBC00C93B56 /* Themes */ = {
+			isa = PBXGroup;
+			children = (
+				B2EA29592A7E3FF700151A7C /* light.json */,
+			);
+			path = Themes;
 			sourceTree = "<group>";
 		};
 		B27458932A6D344B007C29FC /* TestFlight */ = {
@@ -151,7 +162,6 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = B22944602A4D8B05009015BA /* Build configuration list for PBXNativeTarget "Notable" */;
 			buildPhases = (
-				B29512272A7E0A160000058E /* ShellScript */,
 				B22944482A4D8B04009015BA /* Sources */,
 				B22944492A4D8B04009015BA /* Frameworks */,
 				B229444A2A4D8B04009015BA /* Resources */,
@@ -216,6 +226,7 @@
 			files = (
 				B229445D2A4D8B05009015BA /* Preview Assets.xcassets in Resources */,
 				B2D69FD42A613C53007B65C3 /* Package.resolved in Resources */,
+				B2EA295A2A7E3FF700151A7C /* light.json in Resources */,
 				B22944592A4D8B05009015BA /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -223,24 +234,6 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		B29512272A7E0A160000058E /* ShellScript */ = {
-			isa = PBXShellScriptBuildPhase;
-			alwaysOutOfDate = 1;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-			);
-			outputFileListPaths = (
-			);
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "if [[ \"$(uname -m)\" == arm64 ]]; then\n    export PATH=\"/opt/homebrew/bin:$PATH\"\nfi\n\nif which swiftlint > /dev/null; then\n    swiftlint --fix && swiftlint\nelse\n  echo \"warning: SwiftLint not installed, download from https://github.com/realm/SwiftLint\"\nfi\n";
-		};
 		B2D69FD92A61459A007B65C3 /* Copy Package.resolved */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
