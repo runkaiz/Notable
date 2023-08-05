@@ -39,6 +39,7 @@ struct EntryListView: View {
                         Text("Description")
                         Spacer()
                     }
+                    .dismissKeyboardOnTap()
                     .padding(.top, 12)
                     .padding(.horizontal)
                     Divider()
@@ -71,7 +72,6 @@ struct EntryListView: View {
             .onDelete(perform: deleteEntries)
 #endif
         }
-        .dismissKeyboardOnTap()
         .listStyle(.grouped)
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {

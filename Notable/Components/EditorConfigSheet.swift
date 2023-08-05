@@ -90,7 +90,7 @@ struct EditorConfigSheet: View {
             }
         }
     }
-    
+
     private func save() {
         do {
             try viewContext.save()

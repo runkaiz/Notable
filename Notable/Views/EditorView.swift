@@ -90,6 +90,8 @@ struct EditorView: View {
     @AppStorage("editorTheme")
     private var theme = CodeEditor.ThemeName.xcode
 
+    private var mdTheme = Theme(themePath: Bundle.main.path(forResource: "light", ofType: "json")!)
+
     init(entry: Entry) {
         self.entry = entry
         self.note = Note(title: entry.title ?? "", body: entry.content ?? "")
@@ -99,19 +101,11 @@ struct EditorView: View {
         VStack(spacing: 0) {
             Divider()
             if entry.isMarkdown {
-                if autocorrect {
-                    SwiftDownEditor(text: $entry.content ?? "")
-                        .theme(Theme.BuiltIn.defaultLight.theme())
-                        .insetsSize(12)
-                        .keyboardType(.alphabet)
-                        .autocorrectionType(UITextAutocorrectionType.yes)
-                } else {
-                    SwiftDownEditor(text: $entry.content ?? "")
-                        .theme(Theme.BuiltIn.defaultLight.theme())
-                        .insetsSize(12)
-                        .keyboardType(.alphabet)
-                        .autocorrectionType(UITextAutocorrectionType.no)
-                }
+                SwiftDownEditor(text: $entry.content ?? "")
+                    .theme(mdTheme)
+                    .insetsSize(12)
+                    .keyboardType(.alphabet)
+                    .autocorrectionType(autocorrect ? UITextAutocorrectionType.yes : UITextAutocorrectionType.no)
             } else {
 #if os(macOS)
                 CodeEditor(

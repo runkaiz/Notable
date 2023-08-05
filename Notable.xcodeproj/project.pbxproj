@@ -162,6 +162,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = B22944602A4D8B05009015BA /* Build configuration list for PBXNativeTarget "Notable" */;
 			buildPhases = (
+				B2EA295B2A7E4F8A00151A7C /* ShellScript */,
 				B22944482A4D8B04009015BA /* Sources */,
 				B22944492A4D8B04009015BA /* Frameworks */,
 				B229444A2A4D8B04009015BA /* Resources */,
@@ -252,6 +253,24 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\ncp ${PROJECT_FILE_PATH}/project.xcworkspace/xcshareddata/swiftpm/Package.resolved ${PROJECT_DIR}\n";
+		};
+		B2EA295B2A7E4F8A00151A7C /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "if [[ \"$(uname -m)\" == arm64 ]]; then\n    export PATH=\"/opt/homebrew/bin:$PATH\"\nfi\n\nif which swiftlint > /dev/null; then\n  swiftlint --fix && swiftlint\nelse\n  echo \"warning: SwiftLint not installed, download from https://github.com/realm/SwiftLint\"\nfi\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
