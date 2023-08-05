@@ -16,42 +16,50 @@ enum EntryType: String {
 struct EntryItem: View {
     @ObservedObject var entry: Entry
     var type: EntryType
-    
+
     @State var image: UIImage
-    
+
     init(entry: Entry) {
         self.entry = entry
         self.type = EntryType(rawValue: entry.type ?? "text")!
-        
+
         image = UIImage(data: entry.image ?? Data()) ?? UIImage()
     }
-    
+
     @State var isImagePopoverPresented = false
-    
+
     var body: some View {
         switch type {
         case .image:
             Section {
-                Image(uiImage: image)
-                    .resizable()
-                    .aspectRatio(contentMode: .fit)
-                    .listRowInsets(EdgeInsets())
-                HStack {
-                    Text(entry.timestamp ?? Date(), formatter: entryFormatter)
-                        .font(.subheadline)
-                    Spacer()
-                    Button(action: {
-                        isImagePopoverPresented.toggle()
-                    }, label: {
-                        Image(systemName: "info.circle")
-                    })
+                VStack(spacing: 16) {
+                    Image(uiImage: image)
+                        .resizable()
+                        .aspectRatio(contentMode: .fit)
+                    HStack {
+                        Text(entry.timestamp ?? Date(), formatter: entryFormatter)
+                            .font(.subheadline)
+                        Spacer()
+                        Button(action: {
+                            isImagePopoverPresented.toggle()
+                        }, label: {
+                            Image(systemName: "info.circle")
+                        })
                         .popover(isPresented: $isImagePopoverPresented) {
-                            Text("Image resolution: \(Int(image.size.width * image.scale)) * \(Int(image.size.height * image.scale))")
+                            let width = Int(image.size.width * image.scale)
+                            let height = Int(image.size.height * image.scale)
+                            Text(
+                                "Image resolution: \(width) * \(height)"
+                            )
                                 .frame(minWidth: 200, maxHeight: 400)
                                 .presentationCompactAdaptation(.popover)
                                 .padding()
                         }
+                    }
+                    .padding(.horizontal)
+                    .padding(.bottom)
                 }
+                .listRowInsets(EdgeInsets())
             }
         default:
             VStack(alignment: .leading, spacing: 10) {

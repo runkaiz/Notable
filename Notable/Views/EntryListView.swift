@@ -11,29 +11,29 @@ import PhotosUI
 
 struct EntryListView: View {
     @Environment(\.managedObjectContext) private var viewContext
-    
+
     @FetchRequest(
         entity: Entry.entity(),
         sortDescriptors: [NSSortDescriptor(keyPath: \Entry.timestamp, ascending: false)],
         animation: .none)
     private var entries: FetchedResults<Entry>
-    
+
     @State var pile: Pile
-    
+
     @State private var organizedList: [Entry] = [Entry]()
     @State private var selection: Entry?
-    
+
     @State private var showPhotosPicker = false
     @State private var searchText = ""
     @State private var showCancelButton: Bool = false
     @State private var selectedImage: PhotosPickerItem?
-    
+
     var body: some View {
         List(selection: $selection) {
             Section {
                 Group {
                     Label("Description", systemImage: "info.circle").labelStyle(ColorfulIconLabelStyle(color: .gray))
-                    
+
                     TextEditor(text: $pile.desc ?? "")
                         .frame(minHeight: 50)
                 }
@@ -42,12 +42,11 @@ struct EntryListView: View {
                 if pile.desc == nil {
                     pile.desc = ""
                 }
-                
+
                 do {
                     try viewContext.save()
                 } catch {
                     // Replace this implementation with code to handle the error appropriately.
-                    // fatalError() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development.
                     let nsError = error as NSError
                     fatalError("Unresolved error \(nsError), \(nsError.userInfo)")
                 }
@@ -57,16 +56,15 @@ struct EntryListView: View {
                     try viewContext.save()
                 } catch {
                     // Replace this implementation with code to handle the error appropriately.
-                    // fatalError() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development.
                     let nsError = error as NSError
                     fatalError("Unresolved error \(nsError), \(nsError.userInfo)")
                 }
             }
-            
+
             if organizedList.isEmpty {
                 Text("Add some entries to start your pile.")
             }
-            
+
             ForEach(organizedList, id: \.id) { entry in
                 EntryTransformer(entry: entry)
             }
@@ -105,19 +103,24 @@ struct EntryListView: View {
             Task {
                 if let data = try? await selectedImage?.loadTransferable(type: Data.self) {
                     addPicture(image: data)
-                    
+
                     return
                 }
-                
+
                 print("Failed")
             }
         }
-        .photosPicker(isPresented: $showPhotosPicker, selection: $selectedImage, matching: .any(of: [.images, .screenshots]), preferredItemEncoding: .automatic)
+        .photosPicker(
+            isPresented: $showPhotosPicker,
+            selection: $selectedImage,
+            matching: .any(of: [.images, .screenshots]),
+            preferredItemEncoding: .automatic
+        )
     }
-    
+
     private func updateOrganizedList() {
         organizedList.removeAll()
-        
+
         for entry in entries {
             if let pileID = pile.id {
                 if entry.pile?.id == pileID {
@@ -125,7 +128,7 @@ struct EntryListView: View {
                 }
             } else {
                 pile.id = UUID()
-                
+
                 if let pileID = pile.id {
                     if entry.pile?.id == pileID {
                         organizedList.append(entry)
@@ -134,7 +137,7 @@ struct EntryListView: View {
             }
         }
     }
-    
+
     private func addPicture(image: Data) {
         withAnimation {
             let newEntry = Entry(context: viewContext)
@@ -143,25 +146,25 @@ struct EntryListView: View {
             newEntry.type = EntryType.image.rawValue
             newEntry.image = image
             pile.addToEntries(newEntry)
-            
+
             selection = nil
-            
+
             do {
                 try viewContext.save()
                 updateOrganizedList()
             } catch {
                 // Replace this implementation with code to handle the error appropriately.
-                // fatalError() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development.
                 let nsError = error as NSError
                 fatalError("Unresolved error \(nsError), \(nsError.userInfo)")
             }
         }
     }
-    
+
     private func togglePicker() {
+        selectedImage = nil
         showPhotosPicker.toggle()
     }
-    
+
     private func addEntry() {
         withAnimation {
             let newEntry = Entry(context: viewContext)
@@ -169,54 +172,51 @@ struct EntryListView: View {
             newEntry.id = UUID()
             newEntry.title = "Untitled"
             newEntry.content = ""
-            newEntry.isRichText = false
+            newEntry.isMarkdown = true
             newEntry.language = "markdown"
             pile.addToEntries(newEntry)
-            
+
             selection = nil
-            
+
             do {
                 try viewContext.save()
                 updateOrganizedList()
             } catch {
                 // Replace this implementation with code to handle the error appropriately.
-                // fatalError() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development.
                 let nsError = error as NSError
                 fatalError("Unresolved error \(nsError), \(nsError.userInfo)")
             }
         }
     }
-    
+
     private func deleteEntries(offsets: IndexSet) {
         withAnimation {
             offsets.map { entries[$0] }.forEach(viewContext.delete)
-            
+
             selection = nil
-            
+
             do {
                 try viewContext.save()
                 updateOrganizedList()
             } catch {
                 // Replace this implementation with code to handle the error appropriately.
-                // fatalError() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development.
                 let nsError = error as NSError
                 fatalError("Unresolved error \(nsError), \(nsError.userInfo)")
             }
         }
     }
-    
+
     private func deleteEntry() {
         viewContext.delete(entries[entries.firstIndex(of: selection!)!])
-        
+
         // Reset selection
         selection = nil
-        
+
         do {
             try viewContext.save()
             updateOrganizedList()
         } catch {
             // Replace this implementation with code to handle the error appropriately.
-            // fatalError() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development.
             let nsError = error as NSError
             fatalError("Unresolved error \(nsError), \(nsError.userInfo)")
         }
@@ -225,7 +225,7 @@ struct EntryListView: View {
 
 struct ColorfulIconLabelStyle: LabelStyle {
     var color: Color
-    
+
     func makeBody(configuration: Configuration) -> some View {
         Label {
             configuration.title

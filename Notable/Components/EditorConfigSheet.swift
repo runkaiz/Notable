@@ -10,28 +10,28 @@ import CodeEditor
 
 struct EditorConfigSheet: View {
     @Environment(\.managedObjectContext) private var viewContext
-    
+
     @ObservedObject var entry: Entry
-    
+
     @Environment(\.dismiss) private var dismiss
-    
+
     @State private var language: CodeEditor.Language
-    
+
     @State private var selectedMode: String
-    let modes = ["Rich Text", "Code"]
-    
+    let modes = ["Markdown", "Code"]
+
     init(entry: Entry) {
         self.entry = entry
-        
-        if entry.isRichText {
-            _selectedMode = State(initialValue:"Rich Text")
+
+        if entry.isMarkdown {
+            _selectedMode = State(initialValue: "Markdown")
         } else {
-            _selectedMode = State(initialValue:"Code")
+            _selectedMode = State(initialValue: "Code")
         }
-        
+
         _language = State(initialValue: CodeEditor.Language(rawValue: entry.language ?? "lisp"))
     }
-    
+
     var body: some View {
         VStack {
             HStack {
@@ -41,7 +41,7 @@ struct EditorConfigSheet: View {
                         Circle()
                             .fill(Color(UIColor.systemGray4))
                             .frame(width: 30)
-                        
+
                         Image(systemName: "xmark")
                             .font(.system(size: 15, weight: .bold, design: .rounded))
                             .foregroundColor(.white)
@@ -63,22 +63,21 @@ struct EditorConfigSheet: View {
                 .pickerStyle(.segmented)
             }.padding(.horizontal)
             .onChange(of: selectedMode) {
-                if selectedMode == "Rich Text" {
-                    entry.isRichText = true
+                if selectedMode == "Markdown" {
+                    entry.isMarkdown = true
                 } else {
-                    entry.isRichText = false
+                    entry.isMarkdown = false
                 }
-                
+
                 do {
                     try viewContext.save()
                 } catch {
                     // Replace this implementation with code to handle the error appropriately.
-                    // fatalError() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development.
                     let nsError = error as NSError
                     fatalError("Unresolved error \(nsError), \(nsError.userInfo)")
                 }
             }
-            if !entry.isRichText {
+            if !entry.isMarkdown {
                 HStack {
                     Text("Language")
                     Spacer()
@@ -91,12 +90,11 @@ struct EditorConfigSheet: View {
                 }.padding()
                 .onChange(of: language) {
                     entry.language = language.rawValue
-                    
+
                     do {
                         try viewContext.save()
                     } catch {
                         // Replace this implementation with code to handle the error appropriately.
-                        // fatalError() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development.
                         let nsError = error as NSError
                         fatalError("Unresolved error \(nsError), \(nsError.userInfo)")
                     }
@@ -104,7 +102,7 @@ struct EditorConfigSheet: View {
             }
         }
     }
-    
+
     func dismissSheet() {
         dismiss()
     }

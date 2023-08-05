@@ -8,9 +8,9 @@
 import SwiftUI
 
 struct EntryTransformer: View {
-    
+
     @State var entry: Entry
-    
+
     var body: some View {
         if entry.type != "image" {
             NavigationLink {

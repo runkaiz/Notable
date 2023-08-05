@@ -4,7 +4,7 @@
         <attribute name="content" optional="YES" attributeType="String"/>
         <attribute name="id" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
         <attribute name="image" optional="YES" attributeType="Binary" allowsExternalBinaryDataStorage="YES"/>
-        <attribute name="isRichText" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
+        <attribute name="isMarkdown" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
         <attribute name="language" optional="YES" attributeType="String"/>
         <attribute name="timestamp" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
         <attribute name="title" optional="YES" attributeType="String"/>

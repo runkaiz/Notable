@@ -10,8 +10,8 @@ import CoreData
 
 @main
 struct NotableApp: App {
-    let persistenceController = PersistenceController.shared 
-    
+    let persistenceController = PersistenceController.shared
+
     var body: some Scene {
         WindowGroup {
             ContentView()

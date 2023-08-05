@@ -5,10 +5,10 @@
 //  Created by Runkai Zhang on 7/18/23.
 //
 
-//import NaturalLanguage
+// import NaturalLanguage
 //
-//@available(iOS 17.0, *)
-//extension Entry {
+// @available(iOS 17.0, *)
+// extension Entry {
 //    var embedded: NLContextualEmbeddingResult? {
 //        var result: NLContextualEmbeddingResult?
 //        if let model = NLContextualEmbedding(language: .english) {
@@ -24,4 +24,4 @@
 //        
 //        return result
 //    }
-//}
+// }

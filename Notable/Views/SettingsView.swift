@@ -12,20 +12,24 @@ import CodeEditor
 struct SettingsView: View {
     @AppStorage("autocorrect")
     private var autocorrect = true
-    
+
     @AppStorage("editorFontSize")
     private var editorFontSize = 18
-    
+
     @AppStorage("editorLanguage")
     private var language = CodeEditor.Language.markdown
-    
+
     @AppStorage("editorTheme")
     private var theme = CodeEditor.ThemeName.xcode
-    
+
     var body: some View {
         Form {
-            Section(header: Text("Editor settings")) {
-//                Toggle("Autocorrect in rich text mode", isOn: $autocorrect)
+            Section(header: Text("Markdown Editor settings")) {
+                Toggle("Autocorrect", isOn: $autocorrect)
+            }
+
+            Section(header: Text("Code Editor settings")) {
+//
                 Stepper(value: $editorFontSize, in: 1...64) {
                     Text("Font size: \(editorFontSize)")
                 }
@@ -36,7 +40,7 @@ struct SettingsView: View {
                     }
                 }
             }
-            
+
             Section(header: Text("Miscellaneous")) {
                 NavigationLink("Acknowledgement") {
                     AcknowledgeView()
