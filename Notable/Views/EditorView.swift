@@ -143,7 +143,7 @@ struct EditorView: View {
             ToolbarItem(placement: .principal) {
                 Button(entry.title ?? "Error") {
                     newTitle = entry.title ?? ""
-                    presentAlert = true
+                    presentAlert.toggle()
                 }
                 .bold()
                 .foregroundColor(.black)
@@ -174,14 +174,6 @@ struct EditorView: View {
             .presentationDetents([.fraction(0.275)])
             .scrollContentBackground(.hidden)
         }
-    }
-
-    private func styleItalic() {
-
-    }
-
-    private func styleBold() {
-
     }
 
     private func saveEntry() {

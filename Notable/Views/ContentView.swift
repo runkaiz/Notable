@@ -19,6 +19,7 @@ struct ContentView: View {
 
     @State private var tabSelection: Tabs = .tab1
     @State private var presentAlert = false
+    @State private var presentRenamer = false
     @State private var newPileName = ""
 
     @State private var selection: Entry?
@@ -65,6 +66,8 @@ struct ContentView: View {
                         }
                         .contextMenu(ContextMenu(menuItems: {
                             Button {
+                                contextPile = pile
+                                presentRenamer.toggle()
                             } label: {
                                 Text("Rename")
                             }
@@ -112,6 +115,16 @@ struct ContentView: View {
                     }
                 }
             }
+            .alert("Rename Pile", isPresented: $presentRenamer, actions: {
+                TextField("Pile Name", text: $newPileName)
+
+                Button("Rename", action: {
+                    contextPile!.name = newPileName
+                    save()
+                    newPileName = ""
+                })
+                Button("Cancel", role: .cancel, action: {})
+            })
             .alert("Name Pile", isPresented: $presentAlert, actions: {
                 TextField("Pile Name", text: $newPileName)
 

@@ -28,6 +28,9 @@ struct EntryListView: View {
     @State private var showCancelButton: Bool = false
     @State private var selectedImage: PhotosPickerItem?
 
+    @State private var presentRenamer = false
+    @State private var newPileName = ""
+
     var body: some View {
         List(selection: $selection) {
             Section {
@@ -73,9 +76,16 @@ struct EntryListView: View {
 #endif
         }
         .listStyle(.grouped)
-        .navigationTitle(pile.name ?? "error")
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
+            ToolbarItem(placement: .principal) {
+                Button(pile.name ?? "Error") {
+                    newPileName = pile.name ?? ""
+                    presentRenamer.toggle()
+                }
+                .bold()
+                .foregroundColor(.black)
+            }
 #if os(iOS)
             ToolbarItem(placement: .navigationBarTrailing) {
                 if !organizedList.isEmpty {
@@ -116,6 +126,25 @@ struct EntryListView: View {
             matching: .any(of: [.images, .screenshots]),
             preferredItemEncoding: .automatic
         )
+        .alert("Rename Pile", isPresented: $presentRenamer, actions: {
+            TextField("Pile Name", text: $newPileName)
+
+            Button("Rename", action: {
+                withAnimation {
+                    pile.name = newPileName
+                    do {
+                        try viewContext.save()
+                        updateOrganizedList()
+                    } catch {
+                        // Replace this implementation with code to handle the error appropriately.
+                        let nsError = error as NSError
+                        fatalError("Unresolved error \(nsError), \(nsError.userInfo)")
+                    }
+                    newPileName = ""
+                }
+            })
+            Button("Cancel", role: .cancel, action: {})
+        })
     }
 
     private func updateOrganizedList() {
