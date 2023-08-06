@@ -19,12 +19,12 @@
       }
     },
     {
-      "identity" : "down",
+      "identity" : "highlightedtexteditor",
       "kind" : "remoteSourceControl",
-      "location" : "https://github.com/johnxnguyen/Down.git",
+      "location" : "https://github.com/kyle-n/HighlightedTextEditor",
       "state" : {
-        "branch" : "master",
-        "revision" : "e754ab1c80920dd51a8e08290c912ac1c2ac8b58"
+        "revision" : "7069ede002afc6bde867aef7035f45ff72dc839c",
+        "version" : "2.1.0"
       }
     },
     {
