@@ -31,7 +31,7 @@ struct EditorConfigSheet: View {
         
         _language = State(initialValue: CodeEditor.Language(rawValue: entry.language ?? "lisp"))
     }
-    
+
     var body: some View {
         VStack {
             HStack {
