@@ -28,7 +28,7 @@ struct ContentView: View {
 
     @State private var showColorPicker = false
 
-    @State private var colors: [Color] = [
+    private var colors: [Color] = [
         Color(red: 39/255, green: 39/255, blue: 39/255),
         Color(red: 241/255, green: 113/255, blue: 5/255),
         Color(red: 160/255, green: 210/255, blue: 219/255)
@@ -46,23 +46,7 @@ struct ContentView: View {
                         NavigationLink {
                             EntryListView(pile: pile)
                         } label: {
-                            HStack {
-                                Image(systemName: "doc.on.doc")
-                                Text(pile.name ?? "")
-                                Spacer()
-                                if let tagColor = pile.tag {
-                                    switch tagColor {
-                                    case "Raisin Black":
-                                        Circle().fill(colors[0]).frame(width: 10, height: 10)
-                                    case "Safety Orange":
-                                        Circle().fill(colors[1]).frame(width: 10, height: 10)
-                                    case "Non Photo Blue":
-                                        Circle().fill(colors[2]).frame(width: 10, height: 10)
-                                    default:
-                                        EmptyView()
-                                    }
-                                }
-                            }
+                            PileItem(pile: pile)
                         }
                         .contextMenu {
                             Button {
@@ -91,7 +75,7 @@ struct ContentView: View {
 #endif
                 }
                 .tabItem {
-                    Label("Piles", systemImage: "tray.fill")
+                    Label("Piles", systemImage: "tray.2.fill")
                 }
                 .tag(Tabs.tab1)
 
