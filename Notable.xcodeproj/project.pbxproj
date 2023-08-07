@@ -25,7 +25,7 @@
 		B2D69FD42A613C53007B65C3 /* Package.resolved in Resources */ = {isa = PBXBuildFile; fileRef = B2D69FD32A613C53007B65C3 /* Package.resolved */; };
 		B2D69FD72A613CAB007B65C3 /* AcknowledgeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2D69FD62A613CAB007B65C3 /* AcknowledgeView.swift */; };
 		B2D69FDC2A61467F007B65C3 /* AcknowList in Frameworks */ = {isa = PBXBuildFile; productRef = B2D69FDB2A61467F007B65C3 /* AcknowList */; };
-		B2EA295A2A7E3FF700151A7C /* light.json in Resources */ = {isa = PBXBuildFile; fileRef = B2EA29592A7E3FF700151A7C /* light.json */; };
+		B2E8248B2A80DA2D009D1318 /* NotableApp.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = B2E8248A2A80DA2D009D1318 /* NotableApp.xcstrings */; };
 		B2EA295D2A7E511100151A7C /* ci_post_clone.sh in Resources */ = {isa = PBXBuildFile; fileRef = B2EA295C2A7E511100151A7C /* ci_post_clone.sh */; };
 		B2F0F0482A6F7D760000989B /* EntryListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2F0F0472A6F7D760000989B /* EntryListView.swift */; };
 		B2F0F04A2A6F8B590000989B /* EntryTransformer.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2F0F0492A6F8B590000989B /* EntryTransformer.swift */; };
@@ -51,7 +51,7 @@
 		B2D6931C2A71750A00A9DDF1 /* Notable.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Notable.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		B2D69FD32A613C53007B65C3 /* Package.resolved */ = {isa = PBXFileReference; lastKnownFileType = text; path = Package.resolved; sourceTree = SOURCE_ROOT; };
 		B2D69FD62A613CAB007B65C3 /* AcknowledgeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AcknowledgeView.swift; sourceTree = "<group>"; };
-		B2EA29592A7E3FF700151A7C /* light.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = light.json; sourceTree = "<group>"; };
+		B2E8248A2A80DA2D009D1318 /* NotableApp.xcstrings */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json.xcstrings; path = NotableApp.xcstrings; sourceTree = "<group>"; };
 		B2EA295C2A7E511100151A7C /* ci_post_clone.sh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = ci_post_clone.sh; sourceTree = "<group>"; };
 		B2F0F0472A6F7D760000989B /* EntryListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EntryListView.swift; sourceTree = "<group>"; };
 		B2F0F0492A6F8B590000989B /* EntryTransformer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EntryTransformer.swift; sourceTree = "<group>"; };
@@ -93,7 +93,7 @@
 				B2D69FD52A613C80007B65C3 /* Views */,
 				B28AB4432A60F9000097023A /* Components */,
 				B2FAA9322A664E1C00BEB849 /* Models */,
-				B2399E032A7E3FBC00C93B56 /* Themes */,
+				B2E824892A80DA2D009D1318 /* Localization */,
 				B22944532A4D8B04009015BA /* Notable.xcdatamodeld */,
 				B22944582A4D8B05009015BA /* Assets.xcassets */,
 				B229445A2A4D8B05009015BA /* Notable.entitlements */,
@@ -117,14 +117,6 @@
 				B2EA295C2A7E511100151A7C /* ci_post_clone.sh */,
 			);
 			path = ci_scripts;
-			sourceTree = "<group>";
-		};
-		B2399E032A7E3FBC00C93B56 /* Themes */ = {
-			isa = PBXGroup;
-			children = (
-				B2EA29592A7E3FF700151A7C /* light.json */,
-			);
-			path = Themes;
 			sourceTree = "<group>";
 		};
 		B27458932A6D344B007C29FC /* TestFlight */ = {
@@ -162,6 +154,14 @@
 				B2D69FD62A613CAB007B65C3 /* AcknowledgeView.swift */,
 			);
 			path = Views;
+			sourceTree = "<group>";
+		};
+		B2E824892A80DA2D009D1318 /* Localization */ = {
+			isa = PBXGroup;
+			children = (
+				B2E8248A2A80DA2D009D1318 /* NotableApp.xcstrings */,
+			);
+			path = Localization;
 			sourceTree = "<group>";
 		};
 		B2FAA9322A664E1C00BEB849 /* Models */ = {
@@ -221,6 +221,7 @@
 			knownRegions = (
 				en,
 				Base,
+				"zh-Hans",
 			);
 			mainGroup = B22944432A4D8B04009015BA;
 			packageReferences = (
@@ -243,8 +244,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				B229445D2A4D8B05009015BA /* Preview Assets.xcassets in Resources */,
+				B2E8248B2A80DA2D009D1318 /* NotableApp.xcstrings in Resources */,
 				B2D69FD42A613C53007B65C3 /* Package.resolved in Resources */,
-				B2EA295A2A7E3FF700151A7C /* light.json in Resources */,
 				B2EA295D2A7E511100151A7C /* ci_post_clone.sh in Resources */,
 				B22944592A4D8B05009015BA /* Assets.xcassets in Resources */,
 			);
