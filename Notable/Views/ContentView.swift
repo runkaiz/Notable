@@ -73,6 +73,12 @@ struct ContentView: View {
 #if os(iOS)
                     .onDelete(perform: deletePiles)
 #endif
+
+                    NavigationLink {
+                        OrphanEntriesView()
+                    } label: {
+                        Text("Orphan entries")
+                    }
                 }
                 .tabItem {
                     Label("Piles", systemImage: "tray.2.fill")

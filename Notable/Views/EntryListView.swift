@@ -29,6 +29,11 @@ struct EntryListView: View {
 
     @State private var presentRenamer = false
     @State private var newPileName = ""
+    
+    @State private var contextEntry: Entry?
+    
+    @State private var presentEntryRenamer = false
+    @State private var newEntryName = ""
 
     var body: some View {
         List(selection: $selection) {
@@ -66,6 +71,25 @@ struct EntryListView: View {
             ForEach(entries, id: \.id) { entry in
                 if entry.pile == pile {
                     EntryTransformer(entry: entry)
+                        .contextMenu {
+                            if entry.type == "text" {
+                                Button {
+                                    contextEntry = entry
+                                    newEntryName = entry.title ?? ""
+                                    presentEntryRenamer.toggle()
+                                } label: {
+                                    Text("Rename")
+                                }
+                            }
+                            
+                            Button(role: .destructive) {
+                                viewContext.delete(entry)
+                                
+                                save(viewContext)
+                            } label: {
+                                Text("Delete Entry")
+                            }
+                        }
                 }
             }
 #if os(iOS)
@@ -127,6 +151,16 @@ struct EntryListView: View {
                 pile.name = newPileName
                 save(viewContext)
                 newPileName = ""
+            })
+            Button("Cancel", role: .cancel, action: {})
+        })
+        .alert("Rename Entry", isPresented: $presentEntryRenamer, actions: {
+            TextField("Entry Title", text: $newEntryName)
+
+            Button("Rename", action: {
+                contextEntry!.title = newEntryName
+                save(viewContext)
+                newEntryName = ""
             })
             Button("Cancel", role: .cancel, action: {})
         })
