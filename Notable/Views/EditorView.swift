@@ -120,7 +120,7 @@ struct EditorView: View {
 
             note = Note(title: entry.title!, body: entry.content!)
             
-            entry.type = "text"
+            entry.type = EntryType.text.rawValue
 
             save(viewContext)
         }

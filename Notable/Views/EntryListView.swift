@@ -75,7 +75,7 @@ struct EntryListView: View {
                 if entry.pile == pile {
                     EntryTransformer(entry: entry)
                         .contextMenu {
-                            if entry.type == "text" {
+                            if entry.type == EntryType.text.rawValue {
                                 Button {
                                     contextEntry = entry
                                     newEntryName = entry.title ?? ""
@@ -181,7 +181,16 @@ struct EntryListView: View {
             Button("Cancel", role: .cancel, action: {})
         })
     }
+    
+    private func togglePrompt() {
+        showLinkPrompt.toggle()
+    }
 
+    private func togglePicker() {
+        selectedImage = nil
+        showPhotosPicker.toggle()
+    }
+    
     private func addPicture(image: Data) {
         withAnimation {
             let newEntry = Entry(context: viewContext)
@@ -195,21 +204,12 @@ struct EntryListView: View {
         }
     }
     
-    private func togglePrompt() {
-        showLinkPrompt.toggle()
-    }
-
-    private func togglePicker() {
-        selectedImage = nil
-        showPhotosPicker.toggle()
-    }
-    
     private func addLink() {
         withAnimation {
             let newEntry = Entry(context: viewContext)
             newEntry.timestamp = Date()
             newEntry.id = UUID()
-            newEntry.type = "link"
+            newEntry.type = EntryType.link.rawValue
             newEntry.link = URL(string: newLink)
 
             pile.addToEntries(newEntry)
@@ -227,7 +227,7 @@ struct EntryListView: View {
             newEntry.content = ""
             newEntry.isMarkdown = true
             newEntry.language = "markdown"
-            newEntry.type = "text"
+            newEntry.type = EntryType.text.rawValue
             pile.addToEntries(newEntry)
 
             save(viewContext)

@@ -12,7 +12,7 @@ struct EntryTransformer: View {
     @State var entry: Entry
 
     var body: some View {
-        if entry.type == "text" || entry.type == nil {
+        if entry.type == EntryType.text.rawValue || entry.type == nil {
             NavigationLink {
                 EditorView(entry: entry)
             } label: {

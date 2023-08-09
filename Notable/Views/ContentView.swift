@@ -42,6 +42,17 @@ struct ContentView: View {
         NavigationStack {
             TabView(selection: $tabSelection) {
                 List(selection: $selection) {
+                    Section {
+                        NavigationLink {
+                            OrphanEntriesView()
+                        } label: {
+                            HStack{
+                                Image(systemName: "tray.and.arrow.down.fill")
+                                Text("Inbox")
+                            }
+                        }
+                    }
+                    
                     ForEach(piles, id: \.id) { pile in
                         NavigationLink {
                             EntryListView(pile: pile)
@@ -73,12 +84,6 @@ struct ContentView: View {
 #if os(iOS)
                     .onDelete(perform: deletePiles)
 #endif
-
-                    NavigationLink {
-                        OrphanEntriesView()
-                    } label: {
-                        Text("Orphan entries")
-                    }
                 }
                 .tabItem {
                     Label("Piles", systemImage: "tray.2.fill")

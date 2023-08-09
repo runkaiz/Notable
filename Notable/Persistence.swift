@@ -28,9 +28,9 @@ struct PersistenceController {
             newEntry.content = "# lalala\nlalalal"
             newEntry.isMarkdown = true
             newEntry.language = "markdown"
-            newEntry.type = "text"
+            newEntry.type = EntryType.text.rawValue
 
-            newPile.addToEntries(newEntry)
+//            newPile.addToEntries(newEntry)
         }
         do {
             try viewContext.save()

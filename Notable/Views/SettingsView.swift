@@ -60,7 +60,7 @@ struct SettingsView: View {
                         database.clear()
                         
                         for entry in entries {
-                            if entry.type == "text" {
+                            if entry.type == EntryType.text.rawValue {
                                 if let text = entry.title {
                                     if let wordEmbedding = embedding.vector(for: text) {
                                         database.addDocument(text: text, embedding: wordEmbedding)

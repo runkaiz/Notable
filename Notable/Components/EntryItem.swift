@@ -31,7 +31,7 @@ struct EntryItem: View {
     
     init(entry: Entry) {
         self.entry = entry
-        self.type = EntryType(rawValue: entry.type ?? "text")!
+        self.type = EntryType(rawValue: entry.type ?? EntryType.text.rawValue)!
         
         _image = State(initialValue: UIImage(data: entry.image ?? Data()) ?? UIImage())
     }
