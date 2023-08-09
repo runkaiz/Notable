@@ -19,40 +19,50 @@ enum EntryType: String {
 struct EntryItem: View {
     @ObservedObject var entry: Entry
     var type: EntryType
-
+    
     @State var image: UIImage
     
     @State var preview: Response?
     
     let slp = SwiftLinkPreview(session: URLSession.shared,
-                   workQueue: SwiftLinkPreview.defaultWorkQueue,
-                   responseQueue: DispatchQueue.main,
-                       cache: DisabledCache.instance)
-
+                               workQueue: SwiftLinkPreview.defaultWorkQueue,
+                               responseQueue: DispatchQueue.main,
+                               cache: DisabledCache.instance)
+    
     init(entry: Entry) {
         self.entry = entry
         self.type = EntryType(rawValue: entry.type ?? "text")!
-
+        
         _image = State(initialValue: UIImage(data: entry.image ?? Data()) ?? UIImage())
     }
-
+    
     @State var isImagePopoverPresented = false
-
+    
     var body: some View {
         switch type {
         case .link:
             Section {
-                Text(preview?.title ?? "Loading preview...")
-                AsyncImage(url: URL(string: preview?.image ?? "https://kagi.com/proxy/th?c=MvlWCDdicm1aK3zpADFz51uffrI0FEB-kI9GN5Oyn_dqyEzHH5YvglHWRgS7NvM06O65A8rVvgFJDfx-YcVcFd5RKmCR-i-tJFF0Y_14aPWhVWscH92AODUFf6D2dpAD")) { image in
-                    image.resizable()
-                } placeholder: {
-                    ProgressView()
+                VStack {
+                    HStack {
+                        Link(destination: entry.link ?? URL(string: "https://apple.com")!, label: {
+                            Text(preview?.title ?? "Loading preview...")
+                        })
+                        Spacer()
+                    }
+//                    AsyncImage(url: URL(string: preview?.image ?? "https://kagi.com/proxy/th?c=MvlWCDdicm1aK3zpADFz51uffrI0FEB-kI9GN5Oyn_dqyEzHH5YvglHWRgS7NvM06O65A8rVvgFJDfx-YcVcFd5RKmCR-i-tJFF0Y_14aPWhVWscH92AODUFf6D2dpAD")) { image in
+//                        image.resizable()
+//                    } placeholder: {
+//                        ProgressView()
+//                    }
+//                    .aspectRatio(contentMode: .fit)
                 }
             }
             .onAppear {
-                _ = slp.preview("https://github.com/LeonardoCardoso/SwiftLinkPreview", onSuccess: { res in
-                    preview = res
-                }, onError: { error in print("\(error)")})
+                if let link =  entry.link {
+                    _ = slp.preview(link.absoluteString, onSuccess: { res in
+                        preview = res
+                    }, onError: { error in print("\(error)")})
+                }
             }
         case .recording:
             // To be implemented

@@ -34,6 +34,9 @@ struct EntryListView: View {
     
     @State private var presentEntryRenamer = false
     @State private var newEntryName = ""
+    
+    @State private var showLinkPrompt = false
+    @State private var newLink = ""
 
     var body: some View {
         List(selection: $selection) {
@@ -122,7 +125,7 @@ struct EntryListView: View {
                     Button(action: togglePicker) {
                         Label("New Image Entry", systemImage: "photo.badge.plus")
                     }
-                    Button(action: addLink) {
+                    Button(action: togglePrompt) {
                         Label("New Link Entry", systemImage: "photo.badge.plus")
                     }
                 } label: {
@@ -167,6 +170,16 @@ struct EntryListView: View {
             })
             Button("Cancel", role: .cancel, action: {})
         })
+        .alert("New Link", isPresented: $showLinkPrompt, actions: {
+            TextField("Website URL", text: $newLink)
+                .keyboardType(.URL)
+
+            Button("Add", action: {
+                addLink()
+                newLink = ""
+            })
+            Button("Cancel", role: .cancel, action: {})
+        })
     }
 
     private func addPicture(image: Data) {
@@ -181,6 +194,10 @@ struct EntryListView: View {
             save(viewContext)
         }
     }
+    
+    private func togglePrompt() {
+        showLinkPrompt.toggle()
+    }
 
     private func togglePicker() {
         selectedImage = nil
@@ -193,6 +210,7 @@ struct EntryListView: View {
             newEntry.timestamp = Date()
             newEntry.id = UUID()
             newEntry.type = "link"
+            newEntry.link = URL(string: newLink)
 
             pile.addToEntries(newEntry)
 
