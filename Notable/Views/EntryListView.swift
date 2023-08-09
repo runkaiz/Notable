@@ -105,7 +105,7 @@ struct EntryListView: View {
                     presentRenamer.toggle()
                 }
                 .bold()
-                .foregroundColor(.black)
+                .foregroundColor(.primary)
             }
 #if os(iOS)
             ToolbarItem(placement: .navigationBarTrailing) {
@@ -121,6 +121,9 @@ struct EntryListView: View {
                     }
                     Button(action: togglePicker) {
                         Label("New Image Entry", systemImage: "photo.badge.plus")
+                    }
+                    Button(action: addLink) {
+                        Label("New Link Entry", systemImage: "photo.badge.plus")
                     }
                 } label: {
                     Image(systemName: "plus")
@@ -182,6 +185,19 @@ struct EntryListView: View {
     private func togglePicker() {
         selectedImage = nil
         showPhotosPicker.toggle()
+    }
+    
+    private func addLink() {
+        withAnimation {
+            let newEntry = Entry(context: viewContext)
+            newEntry.timestamp = Date()
+            newEntry.id = UUID()
+            newEntry.type = "link"
+
+            pile.addToEntries(newEntry)
+
+            save(viewContext)
+        }
     }
 
     private func addEntry() {

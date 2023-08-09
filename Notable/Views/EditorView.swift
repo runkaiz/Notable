@@ -84,7 +84,7 @@ struct EditorView: View {
                     presentAlert.toggle()
                 }
                 .bold()
-                .foregroundColor(.black)
+                .foregroundColor(.primary)
                 .alert("Rename Entry", isPresented: $presentAlert, actions: {
                     TextField("Entry Title", text: $newTitle)
 
