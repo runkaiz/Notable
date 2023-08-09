@@ -15,7 +15,9 @@
 		B22944592A4D8B05009015BA /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B22944582A4D8B05009015BA /* Assets.xcassets */; };
 		B229445D2A4D8B05009015BA /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B229445C2A4D8B05009015BA /* Preview Assets.xcassets */; };
 		B23B6BF52A7FF68900737B3E /* HighlightedTextEditor in Frameworks */ = {isa = PBXBuildFile; productRef = B23B6BF42A7FF68900737B3E /* HighlightedTextEditor */; };
-		B28268432A664E5E00DF4F82 /* Entry.swift in Sources */ = {isa = PBXBuildFile; fileRef = B28268422A664E5E00DF4F82 /* Entry.swift */; };
+		B269CDCB2A82455C00813F66 /* SVDB in Frameworks */ = {isa = PBXBuildFile; productRef = B269CDCA2A82455C00813F66 /* SVDB */; };
+		B269CDCE2A82795800813F66 /* SwiftLinkPreview in Frameworks */ = {isa = PBXBuildFile; productRef = B269CDCD2A82795800813F66 /* SwiftLinkPreview */; };
+		B269CDD12A828C4500813F66 /* SkeletonView in Frameworks */ = {isa = PBXBuildFile; productRef = B269CDD02A828C4500813F66 /* SkeletonView */; };
 		B28638322A597BB600B361C3 /* CodeEditor in Frameworks */ = {isa = PBXBuildFile; productRef = B28638312A597BB600B361C3 /* CodeEditor */; };
 		B287911F2A512A000012E576 /* EditorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B287911E2A512A000012E576 /* EditorView.swift */; };
 		B287CC642A7FFD4F0041659B /* CloudKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B287CC632A7FFD4F0041659B /* CloudKit.framework */; };
@@ -43,7 +45,6 @@
 		B229445A2A4D8B05009015BA /* Notable.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Notable.entitlements; sourceTree = "<group>"; };
 		B229445C2A4D8B05009015BA /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		B22C1B562A6D78A100D801A2 /* ci_post_xcodebuild.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = ci_post_xcodebuild.sh; sourceTree = "<group>"; };
-		B28268422A664E5E00DF4F82 /* Entry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Entry.swift; sourceTree = "<group>"; };
 		B287911E2A512A000012E576 /* EditorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditorView.swift; sourceTree = "<group>"; };
 		B287CC632A7FFD4F0041659B /* CloudKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CloudKit.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS17.0.sdk/System/Library/Frameworks/CloudKit.framework; sourceTree = DEVELOPER_DIR; };
 		B28AB4442A60F9270097023A /* EditorConfigSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditorConfigSheet.swift; sourceTree = "<group>"; };
@@ -66,6 +67,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B269CDCB2A82455C00813F66 /* SVDB in Frameworks */,
+				B269CDD12A828C4500813F66 /* SkeletonView in Frameworks */,
+				B269CDCE2A82795800813F66 /* SwiftLinkPreview in Frameworks */,
 				B2D69FDC2A61467F007B65C3 /* AcknowList in Frameworks */,
 				B287CC642A7FFD4F0041659B /* CloudKit.framework in Frameworks */,
 				B23B6BF52A7FF68900737B3E /* HighlightedTextEditor in Frameworks */,
@@ -173,7 +177,6 @@
 		B2FAA9322A664E1C00BEB849 /* Models */ = {
 			isa = PBXGroup;
 			children = (
-				B28268422A664E5E00DF4F82 /* Entry.swift */,
 				B21428BD2A7E705000362E73 /* Note.swift */,
 			);
 			path = Models;
@@ -200,6 +203,9 @@
 				B28638312A597BB600B361C3 /* CodeEditor */,
 				B2D69FDB2A61467F007B65C3 /* AcknowList */,
 				B23B6BF42A7FF68900737B3E /* HighlightedTextEditor */,
+				B269CDCA2A82455C00813F66 /* SVDB */,
+				B269CDCD2A82795800813F66 /* SwiftLinkPreview */,
+				B269CDD02A828C4500813F66 /* SkeletonView */,
 			);
 			productName = Notable;
 			productReference = B2D6931C2A71750A00A9DDF1 /* Notable.app */;
@@ -234,6 +240,9 @@
 				B28638302A597BB600B361C3 /* XCRemoteSwiftPackageReference "CodeEditor" */,
 				B2D69FDA2A61467F007B65C3 /* XCRemoteSwiftPackageReference "AcknowList" */,
 				B23B6BF32A7FF68900737B3E /* XCRemoteSwiftPackageReference "HighlightedTextEditor" */,
+				B269CDC92A82455C00813F66 /* XCRemoteSwiftPackageReference "SVDB" */,
+				B269CDCC2A82795800813F66 /* XCRemoteSwiftPackageReference "SwiftLinkPreview" */,
+				B269CDCF2A828C4500813F66 /* XCRemoteSwiftPackageReference "SkeletonView" */,
 			);
 			productRefGroup = B22944432A4D8B04009015BA;
 			projectDirPath = "";
@@ -286,7 +295,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B28268432A664E5E00DF4F82 /* Entry.swift in Sources */,
 				B2B2E7322A821B1A00D51B47 /* OrphanEntriesView.swift in Sources */,
 				B28AB4452A60F9270097023A /* EditorConfigSheet.swift in Sources */,
 				B293DF792A5C2EE500826D26 /* SettingsView.swift in Sources */,
@@ -552,6 +560,30 @@
 				minimumVersion = 2.1.0;
 			};
 		};
+		B269CDC92A82455C00813F66 /* XCRemoteSwiftPackageReference "SVDB" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/Dripfarm/SVDB.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.0.0;
+			};
+		};
+		B269CDCC2A82795800813F66 /* XCRemoteSwiftPackageReference "SwiftLinkPreview" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/LeonardoCardoso/SwiftLinkPreview.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 3.4.0;
+			};
+		};
+		B269CDCF2A828C4500813F66 /* XCRemoteSwiftPackageReference "SkeletonView" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/Juanpe/SkeletonView.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.30.4;
+			};
+		};
 		B28638302A597BB600B361C3 /* XCRemoteSwiftPackageReference "CodeEditor" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/ZeeZide/CodeEditor.git";
@@ -575,6 +607,21 @@
 			isa = XCSwiftPackageProductDependency;
 			package = B23B6BF32A7FF68900737B3E /* XCRemoteSwiftPackageReference "HighlightedTextEditor" */;
 			productName = HighlightedTextEditor;
+		};
+		B269CDCA2A82455C00813F66 /* SVDB */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = B269CDC92A82455C00813F66 /* XCRemoteSwiftPackageReference "SVDB" */;
+			productName = SVDB;
+		};
+		B269CDCD2A82795800813F66 /* SwiftLinkPreview */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = B269CDCC2A82795800813F66 /* XCRemoteSwiftPackageReference "SwiftLinkPreview" */;
+			productName = SwiftLinkPreview;
+		};
+		B269CDD02A828C4500813F66 /* SkeletonView */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = B269CDCF2A828C4500813F66 /* XCRemoteSwiftPackageReference "SkeletonView" */;
+			productName = SkeletonView;
 		};
 		B28638312A597BB600B361C3 /* CodeEditor */ = {
 			isa = XCSwiftPackageProductDependency;

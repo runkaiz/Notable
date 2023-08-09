@@ -35,6 +35,33 @@
         "revision" : "93199b9e434f04bda956a613af8f571933f9f037",
         "version" : "2.1.2"
       }
+    },
+    {
+      "identity" : "skeletonview",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/Juanpe/SkeletonView.git",
+      "state" : {
+        "revision" : "739a4f5d78731bebc48811c75fa9e1f4c4cef23e",
+        "version" : "1.30.4"
+      }
+    },
+    {
+      "identity" : "svdb",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/Dripfarm/SVDB.git",
+      "state" : {
+        "revision" : "01e78b8bb9423e40201db450180f731c9a67c554",
+        "version" : "2.0.0"
+      }
+    },
+    {
+      "identity" : "swiftlinkpreview",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/LeonardoCardoso/SwiftLinkPreview.git",
+      "state" : {
+        "revision" : "3eb30b1832a9cf0eaeec3e2cf6cfc0ed18ef763f",
+        "version" : "3.4.0"
+      }
     }
   ],
   "version" : 2

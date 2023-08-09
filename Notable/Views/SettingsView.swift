@@ -8,8 +8,16 @@
 import SwiftUI
 import CoreData
 import CodeEditor
+import NaturalLanguage
+import SVDB
 
 struct SettingsView: View {
+    @FetchRequest(
+        entity: Entry.entity(),
+        sortDescriptors: [NSSortDescriptor(keyPath: \Entry.timestamp, ascending: false)],
+        animation: .default)
+    private var entries: FetchedResults<Entry>
+    
     @AppStorage("autocorrect")
     private var autocorrect = true
 
@@ -38,6 +46,34 @@ struct SettingsView: View {
                             .tag(theme)
                     }
                 }
+            }
+            
+            Section(header: Text("Search Database")) {
+                Button(action: {
+                    do {
+                        let database = try SVDB.shared.collection("entries")
+                        
+                        guard let embedding = NLEmbedding.sentenceEmbedding(for: .english) else {
+                            return
+                        }
+                        
+                        database.clear()
+                        
+                        for entry in entries {
+                            if entry.type == "text" {
+                                if let text = entry.title {
+                                    if let wordEmbedding = embedding.vector(for: text) {
+                                        database.addDocument(text: text, embedding: wordEmbedding)
+                                    }
+                                }
+                            }
+                        }
+                    } catch {
+                        print(error)
+                    }
+                }, label: {
+                    Text("Reprocess Embed Database")
+                })
             }
 
             Section(header: Text("Miscellaneous")) {
