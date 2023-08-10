@@ -74,6 +74,24 @@ struct EntryListView: View {
             ForEach(entries, id: \.id) { entry in
                 if entry.pile == pile {
                     EntryTransformer(entry: entry)
+                        .swipeActions(edge: .trailing, allowsFullSwipe: false, content: {
+                            Button(role: .destructive) {
+                                viewContext.delete(entry)
+                                save(viewContext)
+                            } label: {
+                                Text("Delete")
+                            }
+                            
+                            if entry.type == EntryType.text.rawValue {
+                                Button {
+                                    contextEntry = entry
+                                    newEntryName = entry.title ?? ""
+                                    presentEntryRenamer.toggle()
+                                } label: {
+                                    Text("Rename")
+                                }
+                            }
+                        })
                         .contextMenu {
                             if entry.type == EntryType.text.rawValue {
                                 Button {
@@ -87,7 +105,6 @@ struct EntryListView: View {
                             
                             Button(role: .destructive) {
                                 viewContext.delete(entry)
-                                
                                 save(viewContext)
                             } label: {
                                 Text("Delete Entry")

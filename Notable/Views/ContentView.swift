@@ -59,6 +59,28 @@ struct ContentView: View {
                         } label: {
                             PileItem(pile: pile)
                         }
+                        .swipeActions(edge: .trailing, allowsFullSwipe: false, content: {
+                            Button(role: .destructive) {
+                                viewContext.delete(pile)
+                                save(viewContext)
+                            } label: {
+                                Text("Delete")
+                            }
+                            Button {
+                                contextPile = pile
+                                showColorPicker.toggle()
+                            } label: {
+                                Text("Color")
+                            }
+                            .tint(.brown)
+                            Button {
+                                contextPile = pile
+                                newPileName = pile.name ?? ""
+                                presentRenamer.toggle()
+                            } label: {
+                                Text("Rename")
+                            }
+                        })
                         .contextMenu {
                             Button {
                                 contextPile = pile

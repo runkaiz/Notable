@@ -46,6 +46,35 @@ struct OrphanEntriesView: View {
             ForEach(entries, id: \.id) { entry in
                 if entry.pile == nil {
                     EntryTransformer(entry: entry)
+                        .swipeActions(edge: .trailing, allowsFullSwipe: false, content: {
+                            Button(role: .destructive) {
+                                viewContext.delete(entry)
+                                save(viewContext)
+                            } label: {
+                                Text("Delete")
+                            }
+                            
+                            if entry.type == EntryType.text.rawValue {
+                                Button {
+                                    contextEntry = entry
+                                    newEntryName = entry.title ?? ""
+                                    presentEntryRenamer.toggle()
+                                } label: {
+                                    Text("Rename")
+                                }
+                            }
+                            
+                            Button {
+                                contextEntry = entry
+                                if let first = piles.first {
+                                    selectedPile = first
+                                }
+                                
+                                showPileChooser.toggle()
+                            } label: {
+                                Text("Assign")
+                            }
+                        })
                         .contextMenu {
                             Button {
                                 contextEntry = entry
