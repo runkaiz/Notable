@@ -11,6 +11,9 @@ import CoreData
 struct ContentView: View {
     @Environment(\.managedObjectContext) private var viewContext
 
+    @EnvironmentObject var actionService: ActionService
+    @Environment(\.scenePhase) var scenePhase
+    
     @FetchRequest(
         entity: Pile.entity(),
         sortDescriptors: [NSSortDescriptor(keyPath: \Pile.name, ascending: true)],
@@ -37,6 +40,8 @@ struct ContentView: View {
     @State private var contextPile: Pile?
 
     @State private var emptyTagAnimateTrigger = false
+    
+    @State public var shouldPushToOrphan = false
 
     var body: some View {
         NavigationStack {
@@ -44,13 +49,16 @@ struct ContentView: View {
                 List(selection: $selection) {
                     Section {
                         NavigationLink {
-                            OrphanEntriesView()
+                            OrphanEntriesView(didGetPushedHere: $shouldPushToOrphan)
                         } label: {
                             HStack{
                                 Image(systemName: "tray.and.arrow.down.fill")
                                 Text("Inbox")
                             }
                         }
+                    }
+                    .navigationDestination(isPresented: $shouldPushToOrphan) {
+                        OrphanEntriesView(didGetPushedHere: $shouldPushToOrphan )
                     }
                     
                     ForEach(piles, id: \.id) { pile in
@@ -244,6 +252,26 @@ struct ContentView: View {
                 }
             }
         }
+        .onChange(of: scenePhase) { _, newValue in
+            switch newValue {
+            case .active:
+                performActionIfNeeded()
+            default:
+                break
+            }
+        }
+
+    }
+    
+    func performActionIfNeeded() {
+        guard let action = actionService.action else { return }
+
+        switch action {
+        case .newEntry:
+            newEntry()
+        }
+
+        actionService.action = nil
     }
 
     enum Tabs {
@@ -260,6 +288,11 @@ struct ContentView: View {
         case .tab1: return Text("Piles")
         case .tab2: return Text("Settings")
         }
+    }
+    
+    private func newEntry() {
+        tabSelection = .tab1
+        shouldPushToOrphan.toggle()
     }
 
     private func deletePile() {

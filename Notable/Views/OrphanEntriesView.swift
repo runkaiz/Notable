@@ -25,6 +25,8 @@ struct OrphanEntriesView: View {
     
     @State private var selection: Entry?
     
+    @Binding public var didGetPushedHere: Bool
+    
     @State private var presentEntryRenamer = false
     @State private var newEntryName = ""
     
@@ -113,6 +115,11 @@ struct OrphanEntriesView: View {
         }
         .navigationTitle("Inbox")
         .navigationBarTitleDisplayMode(.inline)
+        .onAppear {
+            if didGetPushedHere {
+                addEntry()
+            }
+        }
         .toolbar {
 #if os(iOS)
             ToolbarItem(placement: .navigationBarTrailing) {
