@@ -17,7 +17,7 @@
 		B23B6BF52A7FF68900737B3E /* HighlightedTextEditor in Frameworks */ = {isa = PBXBuildFile; productRef = B23B6BF42A7FF68900737B3E /* HighlightedTextEditor */; };
 		B269CDCB2A82455C00813F66 /* SVDB in Frameworks */ = {isa = PBXBuildFile; productRef = B269CDCA2A82455C00813F66 /* SVDB */; };
 		B269CDCE2A82795800813F66 /* SwiftLinkPreview in Frameworks */ = {isa = PBXBuildFile; productRef = B269CDCD2A82795800813F66 /* SwiftLinkPreview */; };
-		B269CDD12A828C4500813F66 /* SkeletonView in Frameworks */ = {isa = PBXBuildFile; productRef = B269CDD02A828C4500813F66 /* SkeletonView */; };
+		B27D43232A84B417007F25AE /* SkeletonUI in Frameworks */ = {isa = PBXBuildFile; productRef = B27D43222A84B417007F25AE /* SkeletonUI */; };
 		B28638322A597BB600B361C3 /* CodeEditor in Frameworks */ = {isa = PBXBuildFile; productRef = B28638312A597BB600B361C3 /* CodeEditor */; };
 		B287911F2A512A000012E576 /* EditorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B287911E2A512A000012E576 /* EditorView.swift */; };
 		B287CC642A7FFD4F0041659B /* CloudKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B287CC632A7FFD4F0041659B /* CloudKit.framework */; };
@@ -68,10 +68,10 @@
 			buildActionMask = 2147483647;
 			files = (
 				B269CDCB2A82455C00813F66 /* SVDB in Frameworks */,
-				B269CDD12A828C4500813F66 /* SkeletonView in Frameworks */,
 				B269CDCE2A82795800813F66 /* SwiftLinkPreview in Frameworks */,
 				B2D69FDC2A61467F007B65C3 /* AcknowList in Frameworks */,
 				B287CC642A7FFD4F0041659B /* CloudKit.framework in Frameworks */,
+				B27D43232A84B417007F25AE /* SkeletonUI in Frameworks */,
 				B23B6BF52A7FF68900737B3E /* HighlightedTextEditor in Frameworks */,
 				B28638322A597BB600B361C3 /* CodeEditor in Frameworks */,
 			);
@@ -205,7 +205,7 @@
 				B23B6BF42A7FF68900737B3E /* HighlightedTextEditor */,
 				B269CDCA2A82455C00813F66 /* SVDB */,
 				B269CDCD2A82795800813F66 /* SwiftLinkPreview */,
-				B269CDD02A828C4500813F66 /* SkeletonView */,
+				B27D43222A84B417007F25AE /* SkeletonUI */,
 			);
 			productName = Notable;
 			productReference = B2D6931C2A71750A00A9DDF1 /* Notable.app */;
@@ -242,7 +242,7 @@
 				B23B6BF32A7FF68900737B3E /* XCRemoteSwiftPackageReference "HighlightedTextEditor" */,
 				B269CDC92A82455C00813F66 /* XCRemoteSwiftPackageReference "SVDB" */,
 				B269CDCC2A82795800813F66 /* XCRemoteSwiftPackageReference "SwiftLinkPreview" */,
-				B269CDCF2A828C4500813F66 /* XCRemoteSwiftPackageReference "SkeletonView" */,
+				B27D43212A84B417007F25AE /* XCRemoteSwiftPackageReference "SkeletonUI" */,
 			);
 			productRefGroup = B22944432A4D8B04009015BA;
 			projectDirPath = "";
@@ -576,12 +576,12 @@
 				minimumVersion = 3.4.0;
 			};
 		};
-		B269CDCF2A828C4500813F66 /* XCRemoteSwiftPackageReference "SkeletonView" */ = {
+		B27D43212A84B417007F25AE /* XCRemoteSwiftPackageReference "SkeletonUI" */ = {
 			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/Juanpe/SkeletonView.git";
+			repositoryURL = "https://github.com/CSolanaM/SkeletonUI.git";
 			requirement = {
 				kind = upToNextMajorVersion;
-				minimumVersion = 1.30.4;
+				minimumVersion = 1.0.11;
 			};
 		};
 		B28638302A597BB600B361C3 /* XCRemoteSwiftPackageReference "CodeEditor" */ = {
@@ -618,10 +618,10 @@
 			package = B269CDCC2A82795800813F66 /* XCRemoteSwiftPackageReference "SwiftLinkPreview" */;
 			productName = SwiftLinkPreview;
 		};
-		B269CDD02A828C4500813F66 /* SkeletonView */ = {
+		B27D43222A84B417007F25AE /* SkeletonUI */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = B269CDCF2A828C4500813F66 /* XCRemoteSwiftPackageReference "SkeletonView" */;
-			productName = SkeletonView;
+			package = B27D43212A84B417007F25AE /* XCRemoteSwiftPackageReference "SkeletonUI" */;
+			productName = SkeletonUI;
 		};
 		B28638312A597BB600B361C3 /* CodeEditor */ = {
 			isa = XCSwiftPackageProductDependency;

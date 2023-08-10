@@ -8,6 +8,7 @@
 import SwiftUI
 import CoreData
 import SwiftLinkPreview
+import SkeletonUI
 
 enum EntryType: String {
     case text
@@ -47,14 +48,17 @@ struct EntryItem: View {
                         Link(destination: entry.link ?? URL(string: "https://apple.com")!, label: {
                             Text(preview?.title ?? "Loading preview...")
                         })
+                        .skeleton(with: preview == nil)
+                        .shape(type: .rectangle)
+                        
                         Spacer()
                     }
-//                    AsyncImage(url: URL(string: preview?.image ?? "https://kagi.com/proxy/th?c=MvlWCDdicm1aK3zpADFz51uffrI0FEB-kI9GN5Oyn_dqyEzHH5YvglHWRgS7NvM06O65A8rVvgFJDfx-YcVcFd5RKmCR-i-tJFF0Y_14aPWhVWscH92AODUFf6D2dpAD")) { image in
-//                        image.resizable()
-//                    } placeholder: {
-//                        ProgressView()
-//                    }
-//                    .aspectRatio(contentMode: .fit)
+                    //                    AsyncImage(url: URL(string: preview?.image ?? "https://kagi.com/proxy/th?c=MvlWCDdicm1aK3zpADFz51uffrI0FEB-kI9GN5Oyn_dqyEzHH5YvglHWRgS7NvM06O65A8rVvgFJDfx-YcVcFd5RKmCR-i-tJFF0Y_14aPWhVWscH92AODUFf6D2dpAD")) { image in
+                    //                        image.resizable()
+                    //                    } placeholder: {
+                    //                        ProgressView()
+                    //                    }
+                    //                    .aspectRatio(contentMode: .fit)
                 }
             }
             .onAppear {
