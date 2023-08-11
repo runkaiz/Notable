@@ -71,6 +71,9 @@
         }
       }
     },
+    "Camera" : {
+
+    },
     "Cancel" : {
       "localizations" : {
         "zh-Hans" : {

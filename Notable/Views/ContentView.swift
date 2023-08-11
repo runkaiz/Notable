@@ -324,16 +324,6 @@ struct ContentView: View {
     }
 }
 
-public func save(_ viewContext: NSManagedObjectContext) {
-    do {
-        try viewContext.save()
-    } catch {
-        // Replace this implementation with code to handle the error appropriately.
-        let nsError = error as NSError
-        fatalError("Unresolved error \(nsError), \(nsError.userInfo)")
-    }
-}
-
 #Preview {
     ContentView().environment(\.managedObjectContext, PersistenceController.preview.container.viewContext)
 }

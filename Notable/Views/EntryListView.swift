@@ -138,7 +138,9 @@ struct EntryListView: View {
 #endif
             ToolbarItem(placement: .navigationBarTrailing) {
                 Menu {
-                    Button(action: addEntry) {
+                    Button {
+                        addEntry(viewContext)
+                    } label: {
                         Label("New Text Entry", systemImage: "doc.badge.plus")
                     }
                     Button(action: togglePicker) {
@@ -155,7 +157,7 @@ struct EntryListView: View {
         .onChange(of: selectedImage) {
             Task {
                 if let data = try? await selectedImage?.loadTransferable(type: Data.self) {
-                    addPicture(image: data)
+                    addPicture(viewContext, image: data)
 
                     return
                 }
@@ -214,7 +216,7 @@ struct EntryListView: View {
                 .keyboardType(.URL)
 
             Button("Add", action: {
-                addLink()
+                addLink(viewContext, newLink: newLink)
                 newLink = ""
             })
             Button("Cancel", role: .cancel, action: {})
@@ -229,49 +231,6 @@ struct EntryListView: View {
         selectedImage = nil
         isConfirmingImageTools.toggle()
     }
-    
-    private func addPicture(image: Data) {
-        withAnimation {
-            let newEntry = Entry(context: viewContext)
-            newEntry.timestamp = Date()
-            newEntry.id = UUID()
-            newEntry.type = EntryType.image.rawValue
-            newEntry.image = image
-            pile.addToEntries(newEntry)
-
-            save(viewContext)
-        }
-    }
-    
-    private func addLink() {
-        withAnimation {
-            let newEntry = Entry(context: viewContext)
-            newEntry.timestamp = Date()
-            newEntry.id = UUID()
-            newEntry.type = EntryType.link.rawValue
-            newEntry.link = URL(string: newLink)
-
-            pile.addToEntries(newEntry)
-
-            save(viewContext)
-        }
-    }
-
-    private func addEntry() {
-        withAnimation {
-            let newEntry = Entry(context: viewContext)
-            newEntry.timestamp = Date()
-            newEntry.id = UUID()
-            newEntry.title = "Untitled"
-            newEntry.content = ""
-            newEntry.isMarkdown = true
-            newEntry.language = "markdown"
-            newEntry.type = EntryType.text.rawValue
-            pile.addToEntries(newEntry)
-
-            save(viewContext)
-        }
-    }
 
     private func deleteEntries(offsets: IndexSet) {
         withAnimation {
@@ -279,12 +238,6 @@ struct EntryListView: View {
 
             save(viewContext)
         }
-    }
-
-    private func deleteEntry() {
-        viewContext.delete(entries[entries.firstIndex(of: selection!)!])
-
-        save(viewContext)
     }
 }
 

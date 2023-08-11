@@ -78,6 +78,7 @@ struct OrphanEntriesView: View {
                             } label: {
                                 Text("Assign")
                             }
+                            .tint(.accentColor)
                         })
                         .contextMenu {
                             Button {
@@ -119,7 +120,7 @@ struct OrphanEntriesView: View {
         .navigationBarTitleDisplayMode(.inline)
         .onAppear {
             if didGetPushedHere {
-                addEntry()
+                addEntry(viewContext)
             }
         }
         .toolbar {
@@ -132,7 +133,9 @@ struct OrphanEntriesView: View {
 #endif
             ToolbarItem(placement: .navigationBarTrailing) {
                 Menu {
-                    Button(action: addEntry) {
+                    Button {
+                        addEntry(viewContext)
+                    } label: {
                         Label("New Text Entry", systemImage: "doc.badge.plus")
                     }
                     Button(action: togglePicker) {
@@ -149,7 +152,7 @@ struct OrphanEntriesView: View {
         .onChange(of: selectedImage) {
             Task {
                 if let data = try? await selectedImage?.loadTransferable(type: Data.self) {
-                    addPicture(image: data)
+                    addPicture(viewContext, image: data)
                     
                     return
                 }
@@ -198,7 +201,7 @@ struct OrphanEntriesView: View {
                 .keyboardType(.URL)
             
             Button("Add", action: {
-                addLink()
+                addLink(viewContext, newLink: newLink)
                 newLink = ""
             })
             Button("Cancel", role: .cancel, action: {})
@@ -242,57 +245,12 @@ struct OrphanEntriesView: View {
         isConfirmingImageTools.toggle()
     }
     
-    private func addPicture(image: Data) {
-        withAnimation {
-            let newEntry = Entry(context: viewContext)
-            newEntry.timestamp = Date()
-            newEntry.id = UUID()
-            newEntry.type = EntryType.image.rawValue
-            newEntry.image = image
-            
-            save(viewContext)
-        }
-    }
-    
-    private func addLink() {
-        withAnimation {
-            let newEntry = Entry(context: viewContext)
-            newEntry.timestamp = Date()
-            newEntry.id = UUID()
-            newEntry.type = EntryType.link.rawValue
-            newEntry.link = URL(string: newLink)
-            
-            save(viewContext)
-        }
-    }
-    
-    private func addEntry() {
-        withAnimation {
-            let newEntry = Entry(context: viewContext)
-            newEntry.timestamp = Date()
-            newEntry.id = UUID()
-            newEntry.title = "Untitled"
-            newEntry.content = ""
-            newEntry.isMarkdown = true
-            newEntry.language = "markdown"
-            newEntry.type = EntryType.text.rawValue
-            
-            save(viewContext)
-        }
-    }
-    
     private func deleteEntries(offsets: IndexSet) {
         withAnimation {
             offsets.map { entries[$0] }.forEach(viewContext.delete)
             
             save(viewContext)
         }
-    }
-    
-    private func deleteEntry() {
-        viewContext.delete(entries[entries.firstIndex(of: selection!)!])
-        
-        save(viewContext)
     }
 }
 
