@@ -38,6 +38,8 @@ struct EntryListView: View {
     @State private var showLinkPrompt = false
     @State private var newLink = ""
 
+    @State private var isConfirmingImageTools = false
+    
     var body: some View {
         List(selection: $selection) {
             Section {
@@ -161,6 +163,26 @@ struct EntryListView: View {
                 print("Failed")
             }
         }
+        .confirmationDialog(
+            "Choose your source of images.",
+            isPresented: $isConfirmingImageTools
+        ) {
+            Button {
+                // No SwiftUI native camera access for now
+            } label: {
+                Text("Camera")
+            }
+            
+            Button {
+                showPhotosPicker.toggle()
+            } label: {
+                Text("Photos Library")
+            }
+            
+            Button("Cancel", role: .cancel) {
+                return
+            }
+        }
         .photosPicker(
             isPresented: $showPhotosPicker,
             selection: $selectedImage,
@@ -205,7 +227,7 @@ struct EntryListView: View {
 
     private func togglePicker() {
         selectedImage = nil
-        showPhotosPicker.toggle()
+        isConfirmingImageTools.toggle()
     }
     
     private func addPicture(image: Data) {

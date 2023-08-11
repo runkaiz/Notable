@@ -43,6 +43,8 @@ struct OrphanEntriesView: View {
     @State private var showPileChooser = false
     @State private var selectedPile: Pile?
     
+    @State private var isConfirmingImageTools = false
+    
     var body: some View {
         List(selection: $selection) {
             ForEach(entries, id: \.id) { entry in
@@ -155,6 +157,26 @@ struct OrphanEntriesView: View {
                 print("Failed")
             }
         }
+        .confirmationDialog(
+            "Choose your source of images.",
+            isPresented: $isConfirmingImageTools
+        ) {
+            Button {
+                // No SwiftUI native camera access for now
+            } label: {
+                Text("Camera")
+            }
+            
+            Button {
+                showPhotosPicker.toggle()
+            } label: {
+                Text("Photos Library")
+            }
+            
+            Button("Cancel", role: .cancel) {
+                return
+            }
+        }
         .photosPicker(
             isPresented: $showPhotosPicker,
             selection: $selectedImage,
@@ -217,7 +239,7 @@ struct OrphanEntriesView: View {
     
     private func togglePicker() {
         selectedImage = nil
-        showPhotosPicker.toggle()
+        isConfirmingImageTools.toggle()
     }
     
     private func addPicture(image: Data) {

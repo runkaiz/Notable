@@ -91,6 +91,9 @@
         }
       }
     },
+    "Choose your source of images." : {
+
+    },
     "Close" : {
       "localizations" : {
         "zh-Hans" : {
@@ -326,6 +329,9 @@
           }
         }
       }
+    },
+    "Photos Library" : {
+
     },
     "Pile Name" : {
       "localizations" : {
