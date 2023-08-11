@@ -92,7 +92,14 @@
       }
     },
     "Choose your source of images." : {
-
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "选择你的图片来源"
+          }
+        }
+      }
     },
     "Close" : {
       "localizations" : {
@@ -331,7 +338,14 @@
       }
     },
     "Photos Library" : {
-
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "照片图库"
+          }
+        }
+      }
     },
     "Pile Name" : {
       "localizations" : {
