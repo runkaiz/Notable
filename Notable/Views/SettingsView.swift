@@ -23,6 +23,9 @@ struct SettingsView: View {
 
     @AppStorage("editorFontSize")
     private var editorFontSize = 18
+    
+    @AppStorage("markdownBaseFontSize")
+    private var markdownBaseFontSize = 18
 
     @AppStorage("editorLanguage")
     private var language = CodeEditor.Language.markdown
@@ -33,6 +36,9 @@ struct SettingsView: View {
     var body: some View {
         Form {
             Section(header: Text("Markdown Editor settings")) {
+                Stepper(value: $markdownBaseFontSize, in: 1...64) {
+                    Text("Font size: \(markdownBaseFontSize)")
+                }
                 Toggle("Autocorrect", isOn: $autocorrect)
             }
 

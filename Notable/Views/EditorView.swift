@@ -22,12 +22,11 @@ struct EditorView: View {
 
     @FocusState var isInputActive: Bool
 
-#if os(macOS)
-    @AppStorage("fontsize") var fontSize = Int(NSFont.systemFontSize)
-#else
     @AppStorage("editorFontSize")
     private var editorFontSize = 18
-#endif
+    
+    @AppStorage("markdownBaseFontSize")
+    private var markdownBaseFontSize = 18
 
     @AppStorage("autocorrect")
     private var autocorrect = true
@@ -47,19 +46,26 @@ struct EditorView: View {
         VStack(spacing: 0) {
             Divider()
             if entry.isMarkdown {
-                HighlightedTextEditor(text: $entry.content ?? "", highlightRules: .markdown)
+#if os(macOS)
+                HighlightedTextEditor(text: $entry.content ?? "", highlightRules: [HighlightRule(pattern: .all, formattingRule: TextFormattingRule(key: .font, value: NSFont.systemFont(ofSize: CGFloat(markdownBaseFontSize))))])
                     .introspect { editor in
-                        editor.textView.autocorrectionType = autocorrect ? UITextAutocorrectionType.yes : UITextAutocorrectionType.no
+                        editor.textView.autocorrectionType = autocorrect ? .yes : .no
                     }
+#else
+                HighlightedTextEditor(text: $entry.content ?? "", highlightRules: [HighlightRule(pattern: .all, formattingRule: TextFormattingRule(key: .font, value: UIFont.systemFont(ofSize: CGFloat(markdownBaseFontSize))))])
+                    .introspect { editor in
+                        editor.textView.autocorrectionType = autocorrect ? .yes : .no
+                    }
+#endif
             } else {
 #if os(macOS)
                 CodeEditor(
                     source: $entry.content ?? "",
                     language: language, theme: theme,
-                    fontSize: .init(get: { CGFloat(fontSize) }, set: { fontSize = Int($0) }))
+                    fontSize: .init(get: { CGFloat(editorFontSize) }, set: { editorFontSize = Int($0) }))
                 .frame(minWidth: 640, minHeight: 480)
                 .focused($isInputActive)
-                .keyboardType(UIKit.UIKeyboardType.alphabet)
+                .keyboardType(.alphabet)
 #else
                 CodeEditor(
                     source: $entry.content ?? "",
@@ -67,7 +73,7 @@ struct EditorView: View {
                     fontSize: .init(get: { CGFloat(editorFontSize) }, set: { editorFontSize = Int($0) }))
                 .padding(.top, CGFloat(12))
                 .focused($isInputActive)
-                .keyboardType(UIKit.UIKeyboardType.alphabet)
+                .keyboardType(.alphabet)
 #endif
             }
         }
