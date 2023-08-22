@@ -52,7 +52,7 @@ struct EditorView: View {
                         editor.textView.autocorrectionType = autocorrect ? .yes : .no
                     }
 #else
-                HighlightedTextEditor(text: $entry.content ?? "", highlightRules: [HighlightRule(pattern: .all, formattingRule: TextFormattingRule(key: .font, value: UIFont.systemFont(ofSize: CGFloat(markdownBaseFontSize))))])
+                HighlightedTextEditor(text: $entry.content ?? "", highlightRules: .markdown)
                     .introspect { editor in
                         editor.textView.autocorrectionType = autocorrect ? .yes : .no
                     }

@@ -45,6 +45,8 @@ struct OrphanEntriesView: View {
     
     @State private var isConfirmingImageTools = false
     
+    @State private var isImporting = false
+    
     var body: some View {
         List(selection: $selection) {
             ForEach(entries, id: \.id) { entry in
@@ -120,7 +122,7 @@ struct OrphanEntriesView: View {
         .navigationBarTitleDisplayMode(.inline)
         .onAppear {
             if didGetPushedHere {
-                addEntry(viewContext)
+                addEntry(viewContext, pile: nil)
             }
         }
         .toolbar {
@@ -134,7 +136,7 @@ struct OrphanEntriesView: View {
             ToolbarItem(placement: .navigationBarTrailing) {
                 Menu {
                     Button {
-                        addEntry(viewContext)
+                        addEntry(viewContext, pile: nil)
                     } label: {
                         Label("New Text Entry", systemImage: "doc.badge.plus")
                     }
@@ -143,6 +145,9 @@ struct OrphanEntriesView: View {
                     }
                     Button(action: togglePrompt) {
                         Label("New Link Entry", systemImage: "photo.badge.plus")
+                    }
+                    Button(action: toggleImporter) {
+                        Label("Import File", systemImage: "photo.badge.plus")
                     }
                 } label: {
                     Image(systemName: "plus")
@@ -228,12 +233,49 @@ struct OrphanEntriesView: View {
             }
             .presentationDetents([.fraction(0.3)])
         }
+        .fileImporter(isPresented: $isImporting, allowedContentTypes: [.text]) { result in
+            switch result {
+            case .success(let directory):
+                // gain access to the directory
+                let gotAccess = directory.startAccessingSecurityScopedResource()
+                if !gotAccess { return }
+                // access the directory URL
+                // (read templates in the directory, make a bookmark, etc.)
+                do {
+                    let contents = try String(contentsOf: directory, encoding: .utf8)
+                    
+                    withAnimation {
+                        let newEntry = Entry(context: viewContext)
+                        newEntry.timestamp = Date()
+                        newEntry.id = UUID()
+                        newEntry.title = directory.lastPathComponent
+                        newEntry.content = contents
+                        newEntry.isMarkdown = true
+                        newEntry.language = "markdown"
+                        newEntry.type = EntryType.text.rawValue
+                        
+                        save(viewContext)
+                    }
+                } catch let error as NSError {
+                    print(error.localizedDescription)
+                }
+                // release access
+                directory.stopAccessingSecurityScopedResource()
+            case .failure(let error):
+                // handle error
+                print(error)
+            }
+        }
     }
     
     private func assignToPile() {
         contextEntry!.pile = selectedPile
         
         save(viewContext)
+    }
+    
+    private func toggleImporter() {
+        isImporting.toggle()
     }
     
     private func togglePrompt() {

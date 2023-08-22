@@ -8,7 +8,7 @@
 import CoreData
 import SwiftUI
 
-public func addEntry(_ viewContext: NSManagedObjectContext) {
+public func addEntry(_ viewContext: NSManagedObjectContext, pile: Pile?) {
     withAnimation {
         let newEntry = Entry(context: viewContext)
         newEntry.timestamp = Date()
@@ -18,6 +18,10 @@ public func addEntry(_ viewContext: NSManagedObjectContext) {
         newEntry.isMarkdown = true
         newEntry.language = "markdown"
         newEntry.type = EntryType.text.rawValue
+        
+        if let pile = pile {
+            pile.addToEntries(newEntry)
+        }
         
         save(viewContext)
     }
