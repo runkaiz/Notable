@@ -17,7 +17,6 @@ struct EditorView: View {
 
     @State private var presentAlert = false
     @State private var newTitle = ""
-    @State private var note: Note
     @State private var showingSheet = false
 
     @FocusState var isInputActive: Bool
@@ -39,7 +38,6 @@ struct EditorView: View {
 
     init(entry: Entry) {
         self.entry = entry
-        self.note = Note(title: entry.title ?? "", body: entry.content ?? "")
     }
 
     var body: some View {
@@ -104,7 +102,7 @@ struct EditorView: View {
                         isInputActive = false
                         showingSheet.toggle()
                     }
-                    ShareLink(item: note, preview: SharePreview("\(note.title)"))
+                    ShareLink(item: Note(title: entry.title!, body: entry.content!), preview: SharePreview(entry.title!))
                 } label: {
                     Image(systemName: "info.circle")
                 }
@@ -123,8 +121,6 @@ struct EditorView: View {
     private func saveEntry() {
         withAnimation {
             if !newTitle.isEmpty { entry.title = newTitle }
-
-            note = Note(title: entry.title!, body: entry.content!)
             
             entry.type = EntryType.text.rawValue
 
