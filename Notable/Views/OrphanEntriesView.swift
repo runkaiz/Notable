@@ -227,6 +227,7 @@ struct OrphanEntriesView: View {
                     Spacer()
                     Button("Assign", action: {
                         assignToPile()
+                        showPileChooser.toggle()
                     })
                     .padding()
                 }
