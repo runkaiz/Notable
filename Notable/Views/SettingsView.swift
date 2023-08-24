@@ -10,6 +10,7 @@ import CoreData
 import CodeEditor
 import NaturalLanguage
 import SVDB
+import CloudKitSyncMonitor
 
 struct SettingsView: View {
     @FetchRequest(
@@ -17,6 +18,9 @@ struct SettingsView: View {
         sortDescriptors: [NSSortDescriptor(keyPath: \Entry.timestamp, ascending: false)],
         animation: .default)
     private var entries: FetchedResults<Entry>
+    
+    @available(iOS 14.0, *)
+    @ObservedObject var syncMonitor = SyncMonitor.shared
     
     @AppStorage("autocorrect")
     private var autocorrect = true
@@ -50,6 +54,17 @@ struct SettingsView: View {
                     ForEach(CodeEditor.availableThemes) { theme in
                         Text("\(theme.rawValue.capitalized)")
                             .tag(theme)
+                    }
+                }
+            }
+            
+            Section(header: Text("iCloud")) {
+                if #available(iOS 14.0, *) {
+                    HStack {
+                        Text("Status:")
+                        Spacer()
+                        Image(systemName: syncMonitor.syncStateSummary.symbolName)
+                            .foregroundColor(syncMonitor.syncStateSummary.symbolColor)
                     }
                 }
             }

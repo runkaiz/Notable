@@ -27,6 +27,7 @@
 		B2B2E7322A821B1A00D51B47 /* OrphanEntriesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2B2E7312A821B1A00D51B47 /* OrphanEntriesView.swift */; };
 		B2C0BE782A55332200EC9CAF /* EntryItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2C0BE772A55332200EC9CAF /* EntryItem.swift */; };
 		B2C8FA662A83CEBA007E7057 /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = B2C8FA652A83CEBA007E7057 /* Localizable.xcstrings */; };
+		B2CC4C682A97399F00AF08D1 /* CloudKitSyncMonitor in Frameworks */ = {isa = PBXBuildFile; productRef = B2CC4C672A97399F00AF08D1 /* CloudKitSyncMonitor */; };
 		B2CE2AF62A80DDD800F44A58 /* PileItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2CE2AF52A80DDD800F44A58 /* PileItem.swift */; };
 		B2D69FD42A613C53007B65C3 /* Package.resolved in Resources */ = {isa = PBXBuildFile; fileRef = B2D69FD32A613C53007B65C3 /* Package.resolved */; };
 		B2D69FD72A613CAB007B65C3 /* AcknowledgeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2D69FD62A613CAB007B65C3 /* AcknowledgeView.swift */; };
@@ -82,6 +83,7 @@
 				B27D43232A84B417007F25AE /* SkeletonUI in Frameworks */,
 				B23B6BF52A7FF68900737B3E /* HighlightedTextEditor in Frameworks */,
 				B28638322A597BB600B361C3 /* CodeEditor in Frameworks */,
+				B2CC4C682A97399F00AF08D1 /* CloudKitSyncMonitor in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -218,6 +220,7 @@
 				B269CDCA2A82455C00813F66 /* SVDB */,
 				B269CDCD2A82795800813F66 /* SwiftLinkPreview */,
 				B27D43222A84B417007F25AE /* SkeletonUI */,
+				B2CC4C672A97399F00AF08D1 /* CloudKitSyncMonitor */,
 			);
 			productName = Notable;
 			productReference = B2D6931C2A71750A00A9DDF1 /* Notable.app */;
@@ -255,6 +258,7 @@
 				B269CDC92A82455C00813F66 /* XCRemoteSwiftPackageReference "SVDB" */,
 				B269CDCC2A82795800813F66 /* XCRemoteSwiftPackageReference "SwiftLinkPreview" */,
 				B27D43212A84B417007F25AE /* XCRemoteSwiftPackageReference "SkeletonUI" */,
+				B2CC4C662A97399F00AF08D1 /* XCRemoteSwiftPackageReference "CloudKitSyncMonitor" */,
 			);
 			productRefGroup = B22944432A4D8B04009015BA;
 			projectDirPath = "";
@@ -492,11 +496,11 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = auto;
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
-				SUPPORTS_MACCATALYST = YES;
+				SUPPORTS_MACCATALYST = NO;
 				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2,6";
+				TARGETED_DEVICE_FAMILY = "1,6";
 			};
 			name = Debug;
 		};
@@ -538,11 +542,11 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = auto;
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
-				SUPPORTS_MACCATALYST = YES;
+				SUPPORTS_MACCATALYST = NO;
 				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2,6";
+				TARGETED_DEVICE_FAMILY = "1,6";
 			};
 			name = Release;
 		};
@@ -610,6 +614,14 @@
 				minimumVersion = 1.0.0;
 			};
 		};
+		B2CC4C662A97399F00AF08D1 /* XCRemoteSwiftPackageReference "CloudKitSyncMonitor" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/ggruen/CloudKitSyncMonitor.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.2.1;
+			};
+		};
 		B2D69FDA2A61467F007B65C3 /* XCRemoteSwiftPackageReference "AcknowList" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/vtourraine/AcknowList";
@@ -645,6 +657,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = B28638302A597BB600B361C3 /* XCRemoteSwiftPackageReference "CodeEditor" */;
 			productName = CodeEditor;
+		};
+		B2CC4C672A97399F00AF08D1 /* CloudKitSyncMonitor */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = B2CC4C662A97399F00AF08D1 /* XCRemoteSwiftPackageReference "CloudKitSyncMonitor" */;
+			productName = CloudKitSyncMonitor;
 		};
 		B2D69FDB2A61467F007B65C3 /* AcknowList */ = {
 			isa = XCSwiftPackageProductDependency;
