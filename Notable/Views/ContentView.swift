@@ -10,8 +10,6 @@ import CoreData
 
 struct ContentView: View {
     @Environment(\.managedObjectContext) private var viewContext
-
-    @EnvironmentObject var actionService: ActionService
     @Environment(\.scenePhase) var scenePhase
     
     @FetchRequest(
@@ -19,6 +17,8 @@ struct ContentView: View {
         sortDescriptors: [NSSortDescriptor(keyPath: \Pile.name, ascending: true)],
         animation: .none)
     private var piles: FetchedResults<Pile>
+    
+    @EnvironmentObject var actionService: ActionService
 
     @State private var tabSelection: Tabs = .tab1
     @State private var presentAlert = false

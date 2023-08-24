@@ -19,17 +19,17 @@ enum EntryType: String {
 
 struct EntryItem: View {
     @ObservedObject var entry: Entry
-    var type: EntryType
-    
+
     @State var image: UIImage
-    
     @State var preview: Response?
-    
+
     let slp = SwiftLinkPreview(session: URLSession.shared,
                                workQueue: SwiftLinkPreview.defaultWorkQueue,
                                responseQueue: DispatchQueue.main,
                                cache: DisabledCache.instance)
-    
+
+    var type: EntryType
+
     init(entry: Entry) {
         self.entry = entry
         self.type = EntryType(rawValue: entry.type ?? EntryType.text.rawValue)!
@@ -45,11 +45,19 @@ struct EntryItem: View {
             Section {
                 VStack {
                     HStack {
-                        Link(destination: entry.link ?? URL(string: "https://apple.com")!, label: {
-                            Text(preview?.title ?? "Loading preview...")
-                        })
-                        .skeleton(with: preview == nil)
-                        .shape(type: .rectangle)
+                        HStack {
+                            Image(systemName: "globe")
+                                .resizable()
+                                .scaledToFit()
+                                .frame(width: 24, height: 24)
+                            Link(destination: entry.link ?? URL(string: "https://apple.com")!, label: {
+                                Text(preview?.title ?? "Loading preview...")
+                                    .fontDesign(.monospaced)
+                            })
+                            .skeleton(with: preview == nil)
+                            .shape(type: .rectangle)
+                        }
+                        
                         
                         Spacer()
                     }
@@ -105,12 +113,25 @@ struct EntryItem: View {
         default:
             VStack(alignment: .leading, spacing: 10) {
                 HStack {
-                    Image(systemName: "text.word.spacing")
+                    if entry.isMarkdown {
+                        Image(systemName: "text.word.spacing")
+                            .resizable()
+                            .scaledToFit()
+                            .frame(width: 24, height: 24)
+                    } else {
+                        Image(systemName: "apple.terminal.fill")
+                            .resizable()
+                            .scaledToFit()
+                            .frame(width: 24, height: 24)
+                    }
                     Text(entry.title ?? "")
+                        .font(.subheadline)
                 }
                 Text(entry.content?.replacingOccurrences(of: "\n", with: " ") ?? "")
                     .lineLimit(3)
                     .font(.body)
+                    .fontWeight(.light)
+                    .fontDesign(.monospaced)
                 Text(entry.timestamp ?? Date(), formatter: entryFormatter)
                     .font(.footnote)
             }

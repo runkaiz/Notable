@@ -23,9 +23,9 @@ struct OrphanEntriesView: View {
         animation: .default)
     private var piles: FetchedResults<Pile>
     
-    @State private var selection: Entry?
-    
     @Binding public var didGetPushedHere: Bool
+    
+    @State private var selection: Entry?
     
     @State private var presentEntryRenamer = false
     @State private var newEntryName = ""
@@ -157,7 +157,7 @@ struct OrphanEntriesView: View {
         .onChange(of: selectedImage) {
             Task {
                 if let data = try? await selectedImage?.loadTransferable(type: Data.self) {
-                    addPicture(viewContext, image: data)
+                    addPicture(viewContext, image: data, pile: nil)
                     
                     return
                 }
@@ -206,7 +206,7 @@ struct OrphanEntriesView: View {
                 .keyboardType(.URL)
             
             Button("Add", action: {
-                addLink(viewContext, newLink: newLink)
+                addLink(viewContext, newLink: newLink, pile: nil)
                 newLink = ""
             })
             Button("Cancel", role: .cancel, action: {})

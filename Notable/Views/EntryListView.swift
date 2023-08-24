@@ -48,6 +48,9 @@ struct EntryListView: View {
                 VStack {
                     HStack {
                         Image(systemName: "info.square")
+                            .resizable()
+                            .scaledToFit()
+                            .frame(width: 24, height: 24)
                         Text("Description")
                         Spacer()
                     }
@@ -58,6 +61,8 @@ struct EntryListView: View {
                     TextField("Description", text: $pile.desc ?? "", axis: .vertical)
                         .padding(.horizontal)
                         .padding(.bottom, 8)
+                        .font(.body)
+                        .foregroundStyle(Color.gray)
                 }.listRowInsets(EdgeInsets())
             }
             .onAppear {
@@ -162,7 +167,7 @@ struct EntryListView: View {
         .onChange(of: selectedImage) {
             Task {
                 if let data = try? await selectedImage?.loadTransferable(type: Data.self) {
-                    addPicture(viewContext, image: data)
+                    addPicture(viewContext, image: data, pile: pile)
 
                     return
                 }
@@ -221,7 +226,7 @@ struct EntryListView: View {
                 .keyboardType(.URL)
 
             Button("Add", action: {
-                addLink(viewContext, newLink: newLink)
+                addLink(viewContext, newLink: newLink, pile: pile)
                 newLink = ""
             })
             Button("Cancel", role: .cancel, action: {})

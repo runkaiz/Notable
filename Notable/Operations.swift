@@ -27,7 +27,7 @@ public func addEntry(_ viewContext: NSManagedObjectContext, pile: Pile?) {
     }
 }
 
-public func addPicture(_ viewContext: NSManagedObjectContext, image: Data) {
+public func addPicture(_ viewContext: NSManagedObjectContext, image: Data, pile: Pile?) {
     withAnimation {
         let newEntry = Entry(context: viewContext)
         newEntry.timestamp = Date()
@@ -39,7 +39,7 @@ public func addPicture(_ viewContext: NSManagedObjectContext, image: Data) {
     }
 }
 
-public func addLink(_ viewContext: NSManagedObjectContext, newLink: String) {
+public func addLink(_ viewContext: NSManagedObjectContext, newLink: String, pile: Pile?) {
     withAnimation {
         if verifyUrl(urlString: newLink) {
             let newEntry = Entry(context: viewContext)
@@ -65,9 +65,11 @@ public func verifyUrl (urlString: String?) -> Bool {
 }
 
 public func deleteEntry(_ viewContext: NSManagedObjectContext, entries: [Entry], selection: Entry?) {
-    viewContext.delete(entries[entries.firstIndex(of: selection!)!])
-    
-    save(viewContext)
+    withAnimation {
+        viewContext.delete(entries[entries.firstIndex(of: selection!)!])
+        
+        save(viewContext)
+    }
 }
 
 public func save(_ viewContext: NSManagedObjectContext) {
