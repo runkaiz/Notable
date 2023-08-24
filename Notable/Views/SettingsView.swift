@@ -66,6 +66,10 @@ struct SettingsView: View {
                         Image(systemName: syncMonitor.syncStateSummary.symbolName)
                             .foregroundColor(syncMonitor.syncStateSummary.symbolColor)
                     }
+                    
+                    if case .accountNotAvailable = syncMonitor.syncStateSummary {
+                        Text("Hey, log into your iCloud account if you want to sync")
+                    }
                 }
             }
             
