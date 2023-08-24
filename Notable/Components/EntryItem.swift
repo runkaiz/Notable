@@ -49,7 +49,7 @@ struct EntryItem: View {
                             Image(systemName: "globe")
                                 .resizable()
                                 .scaledToFit()
-                                .frame(width: 24, height: 24)
+                                .frame(width: 16, height: 16)
                             Link(destination: entry.link ?? URL(string: "https://apple.com")!, label: {
                                 Text(preview?.title ?? "Loading preview...")
                                     .fontDesign(.monospaced)
@@ -117,12 +117,12 @@ struct EntryItem: View {
                         Image(systemName: "text.word.spacing")
                             .resizable()
                             .scaledToFit()
-                            .frame(width: 24, height: 24)
+                            .frame(width: 16, height: 16)
                     } else {
                         Image(systemName: "apple.terminal.fill")
                             .resizable()
                             .scaledToFit()
-                            .frame(width: 24, height: 24)
+                            .frame(width: 16, height: 16)
                     }
                     Text(entry.title ?? "")
                         .font(.subheadline)
