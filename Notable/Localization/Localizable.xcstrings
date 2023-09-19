@@ -221,6 +221,16 @@
         }
       }
     },
+    "Hey, log into your iCloud account if you want to sync" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "嘿，如果你想同步，就登录到你的iCloud账户"
+          }
+        }
+      }
+    },
     "iCloud" : {
       "localizations" : {
         "zh-Hans" : {
