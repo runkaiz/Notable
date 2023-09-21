@@ -35,6 +35,10 @@ public func addPicture(_ viewContext: NSManagedObjectContext, image: Data, pile:
         newEntry.type = EntryType.image.rawValue
         newEntry.image = image
         
+        if let pile = pile {
+            pile.addToEntries(newEntry)
+        }
+        
         save(viewContext)
     }
 }
@@ -47,6 +51,10 @@ public func addLink(_ viewContext: NSManagedObjectContext, newLink: String, pile
             newEntry.id = UUID()
             newEntry.type = EntryType.link.rawValue
             newEntry.link = URL(string: newLink)
+            
+            if let pile = pile {
+                pile.addToEntries(newEntry)
+            }
             
             save(viewContext)
         } else {

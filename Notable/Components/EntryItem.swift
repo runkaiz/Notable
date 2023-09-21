@@ -19,17 +19,17 @@ enum EntryType: String {
 
 struct EntryItem: View {
     @ObservedObject var entry: Entry
-
+    
     @State var image: UIImage
     @State var preview: Response?
-
+    
     let slp = SwiftLinkPreview(session: URLSession.shared,
                                workQueue: SwiftLinkPreview.defaultWorkQueue,
                                responseQueue: DispatchQueue.main,
                                cache: DisabledCache.instance)
-
+    
     var type: EntryType
-
+    
     init(entry: Entry) {
         self.entry = entry
         self.type = EntryType(rawValue: entry.type ?? EntryType.text.rawValue)!
@@ -46,27 +46,32 @@ struct EntryItem: View {
                 VStack {
                     HStack {
                         HStack {
-                            Image(systemName: "globe")
-                                .resizable()
-                                .scaledToFit()
-                                .frame(width: 16, height: 16)
-                            Link(destination: entry.link ?? URL(string: "https://apple.com")!, label: {
-                                Text(preview?.title ?? "Loading preview...")
+                            AsyncImage(url: URL(string: preview?.image ?? "https://kagi.com/proxy/th?c=MvlWCDdicm1aK3zpADFz51uffrI0FEB-kI9GN5Oyn_dqyEzHH5YvglHWRgS7NvM06O65A8rVvgFJDfx-YcVcFd5RKmCR-i-tJFF0Y_14aPWhVWscH92AODUFf6D2dpAD")) { image in
+                                image.resizable()
+                            } placeholder: {
+                                //                                ProgressView()
+                            }
+                            .skeleton(with: preview == nil)
+                            .scaledToFit()
+                            .aspectRatio(contentMode: .fit)
+                            .frame(width: 75)
+                            VStack(alignment: .leading) {
+                                Text(preview?.title)
                                     .fontDesign(.monospaced)
-                            })
+                                    .lineLimit(3)
+                                Spacer(minLength: 0)
+                                Link(destination: entry.link!, label: {
+                                    Text("\(entry.link!.SLD!)")
+                                })
+                                .foregroundStyle(.secondary)
+                            }
+                            .padding(12)
                             .skeleton(with: preview == nil)
                             .shape(type: .rectangle)
                         }
                         
-                        
                         Spacer()
                     }
-                    //                    AsyncImage(url: URL(string: preview?.image ?? "https://kagi.com/proxy/th?c=MvlWCDdicm1aK3zpADFz51uffrI0FEB-kI9GN5Oyn_dqyEzHH5YvglHWRgS7NvM06O65A8rVvgFJDfx-YcVcFd5RKmCR-i-tJFF0Y_14aPWhVWscH92AODUFf6D2dpAD")) { image in
-                    //                        image.resizable()
-                    //                    } placeholder: {
-                    //                        ProgressView()
-                    //                    }
-                    //                    .aspectRatio(contentMode: .fit)
                 }
             }
             .onAppear {
@@ -146,6 +151,15 @@ private let entryFormatter: DateFormatter = {
     formatter.timeStyle = .medium
     return formatter
 }()
+
+extension URL {
+    /// second-level domain [SLD]
+    ///
+    /// i.e. `msk.ru, spb.ru`
+    var SLD: String? {
+        return host?.components(separatedBy: ".").suffix(2).joined(separator: ".")
+    }
+}
 
 #Preview {
     ContentView().environment(\.managedObjectContext, PersistenceController.preview.container.viewContext)
