@@ -8,9 +8,9 @@
 import SwiftUI
 import CoreData
 import CodeEditor
-import NaturalLanguage
-import SVDB
 import CloudKitSyncMonitor
+//import CLIPKit
+//import CoreML
 
 struct SettingsView: View {
     @FetchRequest(
@@ -18,6 +18,8 @@ struct SettingsView: View {
         sortDescriptors: [NSSortDescriptor(keyPath: \Entry.timestamp, ascending: false)],
         animation: .default)
     private var entries: FetchedResults<Entry>
+    
+    @EnvironmentObject var sharedData: SharedData
     
     @available(iOS 14.0, *)
     @ObservedObject var syncMonitor = SyncMonitor.shared
@@ -36,6 +38,8 @@ struct SettingsView: View {
 
     @AppStorage("editorTheme")
     private var theme = CodeEditor.ThemeName.xcode
+    
+    @State var processingDatabase = false
 
     var body: some View {
         Form {
@@ -73,33 +77,17 @@ struct SettingsView: View {
                 }
             }
             
-            Section(header: Text("Search Database")) {
-                Button(action: {
-                    do {
-                        let database = try SVDB.shared.collection("entries")
-                        
-                        guard let embedding = NLEmbedding.sentenceEmbedding(for: .english) else {
-                            return
-                        }
-                        
-                        database.clear()
-                        
-                        for entry in entries {
-                            if entry.type == EntryType.text.rawValue {
-                                if let text = entry.title {
-                                    if let wordEmbedding = embedding.vector(for: text) {
-                                        database.addDocument(text: text, embedding: wordEmbedding)
-                                    }
-                                }
-                            }
-                        }
-                    } catch {
-                        print(error)
-                    }
-                }, label: {
-                    Text("Reprocess Embed Database")
-                })
-            }
+//            Section(header: Text("Search Database")) {
+//                Button(action: {
+//                    processingDatabase = true
+//                    processDatabase(sharedData: sharedData, entries: Array(entries))
+//                    processingDatabase = false
+//                }, label: {
+//                    Text("Reprocess Embed Database")
+//                })
+////                .disabled(!sharedData.textModelLoaded || processingDatabase)
+//                .disabled(processingDatabase)
+//            }
 
             Section(header: Text("Miscellaneous")) {
                 NavigationLink("Acknowledgement") {

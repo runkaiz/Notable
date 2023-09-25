@@ -10,6 +10,15 @@
       }
     },
     {
+      "identity" : "clipkit",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/runkaiz/CLIPKit",
+      "state" : {
+        "branch" : "main",
+        "revision" : "a7534f5ef48aeb5a8d4322daaa3c85a25194c69c"
+      }
+    },
+    {
       "identity" : "cloudkitsyncmonitor",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/ggruen/CloudKitSyncMonitor.git",
@@ -70,6 +79,15 @@
       "state" : {
         "revision" : "dc46eeb3928a75390651fac6c1ef7f93ad59a73b",
         "version" : "1.11.1"
+      }
+    },
+    {
+      "identity" : "swiftannoy",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/jbadger3/SwiftAnnoy",
+      "state" : {
+        "revision" : "6d90636e22510c2f0798f9f8ff072109e345750a",
+        "version" : "1.1.0"
       }
     },
     {

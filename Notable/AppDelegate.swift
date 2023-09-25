@@ -9,14 +9,14 @@ import UIKit
 
 class AppDelegate: NSObject, UIApplicationDelegate {
     private let actionService = ActionService.shared
-
+    
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil) -> Bool {
-
+        
         application.registerForRemoteNotifications()
-
+        
         return true
     }
-
+    
     func application(
         _ application: UIApplication,
         configurationForConnecting connectingSceneSession: UISceneSession,
@@ -25,7 +25,7 @@ class AppDelegate: NSObject, UIApplicationDelegate {
         if let shortcutItem = options.shortcutItem {
             actionService.action = Action(shortcutItem: shortcutItem)
         }
-
+        
         let configuration = UISceneConfiguration(
             name: connectingSceneSession.configuration.name,
             sessionRole: connectingSceneSession.role
@@ -37,7 +37,7 @@ class AppDelegate: NSObject, UIApplicationDelegate {
 
 class SceneDelegate: NSObject, UIWindowSceneDelegate {
     private let actionService = ActionService.shared
-
+    
     func windowScene(
         _ windowScene: UIWindowScene,
         performActionFor shortcutItem: UIApplicationShortcutItem,

@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		B21428BE2A7E705000362E73 /* Note.swift in Sources */ = {isa = PBXBuildFile; fileRef = B21428BD2A7E705000362E73 /* Note.swift */; };
+		B22088F62AC0E14900B4B65E /* CLIPKit in Frameworks */ = {isa = PBXBuildFile; productRef = B22088F52AC0E14900B4B65E /* CLIPKit */; };
+		B22088FD2AC0EBF000B4B65E /* SharedData.swift in Sources */ = {isa = PBXBuildFile; fileRef = B22088FC2AC0EBF000B4B65E /* SharedData.swift */; };
 		B22944502A4D8B04009015BA /* NotableApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = B229444F2A4D8B04009015BA /* NotableApp.swift */; };
 		B22944522A4D8B04009015BA /* Persistence.swift in Sources */ = {isa = PBXBuildFile; fileRef = B22944512A4D8B04009015BA /* Persistence.swift */; };
 		B22944552A4D8B04009015BA /* Notable.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = B22944532A4D8B04009015BA /* Notable.xcdatamodeld */; };
@@ -44,6 +46,7 @@
 
 /* Begin PBXFileReference section */
 		B21428BD2A7E705000362E73 /* Note.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Note.swift; sourceTree = "<group>"; };
+		B22088FC2AC0EBF000B4B65E /* SharedData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SharedData.swift; sourceTree = "<group>"; };
 		B229444F2A4D8B04009015BA /* NotableApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotableApp.swift; sourceTree = "<group>"; };
 		B22944512A4D8B04009015BA /* Persistence.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Persistence.swift; sourceTree = "<group>"; };
 		B22944542A4D8B04009015BA /* Notable.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Notable.xcdatamodel; sourceTree = "<group>"; };
@@ -83,6 +86,7 @@
 				B269CDCB2A82455C00813F66 /* SVDB in Frameworks */,
 				B269CDCE2A82795800813F66 /* SwiftLinkPreview in Frameworks */,
 				B2D69FDC2A61467F007B65C3 /* AcknowList in Frameworks */,
+				B22088F62AC0E14900B4B65E /* CLIPKit in Frameworks */,
 				B287CC642A7FFD4F0041659B /* CloudKit.framework in Frameworks */,
 				B27D43232A84B417007F25AE /* SkeletonUI in Frameworks */,
 				B23B6BF52A7FF68900737B3E /* HighlightedTextEditor in Frameworks */,
@@ -116,6 +120,7 @@
 				B2FFF7E12A851CD000A0E5D4 /* AppDelegate.swift */,
 				B22944512A4D8B04009015BA /* Persistence.swift */,
 				B2A6FCA02A85FEDD003D4584 /* Operations.swift */,
+				B22088FC2AC0EBF000B4B65E /* SharedData.swift */,
 				B2D69FD52A613C80007B65C3 /* Views */,
 				B28AB4432A60F9000097023A /* Components */,
 				B2FAA9322A664E1C00BEB849 /* Models */,
@@ -227,6 +232,7 @@
 				B269CDCD2A82795800813F66 /* SwiftLinkPreview */,
 				B27D43222A84B417007F25AE /* SkeletonUI */,
 				B2CC4C672A97399F00AF08D1 /* CloudKitSyncMonitor */,
+				B22088F52AC0E14900B4B65E /* CLIPKit */,
 			);
 			productName = Notable;
 			productReference = B2D6931C2A71750A00A9DDF1 /* Notable.app */;
@@ -265,6 +271,7 @@
 				B269CDCC2A82795800813F66 /* XCRemoteSwiftPackageReference "SwiftLinkPreview" */,
 				B27D43212A84B417007F25AE /* XCRemoteSwiftPackageReference "SkeletonUI" */,
 				B2CC4C662A97399F00AF08D1 /* XCRemoteSwiftPackageReference "CloudKitSyncMonitor" */,
+				B22088F42AC0E14900B4B65E /* XCRemoteSwiftPackageReference "CLIPKit" */,
 			);
 			productRefGroup = B22944432A4D8B04009015BA;
 			projectDirPath = "";
@@ -320,6 +327,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B22088FD2AC0EBF000B4B65E /* SharedData.swift in Sources */,
 				B2B2E7322A821B1A00D51B47 /* OrphanEntriesView.swift in Sources */,
 				B28AB4452A60F9270097023A /* EditorConfigSheet.swift in Sources */,
 				B293DF792A5C2EE500826D26 /* SettingsView.swift in Sources */,
@@ -499,7 +507,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/Frameworks";
 				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 13.3;
-				MARKETING_VERSION = 1.0.1;
+				MARKETING_VERSION = 1.1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = xyz.runkaizhang.Notable;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = auto;
@@ -545,7 +553,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/Frameworks";
 				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 13.3;
-				MARKETING_VERSION = 1.0.1;
+				MARKETING_VERSION = 1.1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = xyz.runkaizhang.Notable;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = auto;
@@ -582,6 +590,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		B22088F42AC0E14900B4B65E /* XCRemoteSwiftPackageReference "CLIPKit" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/runkaiz/CLIPKit";
+			requirement = {
+				branch = main;
+				kind = branch;
+			};
+		};
 		B23B6BF32A7FF68900737B3E /* XCRemoteSwiftPackageReference "HighlightedTextEditor" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/kyle-n/HighlightedTextEditor";
@@ -641,6 +657,11 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		B22088F52AC0E14900B4B65E /* CLIPKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = B22088F42AC0E14900B4B65E /* XCRemoteSwiftPackageReference "CLIPKit" */;
+			productName = CLIPKit;
+		};
 		B23B6BF42A7FF68900737B3E /* HighlightedTextEditor */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = B23B6BF32A7FF68900737B3E /* XCRemoteSwiftPackageReference "HighlightedTextEditor" */;

@@ -7,6 +7,8 @@
 
 import CoreData
 import SwiftUI
+import SVDB
+import NaturalLanguage
 
 public func addEntry(_ viewContext: NSManagedObjectContext, pile: Pile?) {
     withAnimation {
@@ -88,4 +90,48 @@ public func save(_ viewContext: NSManagedObjectContext) {
         let nsError = error as NSError
         fatalError("Unresolved error \(nsError), \(nsError.userInfo)")
     }
+}
+
+public func processDatabase(sharedData: SharedData, entries: [Entry]) {
+    Task {
+        sharedData.database!.clear()
+        
+        let embedding: NLEmbedding = NLEmbedding.sentenceEmbedding(for: .english)!
+        
+        for entry in entries {
+            if entry.type == EntryType.text.rawValue {
+                if let text = entry.content {
+//                                    Task(priority: .userInitiated) {
+//                                        do {
+//                                            let embedded = try sharedData.clip.textEncoder?.encode(cleanText(text))
+                            let embedded = embedding.vector(for: cleanText(text))
+                            
+                            if let wordEmbedding = embedded {
+//                                                let converted = wordEmbedding.scalars.map { Double($0) }
+                                sharedData.database!.addDocument(text: text, embedding: wordEmbedding)
+                            }
+//                                        } catch {
+//                                            print(error)
+//                                        }
+//                                    }
+                }
+            }
+        }
+    }
+}
+
+func cleanText(_ text: String) -> String {
+    var cleanText = text.replacingOccurrences(of: "\n", with: " ") // Replace newline characters with a space
+    cleanText = cleanText.replacingOccurrences(of: "\r", with: " ") // Replace carriage return characters with a space
+    cleanText = cleanText.replacingOccurrences(of: "#", with: "") // Remove markdown heading characters
+    cleanText = cleanText.replacingOccurrences(of: "*", with: "") // Remove markdown emphasis characters
+    cleanText = cleanText.replacingOccurrences(of: "_", with: "") // Remove markdown emphasis characters
+    cleanText = cleanText.replacingOccurrences(of: "`", with: "") // Remove markdown code characters
+
+    // Replace multiple spaces with a single space
+    while cleanText.contains("  ") {
+        cleanText = cleanText.replacingOccurrences(of: "  ", with: " ")
+    }
+
+    return cleanText.trimmingCharacters(in: .whitespacesAndNewlines) // Trim leading and trailing white spaces
 }
