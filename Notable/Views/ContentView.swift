@@ -82,6 +82,10 @@ struct ContentView: View {
         return resultEntries
     }
     
+    @State var numOfTexts = 0
+    @State var numOfImages = 0
+    @State var numOfLinks = 0
+    
     var body: some View {
         TabView(selection: $tabSelection) {
             NavigationStack {
@@ -91,9 +95,38 @@ struct ContentView: View {
                             NavigationLink {
                                 OrphanEntriesView(didGetPushedHere: $shouldPushToOrphan)
                             } label: {
-                                HStack{
-                                    Image(systemName: "tray.and.arrow.down.fill")
-                                    Text("Inbox")
+                                VStack {
+                                    HStack{
+                                        Image(systemName: "tray.and.arrow.down.fill")
+                                        Text("Inbox")
+                                        Spacer()
+                                    }
+                                    HStack {
+                                        Image(systemName: "text.word.spacing")
+                                        Text(numOfTexts.description)
+                                        Spacer()
+                                        Image(systemName: "photo")
+                                        Text(numOfImages.description)
+                                        Spacer()
+                                        Image(systemName: "link")
+                                        Text(numOfLinks.description)
+                                    }
+                                    .onAppear {
+                                        for entry in Array(entries) {
+                                            if entry.pile != nil {
+                                                switch EntryType(rawValue: entry.type!) {
+                                                case .image:
+                                                    numOfImages += 1
+                                                case .text:
+                                                    numOfTexts += 1
+                                                case .link:
+                                                    numOfLinks += 1
+                                                default:
+                                                    break
+                                                }
+                                            }
+                                        }
+                                    }
                                 }
                             }
                         }
