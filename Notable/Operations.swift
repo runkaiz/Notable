@@ -83,12 +83,14 @@ public func deleteEntry(_ viewContext: NSManagedObjectContext, entries: [Entry],
 }
 
 public func save(_ viewContext: NSManagedObjectContext) {
-    do {
-        try viewContext.save()
-    } catch {
-        // Replace this implementation with code to handle the error appropriately.
-        let nsError = error as NSError
-        fatalError("Unresolved error \(nsError), \(nsError.userInfo)")
+    viewContext.perform {
+        do {
+            try viewContext.save()
+        } catch {
+            // Replace this implementation with code to handle the error appropriately.
+            let nsError = error as NSError
+            fatalError("Unresolved error \(nsError), \(nsError.userInfo)")
+        }
     }
 }
 

@@ -11,10 +11,10 @@ Welcome to Notable, the high-performance markdown editor designed for iOS. With 
 - **Real-time Preview:** See your markdown text instantly rendered into beautifully formatted output as you type, making it easier to visualize the final result.
 - **Easy Export and Sharing:** Export your markdown files as HTML (to be implemented), PDF (to be implemented), or plain text with just a few taps. Share your work effortlessly via email, messaging apps, or cloud storage services.
 - **iCloud Sync:** Seamlessly sync your documents across multiple iOS devices, ensuring your work is always up to date and accessible wherever you go.
+- **Advanced Natural Language Search Engine:** Find your notes effortlessly with powerful natural language-based search capabilities.
 
 ## Upcoming Features (To Be Implemented)
 
-- **Advanced Natural Language Search Engine:** Find your notes effortlessly with powerful natural language-based search capabilities.
 - **Image Support:** Enhance your markdown content with the ability to include images or capture them directly within Notable.
 - **Sound Recorder and Transcription:** Record sound or voices, and enable automatic transcription for easy note-taking on the go.
 
