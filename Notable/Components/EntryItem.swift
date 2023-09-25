@@ -60,8 +60,8 @@ struct EntryItem: View {
                                     .fontDesign(.monospaced)
                                     .lineLimit(3)
                                 Spacer(minLength: 0)
-                                Link(destination: entry.link!, label: {
-                                    Text("\(entry.link!.SLD!)")
+                                Link(destination: (entry.link ?? URL(string: "https://www.runkaizhang.xyz"))!, label: {
+                                    Text("\(entry.link?.SLD ?? "")")
                                 })
                                 .foregroundStyle(.secondary)
                             }

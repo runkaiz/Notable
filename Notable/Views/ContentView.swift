@@ -113,7 +113,7 @@ struct ContentView: View {
                                     }
                                     .onAppear {
                                         for entry in Array(entries) {
-                                            if entry.pile != nil {
+                                            if entry.pile == nil {
                                                 switch EntryType(rawValue: entry.type!) {
                                                 case .image:
                                                     numOfImages += 1
