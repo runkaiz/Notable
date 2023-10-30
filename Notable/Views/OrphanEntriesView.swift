@@ -57,7 +57,7 @@ struct OrphanEntriesView: View {
                                 viewContext.delete(entry)
                                 save(viewContext)
                             } label: {
-                                Text("Delete")
+                                Label("Delete", systemImage: "trash")
                             }
                             
                             if entry.type == EntryType.text.rawValue {
@@ -66,7 +66,7 @@ struct OrphanEntriesView: View {
                                     newEntryName = entry.title ?? ""
                                     presentEntryRenamer.toggle()
                                 } label: {
-                                    Text("Rename")
+                                    Label("Rename", systemImage: "pencil")
                                 }
                             }
                             
@@ -78,7 +78,7 @@ struct OrphanEntriesView: View {
                                 
                                 showPileChooser.toggle()
                             } label: {
-                                Text("Assign")
+                                Label("Assign", systemImage: "move.3d")
                             }
                             .tint(.accentColor)
                         })

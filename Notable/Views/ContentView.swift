@@ -145,13 +145,13 @@ struct ContentView: View {
                                     viewContext.delete(pile)
                                     save(viewContext)
                                 } label: {
-                                    Text("Delete")
+                                    Label("Delete", systemImage: "trash")
                                 }
                                 Button {
                                     contextPile = pile
                                     showColorPicker.toggle()
                                 } label: {
-                                    Text("Color")
+                                    Label("Color", systemImage: "swatchpalette")
                                 }
                                 .tint(.brown)
                                 Button {
@@ -159,7 +159,7 @@ struct ContentView: View {
                                     newPileName = pile.name ?? ""
                                     presentRenamer.toggle()
                                 } label: {
-                                    Text("Rename")
+                                    Label("Rename", systemImage: "pencil")
                                 }
                             })
                             .contextMenu {

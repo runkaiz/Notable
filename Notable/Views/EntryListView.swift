@@ -88,7 +88,7 @@ struct EntryListView: View {
                                 viewContext.delete(entry)
                                 save(viewContext)
                             } label: {
-                                Text("Delete")
+                                Label("Delete", systemImage: "trash")
                             }
                             
                             if entry.type == EntryType.text.rawValue {
@@ -97,7 +97,7 @@ struct EntryListView: View {
                                     newEntryName = entry.title ?? ""
                                     presentEntryRenamer.toggle()
                                 } label: {
-                                    Text("Rename")
+                                    Label("Rename", systemImage: "pencil")
                                 }
                             }
                         })
