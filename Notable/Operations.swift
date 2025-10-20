@@ -96,10 +96,20 @@ public func save(_ viewContext: NSManagedObjectContext) {
 
 public func processDatabase(sharedData: SharedData, entries: [Entry]) {
     Task {
-        sharedData.database!.clear()
-        
-        let embedding: NLEmbedding = NLEmbedding.sentenceEmbedding(for: .english)!
-        
+        // Guard against nil database
+        guard let database = sharedData.database else {
+            print("Warning: SVDB database not initialized. Skipping database processing.")
+            return
+        }
+
+        database.clear()
+
+        // Guard against nil embedding
+        guard let embedding = NLEmbedding.sentenceEmbedding(for: .english) else {
+            print("Warning: NLEmbedding not available. Skipping database processing.")
+            return
+        }
+
         for entry in entries {
             if entry.type == EntryType.text.rawValue {
                 if let text = entry.content {
@@ -107,10 +117,10 @@ public func processDatabase(sharedData: SharedData, entries: [Entry]) {
 //                                        do {
 //                                            let embedded = try sharedData.clip.textEncoder?.encode(cleanText(text))
                             let embedded = embedding.vector(for: cleanText(text))
-                            
+
                             if let wordEmbedding = embedded {
 //                                                let converted = wordEmbedding.scalars.map { Double($0) }
-                                sharedData.database!.addDocument(text: text, embedding: wordEmbedding)
+                                database.addDocument(text: text, embedding: wordEmbedding)
                             }
 //                                        } catch {
 //                                            print(error)
