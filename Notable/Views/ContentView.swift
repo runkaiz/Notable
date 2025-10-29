@@ -236,15 +236,11 @@ struct ContentView: View {
                         .onDelete(perform: deletePiles)
 #endif
                     } else {
-                        //                        if sharedData.textModelLoaded {
                         Section {
                             ForEach(filteredEntries, id: \.id) { entry in
                                 EntryTransformer(entry: entry)
                             }
                         }
-                        //                        } else {
-                        //                            Text("Model is loading...")
-                        //                        }
                     }
                 }
                 .toolbar {

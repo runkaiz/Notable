@@ -9,7 +9,6 @@ import Foundation
 import SVDB
 
 public class SharedData: ObservableObject {
-    @Published var textModelLoaded: Bool = false
     @Published var database: Collection? = nil
     @Published var needsDatabaseRebuild: Bool = false
     @Published var transcriptionService: TranscriptionService

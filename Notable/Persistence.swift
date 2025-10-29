@@ -7,7 +7,6 @@
 
 import CoreData
 import os.log
-import Combine
 
 // CloudKit sync logger
 extension OSLog {
