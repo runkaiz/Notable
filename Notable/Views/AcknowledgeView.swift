@@ -12,8 +12,9 @@ struct AcknowledgeView: UIViewControllerRepresentable {
     typealias UIViewControllerType = AcknowListViewController
 
     func makeUIViewController(context: Context) -> AcknowListViewController {
+        let acknowledgements = AcknowParser.defaultAcknowList()?.acknowledgements ?? []
         let viewController = AcknowListViewController(
-            acknowledgements: AcknowParser.defaultAcknowList()!.acknowledgements,
+            acknowledgements: acknowledgements,
             style: .insetGrouped
         )
         return viewController

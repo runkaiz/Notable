@@ -5,135 +5,182 @@
 //  Created by Runkai Zhang on 6/29/23.
 //
 
-import SwiftUI
-import CLIPKit
-import SVDB
 import NaturalLanguage
+import PhotosUI
+import SVDB
+import SwiftUI
 
 struct ContentView: View {
     @Environment(\.managedObjectContext) private var viewContext
     @Environment(\.scenePhase) var scenePhase
-    
+
     @EnvironmentObject var sharedData: SharedData
-    
+
     @FetchRequest(
         entity: Pile.entity(),
         sortDescriptors: [NSSortDescriptor(keyPath: \Pile.name, ascending: true)],
-        animation: .none)
+        animation: .none
+    )
     private var piles: FetchedResults<Pile>
-    
+
     @FetchRequest(
         entity: Entry.entity(),
         sortDescriptors: [NSSortDescriptor(keyPath: \Entry.timestamp, ascending: false)],
-        animation: .default)
+        animation: .default
+    )
     private var entries: FetchedResults<Entry>
-    
+
     @EnvironmentObject var actionService: ActionService
-    
-    @State private var tabSelection: Tabs = .tab1
+
+    @State private var showSettings = false
     @State private var presentAlert = false
     @State private var presentRenamer = false
     @State private var newPileName = ""
-    
+
     @State private var selection: Entry?
-    
+
     @State private var selectedColor: Color?
-    
+
     @State private var showColorPicker = false
-    
+
     private var colors: [Color] = [
-        Color(red: 39/255, green: 39/255, blue: 39/255),
-        Color(red: 241/255, green: 113/255, blue: 5/255),
-        Color(red: 160/255, green: 210/255, blue: 219/255)
+        Color(red: 39 / 255, green: 39 / 255, blue: 39 / 255),
+        Color(red: 241 / 255, green: 113 / 255, blue: 5 / 255),
+        Color(red: 160 / 255, green: 210 / 255, blue: 219 / 255)
     ]
-    
+
     @State private var contextPile: Pile?
-    
+
     @State private var emptyTagAnimateTrigger = false
-    
-    @State public var shouldPushToOrphan = false
-    
+
+    @State var shouldPushToOrphan = false
+
     @State private var searchText = ""
-    
+
+    @State private var showSaveErrorAlert = false
+    @State private var saveErrorMessage = ""
+
+    // Quick entry creation states (for inbox)
+    @State private var showPhotosPicker = false
+    @State private var selectedImage: PhotosPickerItem?
+    @State private var showLinkPrompt = false
+    @State private var newLink = ""
+    @State private var showRecorder = false
+
     var filteredEntries: [Entry] {
         var resultEntries: [Entry] = []
         var results: [SearchResult] = []
-        
-        //        do {
-        //            let embedded = try sharedData.clip.textEncoder?.encode(searchText)
-        let embedding: NLEmbedding? = NLEmbedding.sentenceEmbedding(for: .english)
-        let embedded = embedding?.vector(for: searchText) //returns double array
-        
-        if let wordEmbedding = embedded {
-            //                let converted = wordEmbedding.scalars.map { Double($0) }
-            results = sharedData.database!.search(query: wordEmbedding, num_results: 5)
+
+        // Guard against nil database - return empty results gracefully
+        guard let database = sharedData.database else {
+            print("Warning: SVDB database not available for search")
+            return resultEntries
         }
-        //        } catch {
-        //            print(error)
-        //        }
-        
+
+        let embedding: NLEmbedding? = NLEmbedding.sentenceEmbedding(for: .english)
+        let embedded = embedding?.vector(for: searchText) // returns double array
+
+        if let wordEmbedding = embedded {
+            results = database.search(query: wordEmbedding, num_results: 5)
+        }
+
+        // Build a dictionary for O(1) lookup instead of O(n²) nested loop
+        // Use a multimap approach since theoretically multiple entries could have identical content
+        var contentToEntries: [String: Entry] = [:]
+        for entry in entries {
+            if let content = entry.content {
+                contentToEntries[content] = entry
+            }
+        }
+
+        // Match search results to entries via dictionary lookup
         for result in results {
-            for entry in entries {
-                if entry.content == result.text {
-                    resultEntries.append(entry)
-                }
+            if let entry = contentToEntries[result.text] {
+                resultEntries.append(entry)
             }
         }
         return resultEntries
     }
-    
-    @State var numOfTexts = 0
-    @State var numOfImages = 0
-    @State var numOfLinks = 0
-    
+
+    var orphanEntries: [Entry] {
+        entries.filter { $0.pile == nil }
+    }
+
+    var orphanCounts: (texts: Int, images: Int, links: Int, recordings: Int) {
+        var texts = 0
+        var images = 0
+        var links = 0
+        var recordings = 0
+
+        for entry in orphanEntries {
+            guard let typeString = entry.type,
+                  let type = EntryType(rawValue: typeString) else {
+                continue
+            }
+            switch type {
+            case .image:
+                images += 1
+            case .text:
+                texts += 1
+            case .link:
+                links += 1
+            case .recording:
+                recordings += 1
+            }
+        }
+
+        return (texts, images, links, recordings)
+    }
+
     var body: some View {
-        TabView(selection: $tabSelection) {
-            NavigationStack {
+        NavigationStack {
                 List(selection: $selection) {
                     if searchText.isEmpty {
                         Section {
                             NavigationLink {
                                 OrphanEntriesView(didGetPushedHere: $shouldPushToOrphan)
                             } label: {
+                                let counts = orphanCounts
                                 VStack {
-                                    HStack{
+                                    HStack {
                                         Image(systemName: "tray.and.arrow.down.fill")
+                                            .accessibilityLabel("Inbox")
                                         Text("Inbox")
                                         Spacer()
                                     }
                                     HStack {
-                                        Image(systemName: "text.word.spacing")
-                                        Text(numOfTexts.description)
-                                        Spacer()
-                                        Image(systemName: "photo")
-                                        Text(numOfImages.description)
-                                        Spacer()
-                                        Image(systemName: "link")
-                                        Text(numOfLinks.description)
-                                    }
-                                    .onAppear {
-                                        for entry in Array(entries) {
-                                            if entry.pile == nil {
-                                                switch EntryType(rawValue: entry.type!) {
-                                                case .image:
-                                                    numOfImages += 1
-                                                case .text:
-                                                    numOfTexts += 1
-                                                case .link:
-                                                    numOfLinks += 1
-                                                default:
-                                                    break
-                                                }
-                                            }
+                                        HStack(spacing: 4) {
+                                            Image(systemName: "text.word.spacing")
+                                            Text(counts.texts.description)
                                         }
+                                        .accessibilityElement(children: .combine)
+                                        .accessibilityLabel("\(counts.texts) text entries")
+                                        Spacer()
+                                        HStack(spacing: 4) {
+                                            Image(systemName: "photo")
+                                            Text(counts.images.description)
+                                        }
+                                        .accessibilityElement(children: .combine)
+                                        .accessibilityLabel("\(counts.images) image entries")
+                                        Spacer()
+                                        HStack(spacing: 4) {
+                                            Image(systemName: "waveform")
+                                            Text(counts.recordings.description)
+                                        }
+                                        .accessibilityElement(children: .combine)
+                                        .accessibilityLabel("\(counts.recordings) voice memo entries")
+                                        Spacer()
+                                        HStack(spacing: 4) {
+                                            Image(systemName: "link")
+                                            Text(counts.links.description)
+                                        }
+                                        .accessibilityElement(children: .combine)
+                                        .accessibilityLabel("\(counts.links) link entries")
                                     }
                                 }
                             }
                         }
-                        .navigationDestination(isPresented: $shouldPushToOrphan) {
-                            OrphanEntriesView(didGetPushedHere: $shouldPushToOrphan )
-                        }
-                        
+
                         ForEach(piles, id: \.id) { pile in
                             NavigationLink {
                                 EntryListView(pile: pile)
@@ -161,6 +208,7 @@ struct ContentView: View {
                                 } label: {
                                     Label("Rename", systemImage: "pencil")
                                 }
+                                .tint(.orange)
                             })
                             .contextMenu {
                                 Button {
@@ -168,19 +216,19 @@ struct ContentView: View {
                                     newPileName = pile.name ?? ""
                                     presentRenamer.toggle()
                                 } label: {
-                                    Text("Rename")
+                                    Label("Rename", systemImage: "pencil")
                                 }
                                 Button {
                                     contextPile = pile
                                     showColorPicker.toggle()
                                 } label: {
-                                    Text("Change Color")
+                                    Label("Change Color", systemImage: "swatchpalette")
                                 }
                                 Button(role: .destructive) {
                                     contextPile = pile
                                     deletePile()
                                 } label: {
-                                    Text("Delete Pile")
+                                    Label("Delete Pile", systemImage: "trash")
                                 }
                             }
                         }
@@ -200,35 +248,123 @@ struct ContentView: View {
                     }
                 }
                 .toolbar {
-                    //                if tabSelection == .tab1 {
+                    ToolbarItem(placement: .navigationBarLeading) {
+                        Button {
+                            showSettings = true
+                        } label: {
+                            Image(systemName: "gear")
+                        }
+                    }
 #if os(iOS)
                     if !piles.isEmpty {
                         ToolbarItem(placement: .navigationBarTrailing) {
                             EditButton()
                         }
                     }
-#endif
-                    ToolbarItem(placement: .navigationBarTrailing) {
-                        Menu {
-                            Button(action: toggleAlert) {
-                                Label("New Pile", systemImage: "folder.badge.plus")
+
+                    if #available(iOS 26.0, *) {
+                        // iOS 26+: Bottom bar with search and add button side by side
+                        DefaultToolbarItem(kind: .search, placement: .bottomBar)
+
+                        ToolbarSpacer(placement: .bottomBar)
+
+                        ToolbarItem(placement: .bottomBar) {
+                            Menu {
+                                Button(action: toggleAlert) {
+                                    Label("New Pile", systemImage: "folder.badge.plus")
+                                }
+
+                                Divider()
+
+                                // Quick entry creation (goes to inbox)
+                                Button {
+                                    addEntry(viewContext, pile: nil)
+                                } label: {
+                                    Label("New Text Entry", systemImage: "doc.badge.plus")
+                                }
+
+                                Menu {
+                                    Button {
+                                        selectedImage = nil
+                                        showPhotosPicker.toggle()
+                                    } label: {
+                                        Label("Photos Library", systemImage: "photo.on.rectangle")
+                                    }
+                                } label: {
+                                    Label("New Image Entry", systemImage: "photo.badge.plus")
+                                }
+
+                                Button {
+                                    showRecorder.toggle()
+                                } label: {
+                                    Label("New Voice Memo", systemImage: "waveform.badge.mic")
+                                }
+
+                                Button {
+                                    showLinkPrompt.toggle()
+                                } label: {
+                                    Label("New Link Entry", systemImage: "link.badge.plus")
+                                }
+                            } label: {
+                                Label("New", systemImage: "plus")
                             }
-                        } label: {
-                            Image(systemName: "plus")
+                        }
+                    } else {
+                        // iOS 17-25: Traditional top toolbar add button
+                        ToolbarItem(placement: .navigationBarTrailing) {
+                            Menu {
+                                Button(action: toggleAlert) {
+                                    Label("New Pile", systemImage: "folder.badge.plus")
+                                }
+
+                                Divider()
+
+                                // Quick entry creation (goes to inbox)
+                                Button {
+                                    addEntry(viewContext, pile: nil)
+                                } label: {
+                                    Label("New Text Entry", systemImage: "doc.badge.plus")
+                                }
+
+                                Menu {
+                                    Button {
+                                        selectedImage = nil
+                                        showPhotosPicker.toggle()
+                                    } label: {
+                                        Label("Photos Library", systemImage: "photo.on.rectangle")
+                                    }
+                                } label: {
+                                    Label("New Image Entry", systemImage: "photo.badge.plus")
+                                }
+
+                                Button {
+                                    showRecorder.toggle()
+                                } label: {
+                                    Label("New Voice Memo", systemImage: "waveform.badge.mic")
+                                }
+
+                                Button {
+                                    showLinkPrompt.toggle()
+                                } label: {
+                                    Label("New Link Entry", systemImage: "link.badge.plus")
+                                }
+                            } label: {
+                                Image(systemName: "plus")
+                            }
                         }
                     }
+#endif
                 }
 #if os(iOS)
                 .navigationBarTitle("Piles")
 #endif
                 .navigationBarTitleDisplayMode(.inline)
-                .searchable(text: $searchText, placement: .navigationBarDrawer)
-            }
-            .tabItem {
-                Label("Piles", systemImage: "tray.2.fill")
-            }
-            .tag(Tabs.tab1)
-            
+                .searchable(text: $searchText)
+                .navigationDestination(isPresented: $shouldPushToOrphan) {
+                    OrphanEntriesView(didGetPushedHere: $shouldPushToOrphan)
+                }
+        }
+        .sheet(isPresented: $showSettings) {
             NavigationStack {
                 SettingsView()
                     .environmentObject(sharedData)
@@ -236,17 +372,21 @@ struct ContentView: View {
                     .navigationBarTitle("Settings")
 #endif
                     .navigationBarTitleDisplayMode(.inline)
+                    .toolbar {
+                        ToolbarItem(placement: .navigationBarTrailing) {
+                            Button("Done") {
+                                showSettings = false
+                            }
+                        }
+                    }
             }
-            .tabItem {
-                Label("Settings", systemImage: "gear")
-            }
-            .tag(Tabs.tab2)
         }
         .alert("Rename Pile", isPresented: $presentRenamer, actions: {
             TextField("Pile Name", text: $newPileName)
-            
+
             Button("Rename", action: {
-                contextPile!.name = newPileName
+                guard let pile = contextPile else { return }
+                pile.name = newPileName
                 save(viewContext)
                 newPileName = ""
             })
@@ -258,15 +398,14 @@ struct ContentView: View {
             Button("Create", action: addFolder)
             Button("Cancel", role: .cancel, action: {})
         })
-        .sheet(isPresented: $showColorPicker) {
-            
-        } content: {
+        .sheet(isPresented: $showColorPicker) {} content: {
             let size = CGFloat(44)
-            
+
             HStack(spacing: 25) {
                 Button {
+                    guard let pile = contextPile else { return }
                     selectedColor = colors[0]
-                    contextPile!.tag = "Raisin Black"
+                    pile.tag = "Raisin Black"
                     save(viewContext)
                 } label: {
                     if selectedColor == colors[0] {
@@ -280,9 +419,12 @@ struct ContentView: View {
                             .frame(width: size, height: size)
                     }
                 }
+                .accessibilityLabel("Black tag")
+                .accessibilityHint(selectedColor == colors[0] ? "Currently selected" : "Tap to apply black tag")
                 Button {
+                    guard let pile = contextPile else { return }
                     selectedColor = colors[1]
-                    contextPile!.tag = "Safety Orange"
+                    pile.tag = "Safety Orange"
                     save(viewContext)
                 } label: {
                     if selectedColor == colors[1] {
@@ -296,9 +438,12 @@ struct ContentView: View {
                             .frame(width: size, height: size)
                     }
                 }
+                .accessibilityLabel("Orange tag")
+                .accessibilityHint(selectedColor == colors[1] ? "Currently selected" : "Tap to apply orange tag")
                 Button {
+                    guard let pile = contextPile else { return }
                     selectedColor = colors[2]
-                    contextPile!.tag = "Non Photo Blue"
+                    pile.tag = "Non Photo Blue"
                     save(viewContext)
                 } label: {
                     if selectedColor == colors[2] {
@@ -312,10 +457,13 @@ struct ContentView: View {
                             .frame(width: size, height: size)
                     }
                 }
+                .accessibilityLabel("Blue tag")
+                .accessibilityHint(selectedColor == colors[2] ? "Currently selected" : "Tap to apply blue tag")
                 Button {
+                    guard let pile = contextPile else { return }
                     emptyTagAnimateTrigger.toggle()
                     selectedColor = nil
-                    contextPile!.tag = nil
+                    pile.tag = nil
                     save(viewContext)
                 } label: {
                     Image(systemName: "circle.dotted")
@@ -323,11 +471,14 @@ struct ContentView: View {
                         .scaledToFit()
                         .frame(width: size, height: size)
                 }
+                .accessibilityLabel("No tag")
+                .accessibilityHint(selectedColor == nil ? "Currently selected" : "Tap to remove tag")
                 .symbolEffect(.bounce, value: emptyTagAnimateTrigger)
             }
             .presentationDetents([.fraction(0.15)])
             .onAppear {
-                switch contextPile!.tag {
+                guard let pile = contextPile else { return }
+                switch pile.tag {
                 case "Raisin Black":
                     selectedColor = colors[0]
                 case "Safety Orange":
@@ -339,66 +490,116 @@ struct ContentView: View {
                 }
             }
         }
+        .photosPicker(
+            isPresented: $showPhotosPicker,
+            selection: $selectedImage,
+            matching: .any(of: [.images, .screenshots]),
+            preferredItemEncoding: .automatic
+        )
+        .onChange(of: selectedImage) {
+            Task {
+                if let data = try? await selectedImage?.loadTransferable(type: Data.self) {
+                    addPicture(viewContext, image: data, pile: nil)
+                    return
+                }
+                print("Failed to load image")
+            }
+        }
+        .alert("New Link", isPresented: $showLinkPrompt) {
+            TextField("Website URL", text: $newLink)
+                .keyboardType(.URL)
+
+            Button("Add") {
+                addLink(viewContext, newLink: newLink, pile: nil)
+                newLink = ""
+            }
+            Button("Cancel", role: .cancel) {
+                newLink = ""
+            }
+        }
+        .sheet(isPresented: $showRecorder) {
+            AudioRecorderView { audioURL in
+                addRecording(viewContext, audioURL: audioURL, pile: nil, transcriptionService: sharedData.transcriptionService)
+            }
+        }
         .onChange(of: scenePhase) { _, newValue in
             switch newValue {
             case .active:
                 performActionIfNeeded()
+
+                // Recover any entries stuck in transcribing state
+                recoverStuckTranscribingEntries(viewContext)
+
+                // Rebuild database if version changed or if needed
+                if sharedData.needsDatabaseRebuild {
+                    print("Rebuilding SVDB after version update...")
+                    processDatabase(sharedData: sharedData, entries: Array(entries))
+                    sharedData.needsDatabaseRebuild = false
+                }
             default:
                 break
             }
-            
-            processDatabase(sharedData: sharedData, entries: Array(entries))
+        }
+        .onReceive(NotificationCenter.default.publisher(for: NSNotification.Name("CoreDataSaveError"))) { notification in
+            if let error = notification.userInfo?["error"] as? NSError {
+                saveErrorMessage = error.localizedDescription
+                showSaveErrorAlert = true
+            }
+        }
+        .alert("Save Error", isPresented: $showSaveErrorAlert) {
+            Button("OK", role: .cancel) {}
+        } message: {
+            Text("Unable to save changes: \(saveErrorMessage)")
         }
     }
-    
+
     func performActionIfNeeded() {
         guard let action = actionService.action else { return }
-        
+
         switch action {
         case .newEntry:
             newEntry()
         }
-        
+
         actionService.action = nil
     }
-    
-    enum Tabs {
-        case tab1, tab2
-    }
-    
+
     func toggleAlert() {
         presentAlert.toggle()
     }
-    
+
     private func newEntry() {
-        tabSelection = .tab1
         shouldPushToOrphan.toggle()
     }
-    
+
     private func deletePile() {
+        guard let pile = contextPile,
+              let index = piles.firstIndex(of: pile) else {
+            return
+        }
+
         withAnimation {
-            viewContext.delete(piles[piles.firstIndex(of: contextPile!)!])
-            
+            viewContext.delete(piles[index])
             save(viewContext)
         }
     }
-    
+
     private func addFolder() {
         withAnimation {
             let newPile = Pile(context: viewContext)
             newPile.id = UUID()
             newPile.name = newPileName
-            
+
             newPileName = ""
-            
+
             save(viewContext)
         }
     }
-    
+
     private func deletePiles(offsets: IndexSet) {
         withAnimation {
             offsets.map { piles[$0] }.forEach(viewContext.delete)
-            
+
             save(viewContext)
         }
     }

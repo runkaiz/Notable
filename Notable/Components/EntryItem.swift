@@ -5,10 +5,11 @@
 //  Created by Runkai Zhang on 7/5/23.
 //
 
-import SwiftUI
 import CoreData
-import SwiftLinkPreview
-import SkeletonUI
+import LinkPresentation
+import SwiftUI
+
+// MARK: - EntryType
 
 enum EntryType: String {
     case text
@@ -17,105 +18,193 @@ enum EntryType: String {
     case link
 }
 
+// MARK: - LinkMetadata
+
+class LinkMetadataLoader: ObservableObject {
+    @Published var metadata: LPLinkMetadata?
+    @Published var image: UIImage?
+
+    private var metadataProvider: LPMetadataProvider?
+    private var hasStartedFetching = false
+    private var currentURL: URL?
+
+    func loadMetadata(for url: URL) {
+        // Don't fetch if we've already started fetching for this URL
+        guard !hasStartedFetching || currentURL != url else { return }
+
+        // Cancel any existing fetch before starting a new one
+        if metadataProvider != nil {
+            metadataProvider?.cancel()
+        }
+
+        // Create a new provider for this fetch
+        metadataProvider = LPMetadataProvider()
+        hasStartedFetching = true
+        currentURL = url
+
+        metadataProvider?.startFetchingMetadata(for: url) { [weak self] metadata, error in
+            guard let self = self else { return }
+
+            if let error = error {
+                print("Link metadata error: \(error)")
+                return
+            }
+
+            DispatchQueue.main.async {
+                self.metadata = metadata
+
+                // Extract image from metadata
+                if let imageProvider = metadata?.imageProvider {
+                    imageProvider.loadObject(ofClass: UIImage.self) { image, error in
+                        if let image = image as? UIImage {
+                            DispatchQueue.main.async {
+                                self.image = image
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    func cancel() {
+        metadataProvider?.cancel()
+        metadataProvider = nil
+    }
+}
+
+// MARK: - EntryItem
+
 struct EntryItem: View {
     @ObservedObject var entry: Entry
-    
+
     @State var image: UIImage
-    @State var preview: Response?
-    
-    let slp = SwiftLinkPreview(session: URLSession.shared,
-                               workQueue: SwiftLinkPreview.defaultWorkQueue,
-                               responseQueue: DispatchQueue.main,
-                               cache: DisabledCache.instance)
-    
+    @StateObject private var linkLoader = LinkMetadataLoader()
+
     var type: EntryType
-    
+
     init(entry: Entry) {
         self.entry = entry
-        self.type = EntryType(rawValue: entry.type ?? EntryType.text.rawValue)!
-        
+        type = EntryType(rawValue: entry.type ?? EntryType.text.rawValue) ?? .text
+
         _image = State(initialValue: UIImage(data: entry.image ?? Data()) ?? UIImage())
     }
-    
-    @State var isImagePopoverPresented = false
-    
+
+    @State var isSafariPresented = false
+
     var body: some View {
         switch type {
         case .link:
-            Section {
-                VStack {
-                    HStack {
-                        HStack {
-                            AsyncImage(url: URL(string: preview?.image ?? "https://kagi.com/proxy/th?c=MvlWCDdicm1aK3zpADFz51uffrI0FEB-kI9GN5Oyn_dqyEzHH5YvglHWRgS7NvM06O65A8rVvgFJDfx-YcVcFd5RKmCR-i-tJFF0Y_14aPWhVWscH92AODUFf6D2dpAD")) { image in
-                                image.resizable()
-                            } placeholder: {
-                                //                                ProgressView()
+            Button(action: {
+                isSafariPresented = true
+            }) {
+                HStack(spacing: 12) {
+                    // Preview image
+                    Group {
+                        if let previewImage = linkLoader.image {
+                            Image(uiImage: previewImage)
+                                .resizable()
+                                .scaledToFill()
+                        } else {
+                            ZStack {
+                                Color(UIColor.tertiarySystemFill)
+                                Image(systemName: "link")
+                                    .font(.title2)
+                                    .foregroundStyle(.secondary)
                             }
-                            .skeleton(with: preview == nil)
-                            .scaledToFit()
-                            .aspectRatio(contentMode: .fit)
-                            .frame(width: 75)
-                            VStack(alignment: .leading) {
-                                Text(preview?.title)
-                                    .fontDesign(.monospaced)
-                                    .lineLimit(3)
-                                Spacer(minLength: 0)
-                                Link(destination: (entry.link ?? URL(string: "https://www.runkaizhang.xyz"))!, label: {
-                                    Text("\(entry.link?.SLD ?? "")")
-                                })
-                                .foregroundStyle(.secondary)
-                            }
-                            .padding(12)
-                            .skeleton(with: preview == nil)
-                            .shape(type: .rectangle)
                         }
-                        
-                        Spacer()
                     }
+                    .frame(width: 70, height: 70)
+                    .cornerRadius(8)
+                    .clipped()
+
+                    VStack(alignment: .leading, spacing: 6) {
+                        Text(linkLoader.metadata?.title ?? entry.title ?? "Link")
+                            .fontDesign(.monospaced)
+                            .lineLimit(2)
+                            .font(.subheadline)
+                            .fontWeight(.medium)
+                            .foregroundStyle(.primary)
+
+                        if let description = linkLoader.metadata?.url?.host {
+                            Text(description)
+                                .font(.caption)
+                                .foregroundStyle(.secondary)
+                                .lineLimit(1)
+                        } else {
+                            Text(entry.link?.SLD ?? "")
+                                .font(.caption)
+                                .foregroundStyle(.secondary)
+                        }
+                    }
+
+                    Spacer()
+                }
+                .contentShape(Rectangle())
+            }
+            .buttonStyle(.plain)
+            .padding(12)
+            .background(Color(UIColor.secondarySystemGroupedBackground))
+            .cornerRadius(12)
+            .padding(.horizontal, 16)
+            .padding(.vertical, 10)
+            .listRowInsets(EdgeInsets())
+            .listRowSeparator(.hidden)
+            .onAppear {
+                if let link = entry.link {
+                    linkLoader.loadMetadata(for: link)
                 }
             }
-            .onAppear {
-                if let link =  entry.link {
-                    _ = slp.preview(link.absoluteString, onSuccess: { res in
-                        preview = res
-                    }, onError: { error in print("\(error)")})
+            .onDisappear {
+                linkLoader.cancel()
+            }
+            .fullScreenCover(isPresented: $isSafariPresented) {
+                if let link = entry.link {
+                    SafariView(url: link)
+                        .ignoresSafeArea()
                 }
             }
         case .recording:
-            // To be implemented
-            EmptyView()
-        case .image:
-            Section {
-                VStack(spacing: 16) {
-                    Image(uiImage: image)
-                        .resizable()
-                        .aspectRatio(contentMode: .fit)
-                    HStack {
-                        Text(entry.timestamp ?? Date(), formatter: entryFormatter)
-                            .font(.subheadline)
-                        Spacer()
-                        Button(action: {
-                            isImagePopoverPresented.toggle()
-                        }, label: {
-                            Image(systemName: "info.circle")
-                        })
-                        .popover(isPresented: $isImagePopoverPresented) {
-                            let width = Int(image.size.width * image.scale)
-                            let height = Int(image.size.height * image.scale)
-                            Text(
-                                "Image resolution: \(width) * \(height)"
-                            )
-                            .frame(minWidth: 200, maxHeight: 400)
-                            .presentationCompactAdaptation(.popover)
-                            .padding()
-                        }
-                    }
-                    .padding(.horizontal)
-                    .padding(.bottom)
-                }
+            if let audioData = entry.audio {
+                AudioEntryPlayer(
+                    entry: entry,
+                    audioData: audioData,
+                    timestamp: entry.timestamp ?? Date()
+                )
                 .listRowInsets(EdgeInsets())
+                .listRowSeparator(.hidden)
+            } else {
+                EmptyView()
             }
-        default:
+        case .image:
+            VStack(spacing: 12) {
+                Image(uiImage: image)
+                    .resizable()
+                    .aspectRatio(contentMode: .fit)
+                    .cornerRadius(12)
+                    .shadow(color: Color.black.opacity(0.1), radius: 2, x: 0, y: 1)
+
+                HStack {
+                    Text(entry.timestamp ?? Date(), formatter: entryFormatter)
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                    Spacer()
+
+                    let width = Int(image.size.width * image.scale)
+                    let height = Int(image.size.height * image.scale)
+                    Text("\(width) × \(height)")
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                }
+            }
+            .padding(12)
+            .background(Color(UIColor.secondarySystemGroupedBackground))
+            .cornerRadius(12)
+            .padding(.horizontal, 16)
+            .padding(.vertical, 10)
+            .listRowInsets(EdgeInsets())
+            .listRowSeparator(.hidden)
+        case .text:
             VStack(alignment: .leading, spacing: 10) {
                 HStack {
                     if entry.isMarkdown {
@@ -140,7 +229,7 @@ struct EntryItem: View {
                 Text(entry.timestamp ?? Date(), formatter: entryFormatter)
                     .font(.footnote)
             }
-            .padding(.vertical, 6)
+            .padding(.vertical, 4)
         }
     }
 }

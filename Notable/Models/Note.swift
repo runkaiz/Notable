@@ -17,18 +17,18 @@ struct Note: Transferable {
 
     static var transferRepresentation: some TransferRepresentation {
         FileRepresentation(contentType: .text) { note in
-            var url: URL?
-
             do {
                 // Call the function to create the temporary text file and get the URL
-                url = try createTemporaryTxtFile(title: note.title, body: note.body)
-                print("Temporary text file created at: \(String(describing: url))")
-
+                let url = try createTemporaryTxtFile(title: note.title, body: note.body)
+                print("Temporary text file created at: \(url)")
+                return SentTransferredFile(url)
             } catch {
                 print("Error creating temporary text file: \(error)")
+                // Create a fallback empty file
+                let fallbackURL = FileManager.default.temporaryDirectory.appendingPathComponent("error.txt")
+                try? "Error: Could not create file".write(to: fallbackURL, atomically: true, encoding: .utf8)
+                return SentTransferredFile(fallbackURL)
             }
-
-            return SentTransferredFile(url!)
         } importing: { _ in
             return Self.init(title: "Imported", body: "Imported Nothing")
         }
