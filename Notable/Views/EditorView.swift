@@ -5,10 +5,12 @@
 //  Created by Runkai Zhang on 7/2/23.
 //
 
-import SwiftUI
 import CodeEditor
 import CoreData
-import HighlightedTextEditor
+import SwiftUI
+import MarkdownUI
+
+// MARK: - EditorView
 
 struct EditorView: View {
     @Environment(\.managedObjectContext) private var viewContext
@@ -18,12 +20,13 @@ struct EditorView: View {
     @State private var presentAlert = false
     @State private var newTitle = ""
     @State private var showingSheet = false
+    @State private var isPreviewMode = false
 
     @FocusState var isInputActive: Bool
 
     @AppStorage("editorFontSize")
     private var editorFontSize = 18
-    
+
     @AppStorage("markdownBaseFontSize")
     private var markdownBaseFontSize = 18
 
@@ -44,23 +47,36 @@ struct EditorView: View {
         VStack(spacing: 0) {
             Divider()
             if entry.isMarkdown {
-#if os(macOS)
-                HighlightedTextEditor(text: $entry.content ?? "", highlightRules: [HighlightRule(pattern: .all, formattingRule: TextFormattingRule(key: .font, value: NSFont.systemFont(ofSize: CGFloat(markdownBaseFontSize))))])
-                    .introspect { editor in
-                        editor.textView.autocorrectionType = autocorrect ? .yes : .no
+                if isPreviewMode {
+                    // Preview Mode: Render markdown with MarkdownUI
+                    ScrollView {
+                        Markdown(entry.content ?? "")
+                            .markdownTextStyle {
+                                FontSize(CGFloat(markdownBaseFontSize))
+                            }
+                            .markdownTheme(.customNotable(baseFontSize: CGFloat(markdownBaseFontSize)))
+                            .textSelection(.enabled)
+                            .padding()
+                            .frame(maxWidth: .infinity, alignment: .leading)
                     }
-#else
-                HighlightedTextEditor(text: $entry.content ?? "", highlightRules: .markdown)
-                    .introspect { editor in
-                        editor.textView.autocorrectionType = autocorrect ? .yes : .no
-                    }
+                } else {
+                    // Edit Mode: Plain text editor
+                    TextEditor(text: $entry.content ?? "")
+                        .font(.system(size: CGFloat(markdownBaseFontSize)))
+                        .autocorrectionDisabled(!autocorrect)
+                        .focused($isInputActive)
+#if os(iOS)
+                        .padding(.top, 8)
 #endif
+                }
             } else {
+// Code editor for non-markdown entries
 #if os(macOS)
                 CodeEditor(
                     source: $entry.content ?? "",
                     language: language, theme: theme,
-                    fontSize: .init(get: { CGFloat(editorFontSize) }, set: { editorFontSize = Int($0) }))
+                    fontSize: .init(get: { CGFloat(editorFontSize) }, set: { editorFontSize = Int($0) })
+                )
                 .frame(minWidth: 640, minHeight: 480)
                 .focused($isInputActive)
                 .keyboardType(.alphabet)
@@ -68,7 +84,8 @@ struct EditorView: View {
                 CodeEditor(
                     source: $entry.content ?? "",
                     language: language, theme: theme,
-                    fontSize: .init(get: { CGFloat(editorFontSize) }, set: { editorFontSize = Int($0) }))
+                    fontSize: .init(get: { CGFloat(editorFontSize) }, set: { editorFontSize = Int($0) })
+                )
                 .padding(.top, CGFloat(12))
                 .focused($isInputActive)
                 .keyboardType(.alphabet)
@@ -96,32 +113,47 @@ struct EditorView: View {
                     Button("Cancel", role: .cancel, action: {})
                 })
             }
+
+            if entry.isMarkdown {
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    Button {
+                        isPreviewMode.toggle()
+                        if isPreviewMode {
+                            isInputActive = false
+                        }
+                    } label: {
+                        Image(systemName: isPreviewMode ? "pencil" : "eye")
+                    }
+                }
+            }
+
             ToolbarItem {
                 Menu {
-                    Button("Settings") {
+                    Button {
                         isInputActive = false
                         showingSheet.toggle()
+                    } label: {
+                        Label("Settings", systemImage: "slider.horizontal.3")
                     }
-                    ShareLink(item: Note(title: entry.title!, body: entry.content!), preview: SharePreview(entry.title!))
+                    if let title = entry.title, let content = entry.content {
+                        ShareLink(item: Note(title: title, body: content), preview: SharePreview(title))
+                    }
                 } label: {
                     Image(systemName: "info.circle")
                 }
             }
         }
         .sheet(isPresented: $showingSheet) {
-            VStack {
-                EditorConfigSheet(entry: entry)
-                Spacer()
-            }
-            .presentationDetents([.fraction(0.275)])
-            .scrollContentBackground(.hidden)
+            EditorConfigSheet(entry: entry)
+                .presentationDetents([.medium, .large])
+                .presentationDragIndicator(.visible)
         }
     }
 
     private func saveEntry() {
         withAnimation {
             if !newTitle.isEmpty { entry.title = newTitle }
-            
+
             entry.type = EntryType.text.rawValue
 
             save(viewContext)
@@ -145,4 +177,77 @@ func ?? <T>(lhs: Binding<T?>, rhs: T) -> Binding<T> {
         get: { lhs.wrappedValue ?? rhs },
         set: { lhs.wrappedValue = $0 }
     )
+}
+
+// MARK: - Custom Markdown Theme
+
+extension Theme {
+    static func customNotable(baseFontSize: CGFloat) -> Theme {
+        Theme()
+            .text {
+                ForegroundColor(.primary)
+                FontSize(baseFontSize)
+            }
+            .heading1 { configuration in
+                configuration.label
+                    .markdownTextStyle {
+                        FontWeight(.bold)
+                        FontSize(baseFontSize * 1.5)
+                    }
+                    .padding(.vertical, 8)
+            }
+            .heading2 { configuration in
+                configuration.label
+                    .markdownTextStyle {
+                        FontWeight(.semibold)
+                        FontSize(baseFontSize * 1.3)
+                    }
+                    .padding(.vertical, 6)
+            }
+            .heading3 { configuration in
+                configuration.label
+                    .markdownTextStyle {
+                        FontWeight(.semibold)
+                        FontSize(baseFontSize * 1.15)
+                    }
+                    .padding(.vertical, 4)
+            }
+            .heading4 { configuration in
+                configuration.label
+                    .markdownTextStyle {
+                        FontWeight(.medium)
+                        FontSize(baseFontSize * 1.1)
+                    }
+                    .padding(.vertical, 2)
+            }
+            .heading5 { configuration in
+                configuration.label
+                    .markdownTextStyle {
+                        FontWeight(.medium)
+                        FontSize(baseFontSize * 1.05)
+                    }
+            }
+            .heading6 { configuration in
+                configuration.label
+                    .markdownTextStyle {
+                        FontWeight(.regular)
+                        FontSize(baseFontSize)
+                    }
+            }
+            .code {
+                FontFamilyVariant(.monospaced)
+                FontSize(baseFontSize * 0.9)
+                BackgroundColor(.secondary.opacity(0.15))
+            }
+            .codeBlock { configuration in
+                configuration.label
+                    .markdownTextStyle {
+                        FontFamilyVariant(.monospaced)
+                        FontSize(baseFontSize * 0.9)
+                    }
+                    .padding()
+                    .background(Color.secondary.opacity(0.1))
+                    .clipShape(RoundedRectangle(cornerRadius: 8))
+            }
+    }
 }

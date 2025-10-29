@@ -29,5 +29,9 @@
 	<array>
 		<string>remote-notification</string>
 	</array>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>Notable needs access to your microphone to record voice memos.</string>
+	<key>NSSpeechRecognitionUsageDescription</key>
+	<string>Notable needs speech recognition to transcribe your voice memos.</string>
 </dict>
 </plist>

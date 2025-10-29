@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="1024" viewBox="0 0 1024 1024">
+  <!-- Two vertical pillars for the 'N' monogram (single layer) -->
+  <g id="pillars" fill="#F8FAFC">
+    <rect x="300" y="252" width="120" height="520" rx="60"/>
+    <rect x="604" y="252" width="120" height="520" rx="60"/>
+  </g>
+</svg>

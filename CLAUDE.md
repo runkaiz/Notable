@@ -10,14 +10,21 @@ Notable is a high-performance Markdown editor for iOS built with SwiftUI. It fea
 
 ### Building the App
 ```bash
-# Build for simulator (Debug)
-xcodebuild -scheme Notable -destination 'platform=iOS Simulator,name=iPhone 15' -configuration Debug build
+# Build for simulator (Debug) - iOS 26+
+# Use any available iOS 26 simulator (iPad recommended as iPhone simulators may not be installed)
+xcodebuild -scheme Notable -destination 'platform=iOS Simulator,name=iPad (A16),OS=26.0.1' -configuration Debug build
+
+# Alternative: Build for any iOS Simulator
+xcodebuild -scheme Notable -destination 'platform=iOS Simulator' -configuration Debug build
 
 # Build for simulator (Release)
-xcodebuild -scheme Notable -destination 'platform=iOS Simulator,name=iPhone 15' -configuration Release build
+xcodebuild -scheme Notable -destination 'platform=iOS Simulator,name=iPad (A16),OS=26.0.1' -configuration Release build
 
 # Build for device
 xcodebuild -scheme Notable -destination 'generic/platform=iOS' -configuration Release build
+
+# List available simulators
+xcrun simctl list devices available
 ```
 
 ### Opening in Xcode
@@ -71,7 +78,7 @@ NotableApp
 ├── OrphanEntriesView (Inbox for unassigned entries)
 │   └── Entries where pile == nil
 ├── EditorView (Markdown/Code editor)
-│   ├── HighlightedTextEditor (markdown mode)
+│   ├── MarkdownUI (markdown preview mode)
 │   └── CodeEditor (code mode, 40+ languages)
 └── SettingsView (App configuration)
     └── CloudKitSyncMonitor for sync status
@@ -151,7 +158,7 @@ Home screen long-press action: "New Entry"
 Key third-party libraries (see Package.resolved):
 - **SVDB** (2.0.0) - Semantic vector search
 - **CodeEditor** (1.2.2) - Code syntax highlighting
-- **HighlightedTextEditor** (2.1.0) - Markdown preview
+- **swift-markdown-ui** - Rich markdown rendering with full CommonMark support
 - **SwiftLinkPreview** (3.4.0) - Link preview cards
 - **CloudKitSyncMonitor** (1.2.1) - iCloud sync status UI
 - **AcknowList** (3.0.1) - License display
@@ -187,9 +194,24 @@ Supports English (en) and Simplified Chinese (zh_CN) via built-in SwiftUI locali
 
 ## Known Limitations
 
+### Testing & Quality
 - No test coverage (tests should be added)
-- SVDB re-indexes entire database on scene activation (performance concern)
-- Search limited to top 5 results
+- No accessibility testing (VoiceOver labels needed for icons)
+
+### Performance
+- SVDB re-indexes entire database on version change (can be slow with 1000+ entries)
+  - Optimization: Move to background task with progress indicator
 - PileItem counts entries on every render (N+1 pattern)
+  - Optimization: Cache counts in Pile entity or use @FetchRequest predicates
+- Search limited to top 5 results
+- WhisperKit downloads ~40MB model on first launch with no progress indicator
+
+### Features
+- Camera capture not implemented (UI placeholders removed in 2.0)
+  - Photos Library works via PhotosPicker
+  - TODO comments mark where to add camera support
 - CLIPKit integration partially implemented but commented out
-- Camera access and audio recording listed but not implemented
+
+### Platform
+- Built for iOS 26+ (use iPad simulators for testing as iPhone 15 simulator not available)
+- No macOS support (iOS-only app)

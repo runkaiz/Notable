@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="840" height="360" viewBox="-140 -60 560 240" preserveAspectRatio="xMidYMid meet"
+     xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="title desc">
+  <title id="title">Smooth cartoon short pencil — rotated 130°, no clipping</title>
+  <desc id="desc">A minimal, chunky pencil rotated back to 130 degrees, with an expanded viewBox to avoid clipping.</desc>
+
+  <g transform="rotate(130 140 60)">
+    <g fill="none" stroke="#0F172A" stroke-width="6" stroke-linejoin="round" stroke-linecap="round">
+      <!-- Eraser: rounded only on the outer edges before rotation -->
+      <path d="M58 28
+               H34
+               A24 24 0 0 0 10 52
+               V68
+               A24 24 0 0 0 34 92
+               H58
+               Z" fill="#FCA5A5"/>
+      <!-- Ferrule: straight edges -->
+      <rect x="58" y="28" width="48" height="64" rx="0" fill="#CBD5E1"/>
+      <!-- Body: longer rectangle, straight edges -->
+      <rect x="106" y="28" width="88" height="64" rx="0" fill="#F4D06F"/>
+      <!-- Wood: soft wedge -->
+      <path d="M194 28
+               Q242 40 250 60
+               Q242 80 194 92
+               Z" fill="#F5DEB3"/>
+      <!-- Graphite: rounded minimal tip -->
+      <path d="M246 54
+               Q258 60 246 66
+               Q244 60 246 54
+               Z" fill="#1F2937"/>
+    </g>
+  </g>
+</svg>

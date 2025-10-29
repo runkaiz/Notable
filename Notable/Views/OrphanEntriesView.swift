@@ -5,121 +5,278 @@
 //  Created by Runkai Zhang on 8/8/23.
 //
 
-import SwiftUI
+import NaturalLanguage
 import PhotosUI
+import SVDB
+import SwiftUI
+import UniformTypeIdentifiers
 
 struct OrphanEntriesView: View {
     @Environment(\.managedObjectContext) private var viewContext
-    
+    @EnvironmentObject var sharedData: SharedData
+
     @FetchRequest(
         entity: Entry.entity(),
         sortDescriptors: [NSSortDescriptor(keyPath: \Entry.timestamp, ascending: false)],
-        animation: .default)
+        animation: .default
+    )
     private var entries: FetchedResults<Entry>
-    
+
     @FetchRequest(
         entity: Pile.entity(),
         sortDescriptors: [NSSortDescriptor(keyPath: \Pile.name, ascending: true)],
-        animation: .default)
+        animation: .default
+    )
     private var piles: FetchedResults<Pile>
-    
-    @Binding public var didGetPushedHere: Bool
-    
+
+    @Binding var didGetPushedHere: Bool
+
     @State private var selection: Entry?
-    
+
     @State private var presentEntryRenamer = false
     @State private var newEntryName = ""
-    
+
     @State private var showLinkPrompt = false
     @State private var newLink = ""
-    
+
     @State private var showPhotosPicker = false
     @State private var searchText = ""
     @State private var showCancelButton: Bool = false
     @State private var selectedImage: PhotosPickerItem?
-    
+
     @State private var contextEntry: Entry?
-    
+
     @State private var showPileChooser = false
     @State private var selectedPile: Pile?
-    
-    @State private var isConfirmingImageTools = false
-    
+
     @State private var isImporting = false
-    
+
+    @State private var showRecorder = false
+
+    var orphanEntries: [Entry] {
+        entries.filter { $0.pile == nil }
+    }
+
+    var filteredOrphanEntries: [Entry] {
+        var resultEntries: [Entry] = []
+        var results: [SearchResult] = []
+
+        // Guard against nil database - return empty results gracefully
+        guard let database = sharedData.database else {
+            print("Warning: SVDB database not available for search")
+            return resultEntries
+        }
+
+        let embedding: NLEmbedding? = NLEmbedding.sentenceEmbedding(for: .english)
+        let embedded = embedding?.vector(for: searchText)
+
+        if let wordEmbedding = embedded {
+            results = database.search(query: wordEmbedding, num_results: 5)
+        }
+
+        for result in results {
+            for entry in orphanEntries {
+                if entry.content == result.text {
+                    resultEntries.append(entry)
+                }
+            }
+        }
+        return resultEntries
+    }
+
+    var orphanCounts: (texts: Int, images: Int, links: Int, recordings: Int) {
+        var texts = 0
+        var images = 0
+        var links = 0
+        var recordings = 0
+
+        for entry in orphanEntries {
+            guard let typeString = entry.type,
+                  let type = EntryType(rawValue: typeString)
+            else {
+                continue
+            }
+            switch type {
+            case .image:
+                images += 1
+            case .text:
+                texts += 1
+            case .link:
+                links += 1
+            case .recording:
+                recordings += 1
+            }
+        }
+
+        return (texts, images, links, recordings)
+    }
+
     var body: some View {
         List(selection: $selection) {
-            ForEach(entries, id: \.id) { entry in
-                if entry.pile == nil {
-                    EntryTransformer(entry: entry)
-                        .swipeActions(edge: .trailing, allowsFullSwipe: false, content: {
-                            Button(role: .destructive) {
-                                viewContext.delete(entry)
-                                save(viewContext)
-                            } label: {
-                                Label("Delete", systemImage: "trash")
+            Section {
+                HStack {
+                    Image(systemName: "tray.and.arrow.down.fill")
+                        .resizable()
+                        .scaledToFit()
+                        .frame(width: 16, height: 16)
+                    Text("Summary")
+                    Spacer()
+                }
+                HStack(spacing: 20) {
+                    HStack {
+                        Image(systemName: "text.word.spacing")
+                            .foregroundStyle(.secondary)
+                        Text("\(orphanCounts.texts)")
+                            .font(.body)
+                    }
+                    HStack {
+                        Image(systemName: "photo")
+                            .foregroundStyle(.secondary)
+                        Text("\(orphanCounts.images)")
+                            .font(.body)
+                    }
+                    HStack {
+                        Image(systemName: "waveform")
+                            .foregroundStyle(.secondary)
+                        Text("\(orphanCounts.recordings)")
+                            .font(.body)
+                    }
+                    HStack {
+                        Image(systemName: "link")
+                            .foregroundStyle(.secondary)
+                        Text("\(orphanCounts.links)")
+                            .font(.body)
+                    }
+                    Spacer()
+                }
+            }
+
+            if orphanEntries.isEmpty && searchText.isEmpty {
+                EmptyStateView(
+                    icon: "tray",
+                    title: "Inbox is Empty",
+                    description: "Your inbox is clear! New entries without a pile will appear here. Tap the + button above to add your first entry.",
+                    actionTitle: "Add Entry",
+                    action: {
+                        addEntry(viewContext, pile: nil)
+                    }
+                )
+                .listRowSeparator(.hidden)
+            }
+
+            let displayEntries = searchText.isEmpty ? orphanEntries : filteredOrphanEntries
+
+            ForEach(displayEntries, id: \.id) { entry in
+                EntryTransformer(entry: entry)
+                    .swipeActions(edge: .leading, allowsFullSwipe: false, content: {
+                        Button {
+                            contextEntry = entry
+                            if let first = piles.first {
+                                selectedPile = first
                             }
-                            
-                            if entry.type == EntryType.text.rawValue {
-                                Button {
-                                    contextEntry = entry
-                                    newEntryName = entry.title ?? ""
-                                    presentEntryRenamer.toggle()
-                                } label: {
-                                    Label("Rename", systemImage: "pencil")
-                                }
-                            }
-                            
+
+                            showPileChooser.toggle()
+                        } label: {
+                            Label("Assign", systemImage: "move.3d")
+                        }
+                        .tint(.accentColor)
+                    })
+                    .swipeActions(edge: .trailing, allowsFullSwipe: false, content: {
+                        Button(role: .destructive) {
+                            viewContext.delete(entry)
+                            save(viewContext)
+                        } label: {
+                            Label("Delete", systemImage: "trash")
+                        }
+
+                        if entry.type == EntryType.text.rawValue {
                             Button {
                                 contextEntry = entry
-                                if let first = piles.first {
-                                    selectedPile = first
-                                }
-                                
-                                showPileChooser.toggle()
+                                newEntryName = entry.title ?? ""
+                                presentEntryRenamer.toggle()
                             } label: {
-                                Label("Assign", systemImage: "move.3d")
+                                Label("Rename", systemImage: "pencil")
                             }
-                            .tint(.accentColor)
-                        })
-                        .contextMenu {
-                            Button {
-                                contextEntry = entry
-                                if let first = piles.first {
-                                    selectedPile = first
-                                }
-                                
-                                showPileChooser.toggle()
-                            } label: {
-                                Text("Assign to pile")
+                            .tint(.orange)
+                        }
+
+                        // Share button for all entry types
+                        if entry.type == EntryType.text.rawValue {
+                            ShareLink(item: entry.content ?? "", subject: Text(entry.title ?? "Entry")) {
+                                Label("Share", systemImage: "square.and.arrow.up")
                             }
-                            
-                            if entry.type == EntryType.text.rawValue {
-                                Button {
-                                    contextEntry = entry
-                                    newEntryName = entry.title ?? ""
-                                    presentEntryRenamer.toggle()
-                                } label: {
-                                    Text("Rename")
-                                }
+                        } else if entry.type == EntryType.image.rawValue, let imageData = entry.image, let uiImage = UIImage(data: imageData) {
+                            ShareLink(item: Image(uiImage: uiImage), preview: SharePreview(entry.title ?? "Image", image: Image(uiImage: uiImage))) {
+                                Label("Share", systemImage: "square.and.arrow.up")
                             }
-                            
-                            Button(role: .destructive) {
-                                viewContext.delete(entry)
-                                
-                                save(viewContext)
-                            } label: {
-                                Text("Delete Entry")
+                        } else if entry.type == EntryType.link.rawValue, let url = entry.link {
+                            ShareLink(item: url) {
+                                Label("Share", systemImage: "square.and.arrow.up")
+                            }
+                        } else if entry.type == EntryType.recording.rawValue, let audioData = entry.audio {
+                            ShareLink(item: audioData, preview: SharePreview(entry.title ?? "Recording")) {
+                                Label("Share", systemImage: "square.and.arrow.up")
                             }
                         }
-                }
+                    })
+                    .contextMenu {
+                        // Share button for all entry types
+                        if entry.type == EntryType.text.rawValue {
+                            ShareLink(item: entry.content ?? "", subject: Text(entry.title ?? "Entry")) {
+                                Label("Share", systemImage: "square.and.arrow.up")
+                            }
+                        } else if entry.type == EntryType.image.rawValue, let imageData = entry.image, let uiImage = UIImage(data: imageData) {
+                            ShareLink(item: Image(uiImage: uiImage), preview: SharePreview(entry.title ?? "Image", image: Image(uiImage: uiImage))) {
+                                Label("Share", systemImage: "square.and.arrow.up")
+                            }
+                        } else if entry.type == EntryType.link.rawValue, let url = entry.link {
+                            ShareLink(item: url) {
+                                Label("Share", systemImage: "square.and.arrow.up")
+                            }
+                        } else if entry.type == EntryType.recording.rawValue, let audioData = entry.audio {
+                            ShareLink(item: audioData, preview: SharePreview(entry.title ?? "Recording")) {
+                                Label("Share", systemImage: "square.and.arrow.up")
+                            }
+                        }
+
+                        Button {
+                            contextEntry = entry
+                            if let first = piles.first {
+                                selectedPile = first
+                            }
+
+                            showPileChooser.toggle()
+                        } label: {
+                            Label("Assign to pile", systemImage: "move.3d")
+                        }
+
+                        if entry.type == EntryType.text.rawValue {
+                            Button {
+                                contextEntry = entry
+                                newEntryName = entry.title ?? ""
+                                presentEntryRenamer.toggle()
+                            } label: {
+                                Label("Rename", systemImage: "pencil")
+                            }
+                        }
+
+                        Button(role: .destructive) {
+                            viewContext.delete(entry)
+
+                            save(viewContext)
+                        } label: {
+                            Label("Delete Entry", systemImage: "trash")
+                        }
+                    }
             }
 #if os(iOS)
             .onDelete(perform: deleteEntries)
 #endif
         }
+        .listStyle(.grouped)
         .navigationTitle("Inbox")
         .navigationBarTitleDisplayMode(.inline)
+        .searchable(text: $searchText)
         .onAppear {
             if didGetPushedHere {
                 addEntry(viewContext, pile: nil)
@@ -128,61 +285,111 @@ struct OrphanEntriesView: View {
         .toolbar {
 #if os(iOS)
             ToolbarItem(placement: .navigationBarTrailing) {
-                if entries.contains(where: {$0.pile == nil}) {
+                if !orphanEntries.isEmpty {
                     EditButton()
                 }
             }
-#endif
-            ToolbarItem(placement: .navigationBarTrailing) {
-                Menu {
-                    Button {
-                        addEntry(viewContext, pile: nil)
+
+            if #available(iOS 26.0, *) {
+                // iOS 26+: Bottom bar with search and add button side by side
+                DefaultToolbarItem(kind: .search, placement: .bottomBar)
+
+                ToolbarSpacer(placement: .bottomBar)
+
+                ToolbarItem(placement: .bottomBar) {
+                    Menu {
+                        Button {
+                            addEntry(viewContext, pile: nil)
+                        } label: {
+                            Label("New Text Entry", systemImage: "doc.badge.plus")
+                        }
+
+                        // Submenu for image sources
+                        Menu {
+                            Button {
+                                selectedImage = nil
+                                showPhotosPicker.toggle()
+                            } label: {
+                                Label("Photos Library", systemImage: "photo.on.rectangle")
+                            }
+
+                            // TODO: Add camera option when implemented
+                            // Button {
+                            //     // Camera implementation
+                            // } label: {
+                            //     Label("Camera", systemImage: "camera")
+                            // }
+                        } label: {
+                            Label("New Image Entry", systemImage: "photo.badge.plus")
+                        }
+
+                        Button(action: toggleRecorder) {
+                            Label("New Voice Memo", systemImage: "waveform.badge.mic")
+                        }
+                        Button(action: togglePrompt) {
+                            Label("New Link Entry", systemImage: "link.badge.plus")
+                        }
+                        Button(action: toggleImporter) {
+                            Label("Import File", systemImage: "arrow.down.doc")
+                        }
                     } label: {
-                        Label("New Text Entry", systemImage: "doc.badge.plus")
+                        Label("New", systemImage: "plus")
                     }
-                    Button(action: togglePicker) {
-                        Label("New Image Entry", systemImage: "photo.badge.plus")
+                }
+            } else {
+                // iOS 17-25: Traditional top toolbar add button
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    Menu {
+                        Button {
+                            addEntry(viewContext, pile: nil)
+                        } label: {
+                            Label("New Text Entry", systemImage: "doc.badge.plus")
+                        }
+
+                        // Submenu for image sources
+                        Menu {
+                            Button {
+                                selectedImage = nil
+                                showPhotosPicker.toggle()
+                            } label: {
+                                Label("Photos Library", systemImage: "photo.on.rectangle")
+                            }
+
+                            // TODO: Add camera option when implemented
+                            // Button {
+                            //     // Camera implementation
+                            // } label: {
+                            //     Label("Camera", systemImage: "camera")
+                            // }
+                        } label: {
+                            Label("New Image Entry", systemImage: "photo.badge.plus")
+                        }
+
+                        Button(action: toggleRecorder) {
+                            Label("New Voice Memo", systemImage: "waveform.badge.mic")
+                        }
+                        Button(action: togglePrompt) {
+                            Label("New Link Entry", systemImage: "link.badge.plus")
+                        }
+                        Button(action: toggleImporter) {
+                            Label("Import File", systemImage: "arrow.down.doc")
+                        }
+                    } label: {
+                        Image(systemName: "plus")
                     }
-                    Button(action: togglePrompt) {
-                        Label("New Link Entry", systemImage: "photo.badge.plus")
-                    }
-                    Button(action: toggleImporter) {
-                        Label("Import File", systemImage: "photo.badge.plus")
-                    }
-                } label: {
-                    Image(systemName: "plus")
                 }
             }
+#endif
         }
         .onChange(of: selectedImage) {
             Task {
                 if let data = try? await selectedImage?.loadTransferable(type: Data.self) {
                     addPicture(viewContext, image: data, pile: nil)
-                    
+
                     return
                 }
-                
+
                 print("Failed")
-            }
-        }
-        .confirmationDialog(
-            "Choose your source of images.",
-            isPresented: $isConfirmingImageTools
-        ) {
-            Button {
-                // No SwiftUI native camera access for now
-            } label: {
-                Text("Camera")
-            }
-            
-            Button {
-                showPhotosPicker.toggle()
-            } label: {
-                Text("Photos Library")
-            }
-            
-            Button("Cancel", role: .cancel) {
-                return
             }
         }
         .photosPicker(
@@ -193,9 +400,10 @@ struct OrphanEntriesView: View {
         )
         .alert("Rename Entry", isPresented: $presentEntryRenamer, actions: {
             TextField("Entry Title", text: $newEntryName)
-            
+
             Button("Rename", action: {
-                contextEntry!.title = newEntryName
+                guard let entry = contextEntry else { return }
+                entry.title = newEntryName
                 save(viewContext)
                 newEntryName = ""
             })
@@ -204,16 +412,14 @@ struct OrphanEntriesView: View {
         .alert("New Link", isPresented: $showLinkPrompt, actions: {
             TextField("Website URL", text: $newLink)
                 .keyboardType(.URL)
-            
+
             Button("Add", action: {
                 addLink(viewContext, newLink: newLink, pile: nil)
                 newLink = ""
             })
             Button("Cancel", role: .cancel, action: {})
         })
-        .sheet(isPresented: $showPileChooser) {
-            
-        } content: {
+        .sheet(isPresented: $showPileChooser) {} content: {
             VStack {
                 Picker("Select pile", selection: $selectedPile) {
                     ForEach(piles, id: \.id) { pile in
@@ -222,7 +428,7 @@ struct OrphanEntriesView: View {
                     }
                 }
                 .pickerStyle(.wheel)
-                
+
                 HStack {
                     Spacer()
                     Button("Assign", action: {
@@ -234,64 +440,109 @@ struct OrphanEntriesView: View {
             }
             .presentationDetents([.fraction(0.3)])
         }
-        .fileImporter(isPresented: $isImporting, allowedContentTypes: [.text]) { result in
+        .fileImporter(isPresented: $isImporting, allowedContentTypes: [.text, .image, .audio]) { result in
             switch result {
-            case .success(let directory):
+            case let .success(fileURL):
                 // gain access to the directory
-                let gotAccess = directory.startAccessingSecurityScopedResource()
+                let gotAccess = fileURL.startAccessingSecurityScopedResource()
                 if !gotAccess { return }
-                // access the directory URL
-                // (read templates in the directory, make a bookmark, etc.)
+
                 do {
-                    let contents = try String(contentsOf: directory, encoding: .utf8)
-                    
-                    withAnimation {
-                        let newEntry = Entry(context: viewContext)
-                        newEntry.timestamp = Date()
-                        newEntry.id = UUID()
-                        newEntry.title = directory.lastPathComponent
-                        newEntry.content = contents
-                        newEntry.isMarkdown = true
-                        newEntry.language = "markdown"
-                        newEntry.type = EntryType.text.rawValue
-                        
-                        save(viewContext)
+                    // Get the UTType of the imported file
+                    let resourceValues = try fileURL.resourceValues(forKeys: [.contentTypeKey])
+
+                    if let contentType = resourceValues.contentType {
+                        if contentType.conforms(to: .image) {
+                            // Handle image import
+                            let imageData = try Data(contentsOf: fileURL)
+                            addPicture(viewContext, image: imageData, pile: nil)
+                        } else if contentType.conforms(to: .audio) {
+                            // Handle audio import
+                            let audioData = try Data(contentsOf: fileURL)
+
+                            withAnimation {
+                                let newEntry = Entry(context: viewContext)
+                                newEntry.timestamp = Date()
+                                newEntry.id = UUID()
+                                newEntry.type = EntryType.recording.rawValue
+                                newEntry.audio = audioData
+                                newEntry.title = fileURL.deletingPathExtension().lastPathComponent
+
+                                save(viewContext)
+                            }
+
+                            // Optionally transcribe imported audio
+                            let audioDuration = getAudioDuration(from: audioData)
+                            let maxAutoTranscribeDuration: TimeInterval = 120 // 2 minutes
+
+                            if audioDuration > 0 && audioDuration < maxAutoTranscribeDuration {
+                                // Find the entry we just created
+                                if let entry = entries.first(where: { $0.audio == audioData }) {
+                                    Task {
+                                        await retranscribeEntry(viewContext, entry: entry, transcriptionService: sharedData.transcriptionService)
+                                    }
+                                }
+                            }
+                        } else {
+                            // Handle text import (existing logic)
+                            let contents = try String(contentsOf: fileURL, encoding: .utf8)
+
+                            withAnimation {
+                                let newEntry = Entry(context: viewContext)
+                                newEntry.timestamp = Date()
+                                newEntry.id = UUID()
+                                newEntry.title = fileURL.lastPathComponent
+                                newEntry.content = contents
+                                newEntry.isMarkdown = true
+                                newEntry.language = "markdown"
+                                newEntry.type = EntryType.text.rawValue
+
+                                save(viewContext)
+                            }
+                        }
                     }
                 } catch let error as NSError {
-                    print(error.localizedDescription)
+                    print("❌ Failed to import file: \(error.localizedDescription)")
                 }
                 // release access
-                directory.stopAccessingSecurityScopedResource()
-            case .failure(let error):
+                fileURL.stopAccessingSecurityScopedResource()
+            case let .failure(error):
                 // handle error
-                print(error)
+                print("❌ File import failed: \(error.localizedDescription)")
+            }
+        }
+        .sheet(isPresented: $showRecorder) {
+            AudioRecorderView { audioURL in
+                addRecording(viewContext, audioURL: audioURL, pile: nil, transcriptionService: sharedData.transcriptionService)
             }
         }
     }
-    
+
     private func assignToPile() {
-        contextEntry!.pile = selectedPile
-        
+        guard let entry = contextEntry else { return }
+        entry.pile = selectedPile
         save(viewContext)
     }
-    
+
     private func toggleImporter() {
         isImporting.toggle()
     }
-    
+
     private func togglePrompt() {
         showLinkPrompt.toggle()
     }
-    
-    private func togglePicker() {
-        selectedImage = nil
-        isConfirmingImageTools.toggle()
+
+    private func toggleRecorder() {
+        showRecorder.toggle()
     }
-    
+
     private func deleteEntries(offsets: IndexSet) {
         withAnimation {
-            offsets.map { entries[$0] }.forEach(viewContext.delete)
-            
+            // Use orphanEntries (the displayed list) instead of entries (all entries)
+            // to ensure we delete the correct items
+            let displayEntries = searchText.isEmpty ? orphanEntries : filteredOrphanEntries
+            offsets.map { displayEntries[$0] }.forEach(viewContext.delete)
+
             save(viewContext)
         }
     }

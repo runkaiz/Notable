@@ -8,30 +8,61 @@
 import SwiftUI
 
 struct PileItem: View {
-    
+
     @State var pile: Pile
-    
-    @State var numOfTexts = 0
-    @State var numOfImages = 0
-    @State var numOfLinks = 0
-    
+
     private var colors: [Color] = [
-        Color(red: 39/255, green: 39/255, blue: 39/255),
-        Color(red: 241/255, green: 113/255, blue: 5/255),
-        Color(red: 160/255, green: 210/255, blue: 219/255)
+        Color(red: 39 / 255, green: 39 / 255, blue: 39 / 255),
+        Color(red: 241 / 255, green: 113 / 255, blue: 5 / 255),
+        Color(red: 160 / 255, green: 210 / 255, blue: 219 / 255)
     ]
-    
+
     init(pile: Pile) {
         self.pile = pile
     }
-    
+
+    // Computed property for entry counts - cached per render cycle
+    private var entryCounts: (texts: Int, images: Int, links: Int, recordings: Int) {
+        var texts = 0
+        var images = 0
+        var links = 0
+        var recordings = 0
+
+        guard let entries = pile.entries?.allObjects as? [Entry] else {
+            return (0, 0, 0, 0)
+        }
+
+        for entry in entries {
+            switch EntryType(rawValue: entry.type ?? "") {
+            case .image:
+                images += 1
+            case .text:
+                texts += 1
+            case .link:
+                links += 1
+            case .recording:
+                recordings += 1
+            default:
+                break
+            }
+        }
+
+        return (texts, images, links, recordings)
+    }
+
     var body: some View {
-        VStack {
+        // Calculate counts once for the entire view
+        let counts = entryCounts
+        let entryCount = counts.texts + counts.images + counts.links + counts.recordings
+
+        return VStack {
             HStack {
-                if pile.entries!.count == 0 {
+                if entryCount == 0 {
                     Image(systemName: "tray.fill")
+                        .accessibilityLabel("Empty pile")
                 } else {
                     Image(systemName: "tray.full.fill")
+                        .accessibilityLabel("Pile with entries")
                 }
                 Text(pile.name ?? "")
                 Spacer()
@@ -39,38 +70,46 @@ struct PileItem: View {
                     switch tagColor {
                     case "Raisin Black":
                         Circle().fill(colors[0]).frame(width: 10, height: 10)
+                            .accessibilityLabel("Black tag")
                     case "Safety Orange":
                         Circle().fill(colors[1]).frame(width: 10, height: 10)
+                            .accessibilityLabel("Orange tag")
                     case "Non Photo Blue":
                         Circle().fill(colors[2]).frame(width: 10, height: 10)
+                            .accessibilityLabel("Blue tag")
                     default:
                         EmptyView()
                     }
                 }
             }
             HStack {
-                Image(systemName: "text.word.spacing")
-                Text(numOfTexts.description)
-                Spacer()
-                Image(systemName: "photo")
-                Text(numOfImages.description)
-                Spacer()
-                Image(systemName: "link")
-                Text(numOfLinks.description)
-            }
-            .onAppear {
-                for entry in pile.entries?.allObjects as! [Entry] {
-                    switch EntryType(rawValue: entry.type!) {
-                    case .image:
-                        numOfImages += 1
-                    case .text:
-                        numOfTexts += 1
-                    case .link:
-                        numOfLinks += 1
-                    default:
-                        break
-                    }
+                HStack(spacing: 4) {
+                    Image(systemName: "text.word.spacing")
+                    Text(counts.texts.description)
                 }
+                .accessibilityElement(children: .combine)
+                .accessibilityLabel("\(counts.texts) text entries")
+                Spacer()
+                HStack(spacing: 4) {
+                    Image(systemName: "photo")
+                    Text(counts.images.description)
+                }
+                .accessibilityElement(children: .combine)
+                .accessibilityLabel("\(counts.images) image entries")
+                Spacer()
+                HStack(spacing: 4) {
+                    Image(systemName: "waveform")
+                    Text(counts.recordings.description)
+                }
+                .accessibilityElement(children: .combine)
+                .accessibilityLabel("\(counts.recordings) voice memo entries")
+                Spacer()
+                HStack(spacing: 4) {
+                    Image(systemName: "link")
+                    Text(counts.links.description)
+                }
+                .accessibilityElement(children: .combine)
+                .accessibilityLabel("\(counts.links) link entries")
             }
         }
     }
