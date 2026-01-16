@@ -119,7 +119,7 @@ struct OrphanEntriesView: View {
                         .resizable()
                         .scaledToFit()
                         .frame(width: 16, height: 16)
-                    Text("Summary")
+                    Text(String(localized: "Summary"))
                     Spacer()
                 }
                 HStack(spacing: 20) {
@@ -154,9 +154,9 @@ struct OrphanEntriesView: View {
             if orphanEntries.isEmpty && searchText.isEmpty {
                 EmptyStateView(
                     icon: "tray",
-                    title: "Inbox is Empty",
-                    description: "Your inbox is clear! New entries without a pile will appear here. Tap the + button above to add your first entry.",
-                    actionTitle: "Add Entry",
+                    title: String(localized: "Inbox is Empty"),
+                    description: String(localized: "Your inbox is clear! New entries without a pile will appear here. Tap the + button above to add your first entry."),
+                    actionTitle: String(localized: "Add Entry"),
                     action: {
                         addEntry(viewContext, pile: nil)
                     }
@@ -177,7 +177,7 @@ struct OrphanEntriesView: View {
 
                             showPileChooser.toggle()
                         } label: {
-                            Label("Assign", systemImage: "move.3d")
+                            Label(String(localized: "Assign"), systemImage: "move.3d")
                         }
                         .tint(.accentColor)
                     })
@@ -186,7 +186,7 @@ struct OrphanEntriesView: View {
                             viewContext.delete(entry)
                             save(viewContext)
                         } label: {
-                            Label("Delete", systemImage: "trash")
+                            Label(String(localized: "Delete"), systemImage: "trash")
                         }
 
                         if entry.type == EntryType.text.rawValue {
@@ -195,47 +195,47 @@ struct OrphanEntriesView: View {
                                 newEntryName = entry.title ?? ""
                                 presentEntryRenamer.toggle()
                             } label: {
-                                Label("Rename", systemImage: "pencil")
+                                Label(String(localized: "Rename"), systemImage: "pencil")
                             }
                             .tint(.orange)
                         }
 
                         // Share button for all entry types
                         if entry.type == EntryType.text.rawValue {
-                            ShareLink(item: entry.content ?? "", subject: Text(entry.title ?? "Entry")) {
-                                Label("Share", systemImage: "square.and.arrow.up")
+                            ShareLink(item: entry.content ?? "", subject: Text(entry.title ?? String(localized: "Entry"))) {
+                                Label(String(localized: "Share"), systemImage: "square.and.arrow.up")
                             }
                         } else if entry.type == EntryType.image.rawValue, let imageData = entry.image, let uiImage = UIImage(data: imageData) {
-                            ShareLink(item: Image(uiImage: uiImage), preview: SharePreview(entry.title ?? "Image", image: Image(uiImage: uiImage))) {
-                                Label("Share", systemImage: "square.and.arrow.up")
+                            ShareLink(item: Image(uiImage: uiImage), preview: SharePreview(entry.title ?? String(localized: "Image"), image: Image(uiImage: uiImage))) {
+                                Label(String(localized: "Share"), systemImage: "square.and.arrow.up")
                             }
                         } else if entry.type == EntryType.link.rawValue, let url = entry.link {
                             ShareLink(item: url) {
-                                Label("Share", systemImage: "square.and.arrow.up")
+                                Label(String(localized: "Share"), systemImage: "square.and.arrow.up")
                             }
                         } else if entry.type == EntryType.recording.rawValue, let audioData = entry.audio {
-                            ShareLink(item: audioData, preview: SharePreview(entry.title ?? "Recording")) {
-                                Label("Share", systemImage: "square.and.arrow.up")
+                            ShareLink(item: audioData, preview: SharePreview(entry.title ?? String(localized: "Recording"))) {
+                                Label(String(localized: "Share"), systemImage: "square.and.arrow.up")
                             }
                         }
                     })
                     .contextMenu {
                         // Share button for all entry types
                         if entry.type == EntryType.text.rawValue {
-                            ShareLink(item: entry.content ?? "", subject: Text(entry.title ?? "Entry")) {
-                                Label("Share", systemImage: "square.and.arrow.up")
+                            ShareLink(item: entry.content ?? "", subject: Text(entry.title ?? String(localized: "Entry"))) {
+                                Label(String(localized: "Share"), systemImage: "square.and.arrow.up")
                             }
                         } else if entry.type == EntryType.image.rawValue, let imageData = entry.image, let uiImage = UIImage(data: imageData) {
-                            ShareLink(item: Image(uiImage: uiImage), preview: SharePreview(entry.title ?? "Image", image: Image(uiImage: uiImage))) {
-                                Label("Share", systemImage: "square.and.arrow.up")
+                            ShareLink(item: Image(uiImage: uiImage), preview: SharePreview(entry.title ?? String(localized: "Image"), image: Image(uiImage: uiImage))) {
+                                Label(String(localized: "Share"), systemImage: "square.and.arrow.up")
                             }
                         } else if entry.type == EntryType.link.rawValue, let url = entry.link {
                             ShareLink(item: url) {
-                                Label("Share", systemImage: "square.and.arrow.up")
+                                Label(String(localized: "Share"), systemImage: "square.and.arrow.up")
                             }
                         } else if entry.type == EntryType.recording.rawValue, let audioData = entry.audio {
-                            ShareLink(item: audioData, preview: SharePreview(entry.title ?? "Recording")) {
-                                Label("Share", systemImage: "square.and.arrow.up")
+                            ShareLink(item: audioData, preview: SharePreview(entry.title ?? String(localized: "Recording"))) {
+                                Label(String(localized: "Share"), systemImage: "square.and.arrow.up")
                             }
                         }
 
@@ -247,7 +247,7 @@ struct OrphanEntriesView: View {
 
                             showPileChooser.toggle()
                         } label: {
-                            Label("Assign to pile", systemImage: "move.3d")
+                            Label(String(localized: "Assign to pile"), systemImage: "move.3d")
                         }
 
                         if entry.type == EntryType.text.rawValue {
@@ -256,7 +256,7 @@ struct OrphanEntriesView: View {
                                 newEntryName = entry.title ?? ""
                                 presentEntryRenamer.toggle()
                             } label: {
-                                Label("Rename", systemImage: "pencil")
+                                Label(String(localized: "Rename"), systemImage: "pencil")
                             }
                         }
 
@@ -265,7 +265,7 @@ struct OrphanEntriesView: View {
 
                             save(viewContext)
                         } label: {
-                            Label("Delete Entry", systemImage: "trash")
+                            Label(String(localized: "Delete Entry"), systemImage: "trash")
                         }
                     }
             }
@@ -274,7 +274,7 @@ struct OrphanEntriesView: View {
 #endif
         }
         .listStyle(.grouped)
-        .navigationTitle("Inbox")
+        .navigationTitle(String(localized: "Inbox"))
         .navigationBarTitleDisplayMode(.inline)
         .searchable(text: $searchText)
         .onAppear {
@@ -301,7 +301,7 @@ struct OrphanEntriesView: View {
                         Button {
                             addEntry(viewContext, pile: nil)
                         } label: {
-                            Label("New Text Entry", systemImage: "doc.badge.plus")
+                            Label(String(localized: "New Text Entry"), systemImage: "doc.badge.plus")
                         }
 
                         // Submenu for image sources
@@ -310,7 +310,7 @@ struct OrphanEntriesView: View {
                                 selectedImage = nil
                                 showPhotosPicker.toggle()
                             } label: {
-                                Label("Photos Library", systemImage: "photo.on.rectangle")
+                                Label(String(localized: "Photos Library"), systemImage: "photo.on.rectangle")
                             }
 
                             // TODO: Add camera option when implemented
@@ -320,20 +320,20 @@ struct OrphanEntriesView: View {
                             //     Label("Camera", systemImage: "camera")
                             // }
                         } label: {
-                            Label("New Image Entry", systemImage: "photo.badge.plus")
+                            Label(String(localized: "New Image Entry"), systemImage: "photo.badge.plus")
                         }
 
                         Button(action: toggleRecorder) {
-                            Label("New Voice Memo", systemImage: "waveform.badge.mic")
+                            Label(String(localized: "New Voice Memo"), systemImage: "waveform.badge.mic")
                         }
                         Button(action: togglePrompt) {
-                            Label("New Link Entry", systemImage: "link.badge.plus")
+                            Label(String(localized: "New Link Entry"), systemImage: "link.badge.plus")
                         }
                         Button(action: toggleImporter) {
-                            Label("Import File", systemImage: "arrow.down.doc")
+                            Label(String(localized: "Import File"), systemImage: "arrow.down.doc")
                         }
                     } label: {
-                        Label("New", systemImage: "plus")
+                        Label(String(localized: "New"), systemImage: "plus")
                     }
                 }
             } else {
@@ -343,7 +343,7 @@ struct OrphanEntriesView: View {
                         Button {
                             addEntry(viewContext, pile: nil)
                         } label: {
-                            Label("New Text Entry", systemImage: "doc.badge.plus")
+                            Label(String(localized: "New Text Entry"), systemImage: "doc.badge.plus")
                         }
 
                         // Submenu for image sources
@@ -352,7 +352,7 @@ struct OrphanEntriesView: View {
                                 selectedImage = nil
                                 showPhotosPicker.toggle()
                             } label: {
-                                Label("Photos Library", systemImage: "photo.on.rectangle")
+                                Label(String(localized: "Photos Library"), systemImage: "photo.on.rectangle")
                             }
 
                             // TODO: Add camera option when implemented
@@ -362,17 +362,17 @@ struct OrphanEntriesView: View {
                             //     Label("Camera", systemImage: "camera")
                             // }
                         } label: {
-                            Label("New Image Entry", systemImage: "photo.badge.plus")
+                            Label(String(localized: "New Image Entry"), systemImage: "photo.badge.plus")
                         }
 
                         Button(action: toggleRecorder) {
-                            Label("New Voice Memo", systemImage: "waveform.badge.mic")
+                            Label(String(localized: "New Voice Memo"), systemImage: "waveform.badge.mic")
                         }
                         Button(action: togglePrompt) {
-                            Label("New Link Entry", systemImage: "link.badge.plus")
+                            Label(String(localized: "New Link Entry"), systemImage: "link.badge.plus")
                         }
                         Button(action: toggleImporter) {
-                            Label("Import File", systemImage: "arrow.down.doc")
+                            Label(String(localized: "Import File"), systemImage: "arrow.down.doc")
                         }
                     } label: {
                         Image(systemName: "plus")
@@ -398,30 +398,30 @@ struct OrphanEntriesView: View {
             matching: .any(of: [.images, .screenshots]),
             preferredItemEncoding: .automatic
         )
-        .alert("Rename Entry", isPresented: $presentEntryRenamer, actions: {
-            TextField("Entry Title", text: $newEntryName)
+        .alert(String(localized: "Rename Entry"), isPresented: $presentEntryRenamer, actions: {
+            TextField(String(localized: "Entry Title"), text: $newEntryName)
 
-            Button("Rename", action: {
+            Button(String(localized: "Rename"), action: {
                 guard let entry = contextEntry else { return }
                 entry.title = newEntryName
                 save(viewContext)
                 newEntryName = ""
             })
-            Button("Cancel", role: .cancel, action: {})
+            Button(String(localized: "Cancel"), role: .cancel, action: {})
         })
-        .alert("New Link", isPresented: $showLinkPrompt, actions: {
-            TextField("Website URL", text: $newLink)
+        .alert(String(localized: "New Link"), isPresented: $showLinkPrompt, actions: {
+            TextField(String(localized: "Website URL"), text: $newLink)
                 .keyboardType(.URL)
 
-            Button("Add", action: {
+            Button(String(localized: "Add"), action: {
                 addLink(viewContext, newLink: newLink, pile: nil)
                 newLink = ""
             })
-            Button("Cancel", role: .cancel, action: {})
+            Button(String(localized: "Cancel"), role: .cancel, action: {})
         })
         .sheet(isPresented: $showPileChooser) {} content: {
             VStack {
-                Picker("Select pile", selection: $selectedPile) {
+                Picker(String(localized: "Select pile"), selection: $selectedPile) {
                     ForEach(piles, id: \.id) { pile in
                         Text(pile.name ?? "")
                             .tag(Optional(pile))
@@ -431,7 +431,7 @@ struct OrphanEntriesView: View {
 
                 HStack {
                     Spacer()
-                    Button("Assign", action: {
+                    Button(String(localized: "Assign"), action: {
                         assignToPile()
                         showPileChooser.toggle()
                     })

@@ -54,18 +54,18 @@ struct SettingsView: View {
 
     var body: some View {
         Form {
-            Section(header: Text("Markdown Editor settings")) {
+            Section(header: Text(String(localized: "Markdown Editor settings"))) {
                 Stepper(value: $markdownBaseFontSize, in: 1...64) {
-                    Text("Font size: \(markdownBaseFontSize)")
+                    Text(String(localized: "Font size: \(markdownBaseFontSize)"))
                 }
-                Toggle("Autocorrect", isOn: $autocorrect)
+                Toggle(String(localized: "Autocorrect"), isOn: $autocorrect)
             }
 
-            Section(header: Text("Code Editor settings")) {
+            Section(header: Text(String(localized: "Code Editor settings"))) {
                 Stepper(value: $editorFontSize, in: 1...64) {
-                    Text("Font size: \(editorFontSize)")
+                    Text(String(localized: "Font size: \(editorFontSize)"))
                 }
-                Picker("Editor Theme", selection: $theme) {
+                Picker(String(localized: "Editor Theme"), selection: $theme) {
                     ForEach(CodeEditor.availableThemes) { theme in
                         Text("\(theme.rawValue.capitalized)")
                             .tag(theme)
@@ -73,10 +73,10 @@ struct SettingsView: View {
                 }
             }
 
-            Section(header: Text("Audio Transcription")) {
+            Section(header: Text(String(localized: "Audio Transcription"))) {
                 // Transcription model status indicator
                 HStack {
-                    Text("Model Status:")
+                    Text(String(localized: "Model Status:"))
                     Spacer()
                     transcriptionStatusView
                 }
@@ -97,18 +97,18 @@ struct SettingsView: View {
                     .foregroundColor(.blue)
                 }
 
-                Toggle("Force Apple Speech", isOn: $forceAppleSpeech)
+                Toggle(String(localized: "Force Apple Speech"), isOn: $forceAppleSpeech)
 
-                Text("By default, Notable uses WhisperKit for accurate transcription with Apple Speech as fallback. Enable this to always use Apple Speech instead.")
+                Text(String(localized: "By default, Notable uses WhisperKit for accurate transcription with Apple Speech as fallback. Enable this to always use Apple Speech instead."))
                     .font(.caption)
                     .foregroundColor(.secondary)
             }
 
-            Section(header: Text("iCloud")) {
+            Section(header: Text(String(localized: "iCloud"))) {
                 if #available(iOS 14.0, *) {
                     // Primary status indicator
                     HStack {
-                        Text("Status:")
+                        Text(String(localized: "Status:"))
                         Spacer()
                         syncStatusIcon
                     }
@@ -116,7 +116,7 @@ struct SettingsView: View {
                     // Show last successful sync time if available
                     if let lastSync = cloudKitState.lastSuccessfulSync {
                         HStack {
-                            Text("Last Sync:")
+                            Text(String(localized: "Last Sync:"))
                             Spacer()
                             Text(timeAgoString(from: lastSync))
                                 .foregroundColor(.secondary)
@@ -125,7 +125,7 @@ struct SettingsView: View {
 
                     // Show account warning if needed
                     if case .accountNotAvailable = syncMonitor.syncStateSummary {
-                        Text("Hey, log into your iCloud account if you want to sync")
+                        Text(String(localized: "Hey, log into your iCloud account if you want to sync"))
                             .font(.caption)
                             .foregroundColor(.orange)
                     }
@@ -133,20 +133,20 @@ struct SettingsView: View {
                     // Debug info: show if there's a mismatch
                     if cloudKitState.lastSuccessfulSync != nil &&
                        syncMonitor.syncStateSummary.symbolName.contains("xmark") {
-                        Text("Note: CloudKit monitor may show stale status. Check Last Sync time above for actual sync state.")
+                        Text(String(localized: "Note: CloudKit monitor may show stale status. Check Last Sync time above for actual sync state."))
                             .font(.caption2)
                             .foregroundColor(.secondary)
                     }
                 }
             }
 
-            Section(header: Text("Search Database")) {
+            Section(header: Text(String(localized: "Search Database"))) {
                 Button(action: {
                     sharedData.forceRebuild()
                     processDatabase(sharedData: sharedData, entries: Array(entries))
                 }, label: {
                     HStack {
-                        Text("Rebuild Search Index")
+                        Text(String(localized: "Rebuild Search Index"))
                         if sharedData.isIndexing {
                             Spacer()
                             ProgressView()
@@ -159,7 +159,7 @@ struct SettingsView: View {
                 if sharedData.isIndexing {
                     VStack(alignment: .leading, spacing: 4) {
                         HStack {
-                            Text("Indexing entries...")
+                            Text(String(localized: "Indexing entries..."))
                                 .font(.caption)
                             Spacer()
                             Text("\(sharedData.indexedCount) / \(sharedData.totalToIndex)")
@@ -171,26 +171,26 @@ struct SettingsView: View {
                     .foregroundColor(.blue)
                 }
 
-                Text("Rebuilds the semantic search index. Use this if search results seem incorrect.")
+                Text(String(localized: "Rebuilds the semantic search index. Use this if search results seem incorrect."))
                     .font(.caption)
                     .foregroundColor(.secondary)
             }
 
             if developerModeEnabled {
-                Section(header: Text("Developer Options")) {
-                    Toggle("Developer Mode", isOn: $developerModeEnabled)
+                Section(header: Text(String(localized: "Developer Options"))) {
+                    Toggle(String(localized: "Developer Mode"), isOn: $developerModeEnabled)
                         .tint(.orange)
 
-                    Text("Developer mode is enabled. Tap the Settings title 10 times to toggle.")
+                    Text(String(localized: "Developer mode is enabled. Tap the Settings title 10 times to toggle."))
                         .font(.caption)
                         .foregroundColor(.secondary)
                 }
             }
 
             if developerModeEnabled {
-                Section(header: Text("Demo Mode")) {
+                Section(header: Text(String(localized: "Demo Mode"))) {
                 if #available(iOS 17.0, *) {
-                    Toggle("Enable Demo Mode", isOn: $isDemoMode)
+                    Toggle(String(localized: "Enable Demo Mode"), isOn: $isDemoMode)
                         .onChange(of: isDemoMode) { oldValue, newValue in
                             if newValue {
                                 DemoDataManager.shared.createDemoData(context: viewContext)
@@ -202,7 +202,7 @@ struct SettingsView: View {
                             }
                         }
                 } else {
-                    Toggle("Enable Demo Mode", isOn: $isDemoMode)
+                    Toggle(String(localized: "Enable Demo Mode"), isOn: $isDemoMode)
                         .onChange(of: isDemoMode) { newValue in
                             if newValue {
                                 DemoDataManager.shared.createDemoData(context: viewContext)
@@ -215,17 +215,17 @@ struct SettingsView: View {
                         }
                 }
 
-                Text("Populates the app with sample piles and entries for screenshots and demonstrations.")
+                Text(String(localized: "Populates the app with sample piles and entries for screenshots and demonstrations."))
                     .font(.caption)
                     .foregroundColor(.secondary)
                 }
             }
 
             Section {
-                NavigationLink("Acknowledgement") {
+                NavigationLink(String(localized: "Acknowledgement")) {
                     AcknowledgeView()
 #if os(iOS)
-                        .navigationTitle("Acknowledgement")
+                        .navigationTitle(String(localized: "Acknowledgement"))
                         .navigationBarTitleDisplayMode(.inline)
 #endif
                 }
@@ -252,18 +252,18 @@ struct SettingsView: View {
                     }
             }
         }
-        .alert("Remove Demo Data?", isPresented: $showingDemoAlert) {
-            Button("Cancel", role: .cancel) {
+        .alert(String(localized: "Remove Demo Data?"), isPresented: $showingDemoAlert) {
+            Button(String(localized: "Cancel"), role: .cancel) {
                 isDemoMode = true
             }
-            Button("Remove", role: .destructive) {
+            Button(String(localized: "Remove"), role: .destructive) {
                 DemoDataManager.shared.removeDemoData(context: viewContext)
                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
                     isDemoMode = DemoDataManager.shared.isDemoDataActive
                 }
             }
         } message: {
-            Text("This will delete all piles and entries. This action cannot be undone.")
+            Text(String(localized: "This will delete all piles and entries. This action cannot be undone."))
         }
         .overlay(
             Group {

@@ -59,10 +59,10 @@ struct PileItem: View {
             HStack {
                 if entryCount == 0 {
                     Image(systemName: "tray.fill")
-                        .accessibilityLabel("Empty pile")
+                        .accessibilityLabel(String(localized: "Empty pile"))
                 } else {
                     Image(systemName: "tray.full.fill")
-                        .accessibilityLabel("Pile with entries")
+                        .accessibilityLabel(String(localized: "Pile with entries"))
                 }
                 Text(pile.name ?? "")
                 Spacer()
@@ -70,13 +70,13 @@ struct PileItem: View {
                     switch tagColor {
                     case "Raisin Black":
                         Circle().fill(colors[0]).frame(width: 10, height: 10)
-                            .accessibilityLabel("Black tag")
+                            .accessibilityLabel(String(localized: "Black tag"))
                     case "Safety Orange":
                         Circle().fill(colors[1]).frame(width: 10, height: 10)
-                            .accessibilityLabel("Orange tag")
+                            .accessibilityLabel(String(localized: "Orange tag"))
                     case "Non Photo Blue":
                         Circle().fill(colors[2]).frame(width: 10, height: 10)
-                            .accessibilityLabel("Blue tag")
+                            .accessibilityLabel(String(localized: "Blue tag"))
                     default:
                         EmptyView()
                     }
@@ -88,28 +88,28 @@ struct PileItem: View {
                     Text(counts.texts.description)
                 }
                 .accessibilityElement(children: .combine)
-                .accessibilityLabel("\(counts.texts) text entries")
+                .accessibilityLabel(String(localized: "\(counts.texts) text entries"))
                 Spacer()
                 HStack(spacing: 4) {
                     Image(systemName: "photo")
                     Text(counts.images.description)
                 }
                 .accessibilityElement(children: .combine)
-                .accessibilityLabel("\(counts.images) image entries")
+                .accessibilityLabel(String(localized: "\(counts.images) image entries"))
                 Spacer()
                 HStack(spacing: 4) {
                     Image(systemName: "waveform")
                     Text(counts.recordings.description)
                 }
                 .accessibilityElement(children: .combine)
-                .accessibilityLabel("\(counts.recordings) voice memo entries")
+                .accessibilityLabel(String(localized: "\(counts.recordings) voice memo entries"))
                 Spacer()
                 HStack(spacing: 4) {
                     Image(systemName: "link")
                     Text(counts.links.description)
                 }
                 .accessibilityElement(children: .combine)
-                .accessibilityLabel("\(counts.links) link entries")
+                .accessibilityLabel(String(localized: "\(counts.links) link entries"))
             }
         }
     }

@@ -144,8 +144,8 @@ struct ContentView: View {
                                 VStack {
                                     HStack {
                                         Image(systemName: "tray.and.arrow.down.fill")
-                                            .accessibilityLabel("Inbox")
-                                        Text("Inbox")
+                                            .accessibilityLabel(String(localized: "Inbox"))
+                                        Text(String(localized: "Inbox"))
                                         Spacer()
                                     }
                                     HStack {
@@ -154,28 +154,28 @@ struct ContentView: View {
                                             Text(counts.texts.description)
                                         }
                                         .accessibilityElement(children: .combine)
-                                        .accessibilityLabel("\(counts.texts) text entries")
+                                        .accessibilityLabel(String(localized: "\(counts.texts) text entries"))
                                         Spacer()
                                         HStack(spacing: 4) {
                                             Image(systemName: "photo")
                                             Text(counts.images.description)
                                         }
                                         .accessibilityElement(children: .combine)
-                                        .accessibilityLabel("\(counts.images) image entries")
+                                        .accessibilityLabel(String(localized: "\(counts.images) image entries"))
                                         Spacer()
                                         HStack(spacing: 4) {
                                             Image(systemName: "waveform")
                                             Text(counts.recordings.description)
                                         }
                                         .accessibilityElement(children: .combine)
-                                        .accessibilityLabel("\(counts.recordings) voice memo entries")
+                                        .accessibilityLabel(String(localized: "\(counts.recordings) voice memo entries"))
                                         Spacer()
                                         HStack(spacing: 4) {
                                             Image(systemName: "link")
                                             Text(counts.links.description)
                                         }
                                         .accessibilityElement(children: .combine)
-                                        .accessibilityLabel("\(counts.links) link entries")
+                                        .accessibilityLabel(String(localized: "\(counts.links) link entries"))
                                     }
                                 }
                             }
@@ -192,13 +192,13 @@ struct ContentView: View {
                                     viewContext.delete(pile)
                                     save(viewContext)
                                 } label: {
-                                    Label("Delete", systemImage: "trash")
+                                    Label(String(localized: "Delete"), systemImage: "trash")
                                 }
                                 Button {
                                     contextPile = pile
                                     showColorPicker.toggle()
                                 } label: {
-                                    Label("Color", systemImage: "swatchpalette")
+                                    Label(String(localized: "Color"), systemImage: "swatchpalette")
                                 }
                                 .tint(.brown)
                                 Button {
@@ -206,7 +206,7 @@ struct ContentView: View {
                                     newPileName = pile.name ?? ""
                                     presentRenamer.toggle()
                                 } label: {
-                                    Label("Rename", systemImage: "pencil")
+                                    Label(String(localized: "Rename"), systemImage: "pencil")
                                 }
                                 .tint(.orange)
                             })
@@ -216,19 +216,19 @@ struct ContentView: View {
                                     newPileName = pile.name ?? ""
                                     presentRenamer.toggle()
                                 } label: {
-                                    Label("Rename", systemImage: "pencil")
+                                    Label(String(localized: "Rename"), systemImage: "pencil")
                                 }
                                 Button {
                                     contextPile = pile
                                     showColorPicker.toggle()
                                 } label: {
-                                    Label("Change Color", systemImage: "swatchpalette")
+                                    Label(String(localized: "Change Color"), systemImage: "swatchpalette")
                                 }
                                 Button(role: .destructive) {
                                     contextPile = pile
                                     deletePile()
                                 } label: {
-                                    Label("Delete Pile", systemImage: "trash")
+                                    Label(String(localized: "Delete Pile"), systemImage: "trash")
                                 }
                             }
                         }
@@ -267,7 +267,7 @@ struct ContentView: View {
                         ToolbarItem(placement: .bottomBar) {
                             Menu {
                                 Button(action: toggleAlert) {
-                                    Label("New Pile", systemImage: "folder.badge.plus")
+                                    Label(String(localized: "New Pile"), systemImage: "folder.badge.plus")
                                 }
 
                                 Divider()
@@ -276,7 +276,7 @@ struct ContentView: View {
                                 Button {
                                     addEntry(viewContext, pile: nil)
                                 } label: {
-                                    Label("New Text Entry", systemImage: "doc.badge.plus")
+                                    Label(String(localized: "New Text Entry"), systemImage: "doc.badge.plus")
                                 }
 
                                 Menu {
@@ -284,25 +284,25 @@ struct ContentView: View {
                                         selectedImage = nil
                                         showPhotosPicker.toggle()
                                     } label: {
-                                        Label("Photos Library", systemImage: "photo.on.rectangle")
+                                        Label(String(localized: "Photos Library"), systemImage: "photo.on.rectangle")
                                     }
                                 } label: {
-                                    Label("New Image Entry", systemImage: "photo.badge.plus")
+                                    Label(String(localized: "New Image Entry"), systemImage: "photo.badge.plus")
                                 }
 
                                 Button {
                                     showRecorder.toggle()
                                 } label: {
-                                    Label("New Voice Memo", systemImage: "waveform.badge.mic")
+                                    Label(String(localized: "New Voice Memo"), systemImage: "waveform.badge.mic")
                                 }
 
                                 Button {
                                     showLinkPrompt.toggle()
                                 } label: {
-                                    Label("New Link Entry", systemImage: "link.badge.plus")
+                                    Label(String(localized: "New Link Entry"), systemImage: "link.badge.plus")
                                 }
                             } label: {
-                                Label("New", systemImage: "plus")
+                                Label(String(localized: "New"), systemImage: "plus")
                             }
                         }
                     } else {
@@ -310,7 +310,7 @@ struct ContentView: View {
                         ToolbarItem(placement: .navigationBarTrailing) {
                             Menu {
                                 Button(action: toggleAlert) {
-                                    Label("New Pile", systemImage: "folder.badge.plus")
+                                    Label(String(localized: "New Pile"), systemImage: "folder.badge.plus")
                                 }
 
                                 Divider()
@@ -319,7 +319,7 @@ struct ContentView: View {
                                 Button {
                                     addEntry(viewContext, pile: nil)
                                 } label: {
-                                    Label("New Text Entry", systemImage: "doc.badge.plus")
+                                    Label(String(localized: "New Text Entry"), systemImage: "doc.badge.plus")
                                 }
 
                                 Menu {
@@ -327,22 +327,22 @@ struct ContentView: View {
                                         selectedImage = nil
                                         showPhotosPicker.toggle()
                                     } label: {
-                                        Label("Photos Library", systemImage: "photo.on.rectangle")
+                                        Label(String(localized: "Photos Library"), systemImage: "photo.on.rectangle")
                                     }
                                 } label: {
-                                    Label("New Image Entry", systemImage: "photo.badge.plus")
+                                    Label(String(localized: "New Image Entry"), systemImage: "photo.badge.plus")
                                 }
 
                                 Button {
                                     showRecorder.toggle()
                                 } label: {
-                                    Label("New Voice Memo", systemImage: "waveform.badge.mic")
+                                    Label(String(localized: "New Voice Memo"), systemImage: "waveform.badge.mic")
                                 }
 
                                 Button {
                                     showLinkPrompt.toggle()
                                 } label: {
-                                    Label("New Link Entry", systemImage: "link.badge.plus")
+                                    Label(String(localized: "New Link Entry"), systemImage: "link.badge.plus")
                                 }
                             } label: {
                                 Image(systemName: "plus")
@@ -352,7 +352,7 @@ struct ContentView: View {
 #endif
                 }
 #if os(iOS)
-                .navigationBarTitle("Piles")
+                .navigationBarTitle(String(localized: "Piles"))
 #endif
                 .navigationBarTitleDisplayMode(.inline)
                 .searchable(text: $searchText)
@@ -365,34 +365,34 @@ struct ContentView: View {
                 SettingsView()
                     .environmentObject(sharedData)
 #if os(iOS)
-                    .navigationBarTitle("Settings")
+                    .navigationBarTitle(String(localized: "Settings"))
 #endif
                     .navigationBarTitleDisplayMode(.inline)
                     .toolbar {
                         ToolbarItem(placement: .navigationBarTrailing) {
-                            Button("Done") {
+                            Button(String(localized: "Done")) {
                                 showSettings = false
                             }
                         }
                     }
             }
         }
-        .alert("Rename Pile", isPresented: $presentRenamer, actions: {
-            TextField("Pile Name", text: $newPileName)
+        .alert(String(localized: "Rename Pile"), isPresented: $presentRenamer, actions: {
+            TextField(String(localized: "Pile Name"), text: $newPileName)
 
-            Button("Rename", action: {
+            Button(String(localized: "Rename"), action: {
                 guard let pile = contextPile else { return }
                 pile.name = newPileName
                 save(viewContext)
                 newPileName = ""
             })
-            Button("Cancel", role: .cancel, action: {})
+            Button(String(localized: "Cancel"), role: .cancel, action: {})
         })
-        .alert("Name Pile", isPresented: $presentAlert, actions: {
-            TextField("Pile Name", text: $newPileName)
-            
-            Button("Create", action: addFolder)
-            Button("Cancel", role: .cancel, action: {})
+        .alert(String(localized: "Name Pile"), isPresented: $presentAlert, actions: {
+            TextField(String(localized: "Pile Name"), text: $newPileName)
+
+            Button(String(localized: "Create"), action: addFolder)
+            Button(String(localized: "Cancel"), role: .cancel, action: {})
         })
         .sheet(isPresented: $showColorPicker) {} content: {
             let size = CGFloat(44)
@@ -415,8 +415,8 @@ struct ContentView: View {
                             .frame(width: size, height: size)
                     }
                 }
-                .accessibilityLabel("Black tag")
-                .accessibilityHint(selectedColor == colors[0] ? "Currently selected" : "Tap to apply black tag")
+                .accessibilityLabel(String(localized: "Black tag"))
+                .accessibilityHint(selectedColor == colors[0] ? String(localized: "Currently selected") : String(localized: "Tap to apply black tag"))
                 Button {
                     guard let pile = contextPile else { return }
                     selectedColor = colors[1]
@@ -434,8 +434,8 @@ struct ContentView: View {
                             .frame(width: size, height: size)
                     }
                 }
-                .accessibilityLabel("Orange tag")
-                .accessibilityHint(selectedColor == colors[1] ? "Currently selected" : "Tap to apply orange tag")
+                .accessibilityLabel(String(localized: "Orange tag"))
+                .accessibilityHint(selectedColor == colors[1] ? String(localized: "Currently selected") : String(localized: "Tap to apply orange tag"))
                 Button {
                     guard let pile = contextPile else { return }
                     selectedColor = colors[2]
@@ -453,8 +453,8 @@ struct ContentView: View {
                             .frame(width: size, height: size)
                     }
                 }
-                .accessibilityLabel("Blue tag")
-                .accessibilityHint(selectedColor == colors[2] ? "Currently selected" : "Tap to apply blue tag")
+                .accessibilityLabel(String(localized: "Blue tag"))
+                .accessibilityHint(selectedColor == colors[2] ? String(localized: "Currently selected") : String(localized: "Tap to apply blue tag"))
                 Button {
                     guard let pile = contextPile else { return }
                     emptyTagAnimateTrigger.toggle()
@@ -467,8 +467,8 @@ struct ContentView: View {
                         .scaledToFit()
                         .frame(width: size, height: size)
                 }
-                .accessibilityLabel("No tag")
-                .accessibilityHint(selectedColor == nil ? "Currently selected" : "Tap to remove tag")
+                .accessibilityLabel(String(localized: "No tag"))
+                .accessibilityHint(selectedColor == nil ? String(localized: "Currently selected") : String(localized: "Tap to remove tag"))
                 .symbolEffect(.bounce, value: emptyTagAnimateTrigger)
             }
             .presentationDetents([.fraction(0.15)])
@@ -501,15 +501,15 @@ struct ContentView: View {
                 print("Failed to load image")
             }
         }
-        .alert("New Link", isPresented: $showLinkPrompt) {
-            TextField("Website URL", text: $newLink)
+        .alert(String(localized: "New Link"), isPresented: $showLinkPrompt) {
+            TextField(String(localized: "Website URL"), text: $newLink)
                 .keyboardType(.URL)
 
-            Button("Add") {
+            Button(String(localized: "Add")) {
                 addLink(viewContext, newLink: newLink, pile: nil)
                 newLink = ""
             }
-            Button("Cancel", role: .cancel) {
+            Button(String(localized: "Cancel"), role: .cancel) {
                 newLink = ""
             }
         }
@@ -542,10 +542,10 @@ struct ContentView: View {
                 showSaveErrorAlert = true
             }
         }
-        .alert("Save Error", isPresented: $showSaveErrorAlert) {
-            Button("OK", role: .cancel) {}
+        .alert(String(localized: "Save Error"), isPresented: $showSaveErrorAlert) {
+            Button(String(localized: "OK"), role: .cancel) {}
         } message: {
-            Text("Unable to save changes: \(saveErrorMessage)")
+            Text(String(localized: "Unable to save changes: \(saveErrorMessage)"))
         }
     }
 

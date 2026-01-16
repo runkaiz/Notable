@@ -63,14 +63,14 @@ struct EditorConfigSheet: View {
                     .contentShape(Circle())
                 })
                 .buttonStyle(PlainButtonStyle())
-                .accessibilityLabel(Text("Close"))
+                .accessibilityLabel(Text(String(localized: "Close")))
                 .padding(.top, 8)
                 .padding(.trailing, 8)
             }
 
             Form {
                 Section {
-                    Picker("Mode", selection: $selectedMode) {
+                    Picker(String(localized: "Mode"), selection: $selectedMode) {
                         ForEach(modes, id: \.self) { name in
                             Text(name).tag(name)
                         }
@@ -89,30 +89,30 @@ struct EditorConfigSheet: View {
                 }
 
                 if entry.isMarkdown {
-                    Section(header: Text("Markdown Settings")) {
+                    Section(header: Text(String(localized: "Markdown Settings"))) {
                         Stepper(value: $markdownBaseFontSize, in: 8...48) {
                             HStack {
-                                Text("Font Size")
+                                Text(String(localized: "Font Size"))
                                 Spacer()
                                 Text("\(markdownBaseFontSize)")
                                     .foregroundColor(.secondary)
                             }
                         }
 
-                        Toggle("Autocorrect", isOn: $autocorrect)
+                        Toggle(String(localized: "Autocorrect"), isOn: $autocorrect)
                     }
                 } else {
-                    Section(header: Text("Code Settings")) {
+                    Section(header: Text(String(localized: "Code Settings"))) {
                         Stepper(value: $editorFontSize, in: 8...48) {
                             HStack {
-                                Text("Font Size")
+                                Text(String(localized: "Font Size"))
                                 Spacer()
                                 Text("\(editorFontSize)")
                                     .foregroundColor(.secondary)
                             }
                         }
 
-                        Picker("Language", selection: $language) {
+                        Picker(String(localized: "Language"), selection: $language) {
                             ForEach(CodeEditor.availableLanguages) { language in
                                 Text("\(language.rawValue.capitalized)")
                                     .tag(language)
@@ -123,7 +123,7 @@ struct EditorConfigSheet: View {
                             save(viewContext)
                         }
 
-                        Picker("Theme", selection: $theme) {
+                        Picker(String(localized: "Theme"), selection: $theme) {
                             ForEach(CodeEditor.availableThemes) { theme in
                                 Text("\(theme.rawValue.capitalized)")
                                     .tag(theme)
@@ -137,7 +137,7 @@ struct EditorConfigSheet: View {
                         HStack {
                             Image(systemName: "clock")
                                 .foregroundColor(.secondary)
-                            Text("Created")
+                            Text(String(localized: "Created"))
                                 .foregroundColor(.secondary)
                             Spacer()
                             Text(entry.timestamp ?? Date(), style: .date)
@@ -146,7 +146,7 @@ struct EditorConfigSheet: View {
                         HStack {
                             Image(systemName: "character.cursor.ibeam")
                                 .foregroundColor(.secondary)
-                            Text("Word Count")
+                            Text(String(localized: "Word Count"))
                                 .foregroundColor(.secondary)
                             Spacer()
                             Text("\(wordCount)")

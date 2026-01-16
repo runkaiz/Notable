@@ -278,23 +278,23 @@ struct AudioRecorderView: View {
                                         .frame(width: 30, height: 30)
                                 }
                             }
-                            .accessibilityLabel("Start recording")
-                            .accessibilityHint("Begins voice recording")
+                            .accessibilityLabel(String(localized: "Start recording"))
+                            .accessibilityHint(String(localized: "Begins voice recording"))
                             .disabled(!recorder.hasPermission)
 
                             if !recorder.hasPermission {
-                                Text("Microphone permission required")
+                                Text(String(localized: "Microphone permission required"))
                                     .font(.caption)
                                     .foregroundStyle(.secondary)
                             }
                         } else if !recorder.isRecording && recorder.audioURL != nil {
                             // Recording stopped: Show review options
                             VStack(spacing: 20) {
-                                Text("Recording complete!")
+                                Text(String(localized: "Recording complete!"))
                                     .font(.headline)
                                     .foregroundStyle(.secondary)
 
-                                Text("Tap Save to keep, or Cancel to discard")
+                                Text(String(localized: "Tap Save to keep, or Cancel to discard"))
                                     .font(.caption)
                                     .foregroundStyle(.tertiary)
                                     .multilineTextAlignment(.center)
@@ -313,7 +313,7 @@ struct AudioRecorderView: View {
                                     HStack(spacing: 8) {
                                         Image(systemName: "arrow.clockwise")
                                             .font(.system(size: 14))
-                                        Text("Record Again")
+                                        Text(String(localized: "Record Again"))
                                             .font(.subheadline)
                                             .fontWeight(.medium)
                                     }
@@ -329,8 +329,8 @@ struct AudioRecorderView: View {
                                             ))
                                     )
                                 }
-                                .accessibilityLabel("Record again")
-                                .accessibilityHint("Discards current recording and starts a new one")
+                                .accessibilityLabel(String(localized: "Record again"))
+                                .accessibilityHint(String(localized: "Discards current recording and starts a new one"))
                             }
                         } else {
                             // Recording controls
@@ -387,7 +387,7 @@ struct AudioRecorderView: View {
                                     HStack(spacing: 8) {
                                         Image(systemName: "stop.fill")
                                             .font(.system(size: 14))
-                                        Text("Stop Recording")
+                                        Text(String(localized: "Stop Recording"))
                                             .font(.subheadline)
                                             .fontWeight(.medium)
                                     }
@@ -399,19 +399,19 @@ struct AudioRecorderView: View {
                                             .fill(Color(UIColor.tertiarySystemBackground))
                                     )
                                 }
-                                .accessibilityLabel("Stop recording")
-                                .accessibilityHint("Finishes recording and allows you to save or discard")
+                                .accessibilityLabel(String(localized: "Stop recording"))
+                                .accessibilityHint(String(localized: "Finishes recording and allows you to save or discard"))
                             }
                         }
                     }
                     .padding(.bottom, 40)
                 }
             }
-            .navigationTitle("Voice Memo")
+            .navigationTitle(String(localized: "Voice Memo"))
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
-                    Button("Cancel") {
+                    Button(String(localized: "Cancel")) {
                         if recorder.isRecording {
                             recorder.stopRecording()
                         }
@@ -421,7 +421,7 @@ struct AudioRecorderView: View {
                 }
 
                 ToolbarItem(placement: .confirmationAction) {
-                    Button("Save") {
+                    Button(String(localized: "Save")) {
                         if recorder.isRecording {
                             recorder.stopRecording()
                         }

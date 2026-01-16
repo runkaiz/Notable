@@ -312,7 +312,7 @@ struct AudioEntryPlayer: View {
                                 .font(.caption)
                                 .foregroundStyle(.secondary)
 
-                            Text("Transcript")
+                            Text(String(localized: "Transcript"))
                                 .font(.caption)
                                 .fontWeight(.medium)
                                 .foregroundStyle(.secondary)
@@ -350,7 +350,7 @@ struct AudioEntryPlayer: View {
                                     HStack(spacing: 6) {
                                         Image(systemName: "arrow.clockwise")
                                             .font(.caption2)
-                                        Text("Re-transcribe")
+                                        Text(String(localized: "Re-transcribe"))
                                             .font(.caption)
                                     }
                                     .foregroundStyle(.blue)
@@ -382,7 +382,7 @@ struct AudioEntryPlayer: View {
                                     HStack(spacing: 6) {
                                         Image(systemName: "square.and.arrow.up")
                                             .font(.caption2)
-                                        Text("Export")
+                                        Text(String(localized: "Export"))
                                             .font(.caption)
                                     }
                                     .foregroundStyle(.blue)
@@ -412,7 +412,7 @@ struct AudioEntryPlayer: View {
                             ProgressView()
                                 .scaleEffect(0.8)
 
-                            Text("Transcribing...")
+                            Text(String(localized: "Transcribing..."))
                                 .font(.caption)
                                 .foregroundStyle(.secondary)
 
@@ -432,7 +432,7 @@ struct AudioEntryPlayer: View {
                                     .font(.caption)
                                     .foregroundStyle(.blue)
 
-                                Text("Tap to transcribe")
+                                Text(String(localized: "Tap to transcribe"))
                                     .font(.caption)
                                     .fontWeight(.medium)
                                     .foregroundStyle(.blue)

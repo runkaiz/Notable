@@ -106,11 +106,11 @@ struct EditorView: View {
                 }
                 .bold()
                 .foregroundColor(.primary)
-                .alert("Rename Entry", isPresented: $presentAlert, actions: {
-                    TextField("Entry Title", text: $newTitle)
+                .alert(String(localized: "Rename Entry"), isPresented: $presentAlert, actions: {
+                    TextField(String(localized: "Entry Title"), text: $newTitle)
 
-                    Button("Rename", action: saveEntry)
-                    Button("Cancel", role: .cancel, action: {})
+                    Button(String(localized: "Rename"), action: saveEntry)
+                    Button(String(localized: "Cancel"), role: .cancel, action: {})
                 })
             }
 
@@ -133,7 +133,7 @@ struct EditorView: View {
                         isInputActive = false
                         showingSheet.toggle()
                     } label: {
-                        Label("Settings", systemImage: "slider.horizontal.3")
+                        Label(String(localized: "Settings"), systemImage: "slider.horizontal.3")
                     }
                     if let title = entry.title, let content = entry.content {
                         ShareLink(item: Note(title: title, body: content), preview: SharePreview(title))

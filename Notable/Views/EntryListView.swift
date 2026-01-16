@@ -96,14 +96,14 @@ struct EntryListView: View {
                             .resizable()
                             .scaledToFit()
                             .frame(width: 16, height: 16)
-                        Text("Description")
+                        Text(String(localized: "Description"))
                         Spacer()
                     }
                     .dismissKeyboardOnTap()
                     .padding(.top, 12)
                     .padding(.horizontal)
                     Divider()
-                    TextField("Description", text: $pile.desc ?? "", axis: .vertical)
+                    TextField(String(localized: "Description"), text: $pile.desc ?? "", axis: .vertical)
                         .padding(.horizontal)
                         .padding(.bottom, 8)
                         .font(.body)
@@ -124,9 +124,9 @@ struct EntryListView: View {
             if pileEntries.isEmpty && searchText.isEmpty {
                 EmptyStateView(
                     icon: "folder",
-                    title: "Pile is Empty",
-                    description: "This pile doesn't have any entries yet. Add notes, images, or links to organize your content here.",
-                    actionTitle: "Add Entry",
+                    title: String(localized: "Pile is Empty"),
+                    description: String(localized: "This pile doesn't have any entries yet. Add notes, images, or links to organize your content here."),
+                    actionTitle: String(localized: "Add Entry"),
                     action: {
                         addEntry(viewContext, pile: pile)
                     }
@@ -140,8 +140,8 @@ struct EntryListView: View {
             if !searchText.isEmpty && displayEntries.isEmpty && !pileEntries.isEmpty {
                 EmptyStateView(
                     icon: "magnifyingglass",
-                    title: "No Results Found",
-                    description: "No entries match your search query. Try different keywords or clear the search.",
+                    title: String(localized: "No Results Found"),
+                    description: String(localized: "No entries match your search query. Try different keywords or clear the search."),
                     actionTitle: nil,
                     action: {}
                 )
@@ -157,7 +157,7 @@ struct EntryListView: View {
                             selectedPile = nil
                             showPileChooser.toggle()
                         } label: {
-                            Label("Move", systemImage: "arrow.left.arrow.right")
+                            Label(String(localized: "Move"), systemImage: "arrow.left.arrow.right")
                         }
                         .tint(.accentColor)
                     })
@@ -166,7 +166,7 @@ struct EntryListView: View {
                             viewContext.delete(entry)
                             save(viewContext)
                         } label: {
-                            Label("Delete", systemImage: "trash")
+                            Label(String(localized: "Delete"), systemImage: "trash")
                         }
 
                         if entry.type == EntryType.text.rawValue {
@@ -175,47 +175,47 @@ struct EntryListView: View {
                                 newEntryName = entry.title ?? ""
                                 presentEntryRenamer.toggle()
                             } label: {
-                                Label("Rename", systemImage: "pencil")
+                                Label(String(localized: "Rename"), systemImage: "pencil")
                             }
                             .tint(.orange)
                         }
 
                         // Share button for all entry types
                         if entry.type == EntryType.text.rawValue {
-                            ShareLink(item: entry.content ?? "", subject: Text(entry.title ?? "Entry")) {
-                                Label("Share", systemImage: "square.and.arrow.up")
+                            ShareLink(item: entry.content ?? "", subject: Text(entry.title ?? String(localized: "Entry"))) {
+                                Label(String(localized: "Share"), systemImage: "square.and.arrow.up")
                             }
                         } else if entry.type == EntryType.image.rawValue, let imageData = entry.image, let uiImage = UIImage(data: imageData) {
-                            ShareLink(item: Image(uiImage: uiImage), preview: SharePreview(entry.title ?? "Image", image: Image(uiImage: uiImage))) {
-                                Label("Share", systemImage: "square.and.arrow.up")
+                            ShareLink(item: Image(uiImage: uiImage), preview: SharePreview(entry.title ?? String(localized: "Image"), image: Image(uiImage: uiImage))) {
+                                Label(String(localized: "Share"), systemImage: "square.and.arrow.up")
                             }
                         } else if entry.type == EntryType.link.rawValue, let url = entry.link {
                             ShareLink(item: url) {
-                                Label("Share", systemImage: "square.and.arrow.up")
+                                Label(String(localized: "Share"), systemImage: "square.and.arrow.up")
                             }
                         } else if entry.type == EntryType.recording.rawValue, let audioData = entry.audio {
-                            ShareLink(item: audioData, preview: SharePreview(entry.title ?? "Recording")) {
-                                Label("Share", systemImage: "square.and.arrow.up")
+                            ShareLink(item: audioData, preview: SharePreview(entry.title ?? String(localized: "Recording"))) {
+                                Label(String(localized: "Share"), systemImage: "square.and.arrow.up")
                             }
                         }
                     })
                     .contextMenu {
                         // Share button for all entry types
                         if entry.type == EntryType.text.rawValue {
-                            ShareLink(item: entry.content ?? "", subject: Text(entry.title ?? "Entry")) {
-                                Label("Share", systemImage: "square.and.arrow.up")
+                            ShareLink(item: entry.content ?? "", subject: Text(entry.title ?? String(localized: "Entry"))) {
+                                Label(String(localized: "Share"), systemImage: "square.and.arrow.up")
                             }
                         } else if entry.type == EntryType.image.rawValue, let imageData = entry.image, let uiImage = UIImage(data: imageData) {
-                            ShareLink(item: Image(uiImage: uiImage), preview: SharePreview(entry.title ?? "Image", image: Image(uiImage: uiImage))) {
-                                Label("Share", systemImage: "square.and.arrow.up")
+                            ShareLink(item: Image(uiImage: uiImage), preview: SharePreview(entry.title ?? String(localized: "Image"), image: Image(uiImage: uiImage))) {
+                                Label(String(localized: "Share"), systemImage: "square.and.arrow.up")
                             }
                         } else if entry.type == EntryType.link.rawValue, let url = entry.link {
                             ShareLink(item: url) {
-                                Label("Share", systemImage: "square.and.arrow.up")
+                                Label(String(localized: "Share"), systemImage: "square.and.arrow.up")
                             }
                         } else if entry.type == EntryType.recording.rawValue, let audioData = entry.audio {
-                            ShareLink(item: audioData, preview: SharePreview(entry.title ?? "Recording")) {
-                                Label("Share", systemImage: "square.and.arrow.up")
+                            ShareLink(item: audioData, preview: SharePreview(entry.title ?? String(localized: "Recording"))) {
+                                Label(String(localized: "Share"), systemImage: "square.and.arrow.up")
                             }
                         }
 
@@ -224,7 +224,7 @@ struct EntryListView: View {
                             selectedPile = nil
                             showPileChooser.toggle()
                         } label: {
-                            Label("Move to pile", systemImage: "arrow.left.arrow.right")
+                            Label(String(localized: "Move to pile"), systemImage: "arrow.left.arrow.right")
                         }
 
                         if entry.type == EntryType.text.rawValue {
@@ -233,7 +233,7 @@ struct EntryListView: View {
                                 newEntryName = entry.title ?? ""
                                 presentEntryRenamer.toggle()
                             } label: {
-                                Label("Rename", systemImage: "pencil")
+                                Label(String(localized: "Rename"), systemImage: "pencil")
                             }
                         }
 
@@ -241,7 +241,7 @@ struct EntryListView: View {
                             viewContext.delete(entry)
                             save(viewContext)
                         } label: {
-                            Label("Delete Entry", systemImage: "trash")
+                            Label(String(localized: "Delete Entry"), systemImage: "trash")
                         }
                     }
             }
@@ -279,7 +279,7 @@ struct EntryListView: View {
                         Button {
                             addEntry(viewContext, pile: pile)
                         } label: {
-                            Label("New Text Entry", systemImage: "doc.badge.plus")
+                            Label(String(localized: "New Text Entry"), systemImage: "doc.badge.plus")
                         }
 
                         // Submenu for image sources
@@ -288,7 +288,7 @@ struct EntryListView: View {
                                 selectedImage = nil
                                 showPhotosPicker.toggle()
                             } label: {
-                                Label("Photos Library", systemImage: "photo.on.rectangle")
+                                Label(String(localized: "Photos Library"), systemImage: "photo.on.rectangle")
                             }
 
                             // TODO: Add camera option when implemented
@@ -298,20 +298,20 @@ struct EntryListView: View {
                             //     Label("Camera", systemImage: "camera")
                             // }
                         } label: {
-                            Label("New Image Entry", systemImage: "photo.badge.plus")
+                            Label(String(localized: "New Image Entry"), systemImage: "photo.badge.plus")
                         }
 
                         Button(action: toggleRecorder) {
-                            Label("New Voice Memo", systemImage: "waveform.badge.mic")
+                            Label(String(localized: "New Voice Memo"), systemImage: "waveform.badge.mic")
                         }
                         Button(action: togglePrompt) {
-                            Label("New Link Entry", systemImage: "link.badge.plus")
+                            Label(String(localized: "New Link Entry"), systemImage: "link.badge.plus")
                         }
                         Button(action: toggleImporter) {
-                            Label("Import File", systemImage: "arrow.down.doc")
+                            Label(String(localized: "Import File"), systemImage: "arrow.down.doc")
                         }
                     } label: {
-                        Label("New", systemImage: "plus")
+                        Label(String(localized: "New"), systemImage: "plus")
                     }
                 }
             } else {
@@ -321,7 +321,7 @@ struct EntryListView: View {
                         Button {
                             addEntry(viewContext, pile: pile)
                         } label: {
-                            Label("New Text Entry", systemImage: "doc.badge.plus")
+                            Label(String(localized: "New Text Entry"), systemImage: "doc.badge.plus")
                         }
 
                         // Submenu for image sources
@@ -330,7 +330,7 @@ struct EntryListView: View {
                                 selectedImage = nil
                                 showPhotosPicker.toggle()
                             } label: {
-                                Label("Photos Library", systemImage: "photo.on.rectangle")
+                                Label(String(localized: "Photos Library"), systemImage: "photo.on.rectangle")
                             }
 
                             // TODO: Add camera option when implemented
@@ -340,17 +340,17 @@ struct EntryListView: View {
                             //     Label("Camera", systemImage: "camera")
                             // }
                         } label: {
-                            Label("New Image Entry", systemImage: "photo.badge.plus")
+                            Label(String(localized: "New Image Entry"), systemImage: "photo.badge.plus")
                         }
 
                         Button(action: toggleRecorder) {
-                            Label("New Voice Memo", systemImage: "waveform.badge.mic")
+                            Label(String(localized: "New Voice Memo"), systemImage: "waveform.badge.mic")
                         }
                         Button(action: togglePrompt) {
-                            Label("New Link Entry", systemImage: "link.badge.plus")
+                            Label(String(localized: "New Link Entry"), systemImage: "link.badge.plus")
                         }
                         Button(action: toggleImporter) {
-                            Label("Import File", systemImage: "arrow.down.doc")
+                            Label(String(localized: "Import File"), systemImage: "arrow.down.doc")
                         }
                     } label: {
                         Image(systemName: "plus")
@@ -376,36 +376,36 @@ struct EntryListView: View {
             matching: .any(of: [.images, .screenshots]),
             preferredItemEncoding: .automatic
         )
-        .alert("Rename Pile", isPresented: $presentRenamer, actions: {
-            TextField("Pile Name", text: $newPileName)
+        .alert(String(localized: "Rename Pile"), isPresented: $presentRenamer, actions: {
+            TextField(String(localized: "Pile Name"), text: $newPileName)
 
-            Button("Rename", action: {
+            Button(String(localized: "Rename"), action: {
                 pile.name = newPileName
                 save(viewContext)
                 newPileName = ""
             })
-            Button("Cancel", role: .cancel, action: {})
+            Button(String(localized: "Cancel"), role: .cancel, action: {})
         })
-        .alert("Rename Entry", isPresented: $presentEntryRenamer, actions: {
-            TextField("Entry Title", text: $newEntryName)
+        .alert(String(localized: "Rename Entry"), isPresented: $presentEntryRenamer, actions: {
+            TextField(String(localized: "Entry Title"), text: $newEntryName)
 
-            Button("Rename", action: {
+            Button(String(localized: "Rename"), action: {
                 guard let entry = contextEntry else { return }
                 entry.title = newEntryName
                 save(viewContext)
                 newEntryName = ""
             })
-            Button("Cancel", role: .cancel, action: {})
+            Button(String(localized: "Cancel"), role: .cancel, action: {})
         })
-        .alert("New Link", isPresented: $showLinkPrompt, actions: {
-            TextField("Website URL", text: $newLink)
+        .alert(String(localized: "New Link"), isPresented: $showLinkPrompt, actions: {
+            TextField(String(localized: "Website URL"), text: $newLink)
                 .keyboardType(.URL)
 
-            Button("Add", action: {
+            Button(String(localized: "Add"), action: {
                 addLink(viewContext, newLink: newLink, pile: pile)
                 newLink = ""
             })
-            Button("Cancel", role: .cancel, action: {})
+            Button(String(localized: "Cancel"), role: .cancel, action: {})
         })
         .fileImporter(isPresented: $isImporting, allowedContentTypes: [.text, .image, .audio]) { result in
             switch result {
@@ -489,12 +489,12 @@ struct EntryListView: View {
         }
         .sheet(isPresented: $showPileChooser) {} content: {
             VStack {
-                Text("Move to pile")
+                Text(String(localized: "Move to pile"))
                     .font(.headline)
                     .padding(.top)
 
-                Picker("Select pile", selection: $selectedPile) {
-                    Text("Inbox")
+                Picker(String(localized: "Select pile"), selection: $selectedPile) {
+                    Text(String(localized: "Inbox"))
                         .tag(nil as Pile?)
 
                     ForEach(piles, id: \.id) { targetPile in
@@ -508,7 +508,7 @@ struct EntryListView: View {
 
                 HStack {
                     Spacer()
-                    Button("Move", action: {
+                    Button(String(localized: "Move"), action: {
                         moveToPile()
                         showPileChooser.toggle()
                     })
